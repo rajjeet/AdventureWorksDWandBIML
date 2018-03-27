@@ -47,6 +47,7 @@ INSERT INTO [dbo].[Audit]
 		   ,[TableMaxDateTime]
 		   ,[IsSuccessful]
 		   )
+	OUTPUT inserted.AuditId
 	 VALUES
 		   (
 			@ParentAuditId

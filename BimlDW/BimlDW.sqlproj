@@ -65,5 +65,6 @@
   <ItemGroup>
     <Build Include="Audit.sql" />
     <Build Include="spIns_Audit.sql" />
+    <Build Include="spUpd_Audit.sql" />
   </ItemGroup>
 </Project>

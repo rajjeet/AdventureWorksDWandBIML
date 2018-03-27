@@ -1,0 +1,14 @@
+<#@ property name="tableSchemaName" type="String" required="True"#>
+<#@ property name="tableName" type="String" required="True"#>
+
+    <Variable Name="AuditId" DataType="Int32">-1</Variable>
+    <Variable Name="TableSchemaName" DataType="String"><#=tableSchemaName#></Variable>
+    <Variable Name="TableName" DataType="String"><#=tableName#></Variable>
+    <Variable Name="ExtractRowCnt" DataType="Int32">-1</Variable>
+    <Variable Name="InsertRowCnt" DataType="Int32">-1</Variable>
+    <Variable Name="UpdateRowCnt" DataType="Int32">-1</Variable>
+    <Variable Name="ErrorRowCnt" DataType="Int32">-1</Variable>
+    <Variable Name="InitialTableRowCnt" DataType="Int32">-1</Variable>
+    <Variable Name="FinalTableRowCnt" DataType="Int32">-1</Variable>
+    <Variable Name="TableMaxDateTime" DataType="DateTime">1900-01-01</Variable>
+    <Variable Name="IsSuccessful" DataType="String">N</Variable>

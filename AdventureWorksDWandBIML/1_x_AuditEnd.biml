@@ -1,0 +1,15 @@
+<ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_Staging">
+    <DirectInput>
+        exec spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+    </DirectInput>
+    <Parameters>
+        <Parameter Name="@AuditId" DataType="Int32" VariableName="User.AuditId" />
+        <Parameter Name="@ExtractRowCnt" DataType="Int32" VariableName="User.ExtractRowCnt" />
+        <Parameter Name="@InsertRowCnt" DataType="Int32" VariableName="User.InsertRowCnt" />
+        <Parameter Name="@UpdateRowCnt" DataType="Int32" VariableName="User.UpdateRowCnt" />
+        <Parameter Name="@ErrorRowCnt" DataType="Int32" VariableName="User.ErrorRowCnt" />
+        <Parameter Name="@InitialTableRowCnt" DataType="Int32" VariableName="User.InitialTableRowCnt" />
+        <Parameter Name="@FinalTableRowCnt" DataType="Int32" VariableName="User.FinalTableRowCnt" />
+        <Parameter Name="@TableMaxDateTime" DataType="DateTime" VariableName="User.TableMaxDateTime" />
+    </Parameters>
+</ExecuteSQL>

@@ -12,49 +12,12 @@
                 <Parameter Name="ParentAuditId" DataType="Int32">-1</Parameter>
             </Parameters>
             <Variables>
-                <Variable Name="TableSchemaName" DataType="String">dbo</Variable>
-                <Variable Name="TableName" DataType="String">SalesTerritory</Variable>
-                <Variable Name="ExtractRowCnt" DataType="Int32">-1</Variable>
-                <Variable Name="InsertRowCnt" DataType="Int32">-1</Variable>
-                <Variable Name="UpdateRowCnt" DataType="Int32">-1</Variable>
-                <Variable Name="ErrorRowCnt" DataType="Int32">-1</Variable>
-                <Variable Name="InitialTableRowCnt" DataType="Int32">-1</Variable>
-                <Variable Name="FinalTableRowCnt" DataType="Int32">-1</Variable>
-                <Variable Name="TableMaxDateTime" DataType="DateTime">1900-01-01</Variable>
-                <Variable Name="IsSuccessful" DataType="String">N</Variable>
+                <#=CallBimlScript("1_x_AuditVariables.biml", "dbo", "SalesTerritory")#>
             </Variables>
             <Tasks>
-                <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_Staging">
-                    <DirectInput>
-                        exec dbo.spIns_Audit ?, ?, ?, ?, ?,
-                                             ?, ?, ?, ?, ?,
-                                             ?, ?, ?, ?, ?,
-                                             ?, ?, ?, ?, ?, ?
-                    </DirectInput>
-                    <Parameters>
-                        <Parameter Name="@ParentAuditId" DataType="Int32" VariableName="Extract__Master.ParentAuditId" />
-                        <Parameter Name="@ExecutionInstanceGUID" DataType="Guid" VariableName="System.ExecutionInstanceGUID" />
-                        <Parameter Name="@MachineName" DataType="String" VariableName="System.MachineName" />
-                        <Parameter Name="@PackageID" DataType="Guid" VariableName="System.PackageID" />
-                        <Parameter Name="@ServerExecutionId" DataType="String" VariableName="System.ServerExecutionID" /> 
-                        <Parameter Name="@StartTime" DataType="DateTime" VariableName="System.StartTime" />
-                        <Parameter Name="@UserName" DataType="String" VariableName="System.UserName" />
-                        <Parameter Name="@VersionBuild" DataType="Int16" VariableName="System.VersionBuild" />
-                        <Parameter Name="@VersionGUID" DataType="Guid" VariableName="System.VersionGUID" />
-                        <Parameter Name="@VersionMajor" DataType="Int32" VariableName="System.VersionMajor" />
-                        <Parameter Name="@VersionMinor" DataType="Int32" VariableName="System.VersionMinor" />
-                        <Parameter Name="@TableSchemaName" DataType="String" VariableName="User.TableSchemaName" />
-                        <Parameter Name="@TableName" DataType="String" VariableName="User.TableName" />
-                        <Parameter Name="@ExtractRowCnt" DataType="Int32" VariableName="User.ExtractRowCnt" />
-                        <Parameter Name="@InsertRowCnt" DataType="Int32" VariableName="User.InsertRowCnt" />
-                        <Parameter Name="@UpdateRowCnt" DataType="Int32" VariableName="User.UpdateRowCnt" />
-                        <Parameter Name="@ErrorRowCnt" DataType="Int32" VariableName="User.ErrorRowCnt" />
-                        <Parameter Name="@InitialTableRowCnt" DataType="Int32" VariableName="User.InitialTableRowCnt" />
-                        <Parameter Name="@FinalTableRowCnt" DataType="Int32" VariableName="User.FinalTableRowCnt" />
-                        <Parameter Name="@TableMaxDateTime" DataType="DateTime" VariableName="User.TableMaxDateTime" />
-                        <Parameter Name="@IsSuccessful" DataType="String" VariableName="User.IsSuccessful" />
-                    </Parameters>
-                </ExecuteSQL>
+                <#=CallBimlScript("1_x_AuditBegin.biml")#>
+                  
+                <#=CallBimlScript("1_x_AuditEnd.biml")#>
             </Tasks>
         </Package>
     </Packages>
