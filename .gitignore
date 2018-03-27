@@ -3,6 +3,7 @@
 
 # Integration packages - using BIML exclusively
 *.dtsx
+*.conmgr
 
 # User-specific files
 *.suo

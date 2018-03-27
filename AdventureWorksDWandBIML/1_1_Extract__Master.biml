@@ -1,0 +1,26 @@
+<#@ template tier="1" language="C#" #>
+<Biml xmlns="http://schemas.varigence.com/biml.xsd">
+    <Connections>
+        <OleDbConnection Name="OLEDB_Staging" ConnectionString="Data Source=localhost; Integrated Security=SSPI; Initial Catalog=BimlDW" CreateInProject="true"/>
+    </Connections>
+    <Packages>
+        <Package Name="Extract__Master" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey" >
+            <Connections>
+                <Connection ConnectionName="OLEDB_Staging" />
+            </Connections>
+            <Parameters>
+                <Parameter Name="ParentAuditId" DataType="Int32">-1</Parameter>
+            </Parameters>
+            <Tasks>
+                <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_Staging">
+                    <DirectInput>
+                        exec dbo.spIns_Audit ?
+                    </DirectInput>
+                    <Parameters>
+                        <Parameter Name="@ParentAuditId" DataType="Int32" VariableName="Extract__Master.ParentAuditId" />
+                    </Parameters>
+                </ExecuteSQL>
+            </Tasks>
+        </Package>
+    </Packages>
+</Biml>

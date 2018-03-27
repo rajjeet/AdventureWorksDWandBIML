@@ -1,9 +1,25 @@
 <Biml xmlns="http://schemas.varigence.com/biml.xsd">
+  <Connections>
+    <OleDbConnection Name="OLEDB_Staging" CreateInProject="true" ConnectionString="Data Source=localhost; Integrated Security=SSPI; Initial Catalog=BimlDW" />
+  </Connections>
   <Packages>
-    <Package Name="HelloWorld" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey">
+    <Package Name="Extract__Master" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey">
       <Tasks>
-        <Dataflow Name="DFT HelloWorld" />
+        <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_Staging">
+          <Parameters>
+            <Parameter Name="@ParentAuditId" VariableName="ParentAuditId" DataType="Int32" />
+          </Parameters>
+          <DirectInput>
+                        exec dbo.spIns_Audit ?
+                    </DirectInput>
+        </ExecuteSQL>
       </Tasks>
+      <Connections>
+        <Connection ConnectionName="OLEDB_Staging" />
+      </Connections>
+      <Parameters>
+        <Parameter Name="ParentAuditId" DataType="Int32">-1</Parameter>
+      </Parameters>
     </Package>
   </Packages>
 </Biml>
