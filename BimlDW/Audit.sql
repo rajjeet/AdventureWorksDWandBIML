@@ -4,8 +4,8 @@
 	,[ParentAuditId] int
 	,[ExecutionInstanceGUID] uniqueidentifier
 	,[MachineName] nvarchar(100)
-	,[PackageId] uniqueidentifier
-	,[ServerExecutionId] uniqueidentifier
+	,[PackageID] uniqueidentifier
+	,[ServerExecutionId] nvarchar(100)
 	,[StartTime] datetime
 	,[UserName] nvarchar(100)
 	,[VersionBuild] smallint

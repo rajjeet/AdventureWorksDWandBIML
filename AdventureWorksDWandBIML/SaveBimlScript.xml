@@ -8,9 +8,14 @@
         <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_Staging">
           <Parameters>
             <Parameter Name="@ParentAuditId" VariableName="ParentAuditId" DataType="Int32" />
+            <Parameter Name="@ExecutionInstanceGUID" VariableName="System.ExecutionInstanceGUID" DataType="Guid" />
+            <Parameter Name="@MachineName" VariableName="System.MachineName" DataType="String" />
+            <Parameter Name="@PackageID" VariableName="System.PackageID" DataType="Guid" />
+            <Parameter Name="@ServerExecutionId" VariableName="System.ServerExecutionID" DataType="String" />
+            <Parameter Name="@StartTime" VariableName="System.StartTime" DataType="DateTime" />
           </Parameters>
           <DirectInput>
-                        exec dbo.spIns_Audit ?
+                        exec dbo.spIns_Audit ?, ?, ?, ?, ?, ?
                     </DirectInput>
         </ExecuteSQL>
       </Tasks>

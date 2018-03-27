@@ -1,17 +1,17 @@
 ﻿CREATE PROCEDURE [dbo].[spIns_Audit] (
 	@ParentAuditId [int] 
 	,@ExecutionInstanceGUID [uniqueidentifier] = NULL
-	,@MachineName [nvarchar] = NULL
-	,@PackageId [uniqueidentifier] = NULL
-	,@ServerExecutionId [uniqueidentifier] = NULL
+	,@MachineName [nvarchar] (100) = NULL
+	,@PackageID [uniqueidentifier] = NULL
+	,@ServerExecutionId [nvarchar](100) = NULL
 	,@StartTime [datetime] = NULL
-	,@UserName [nvarchar] = NULL
+	,@UserName [nvarchar] (100) = NULL
 	,@VersionBuild [smallint] = NULL
 	,@VersionGUID [uniqueidentifier] = NULL
 	,@VersionMajor [smallint] = NULL
 	,@VersionMinor [smallint] = NULL
-	,@TableSchemaName [nvarchar] = NULL
-	,@TableName [nvarchar] = NULL
+	,@TableSchemaName [nvarchar] (15) = NULL
+	,@TableName [nvarchar] (100) = NULL
 	,@ExtractRowCnt [int] = NULL
 	,@InsertRowCnt [int] = NULL
 	,@UpdateRowCnt [int] = NULL
@@ -28,7 +28,7 @@ INSERT INTO [dbo].[Audit]
 		   [ParentAuditId]
 		   ,[ExecutionInstanceGUID]
 		   ,[MachineName]
-		   ,[PackageId]
+		   ,[PackageID]
 		   ,[ServerExecutionId]
 		   ,[StartTime]
 		   ,[UserName]
@@ -52,7 +52,7 @@ INSERT INTO [dbo].[Audit]
 			@ParentAuditId
 			,@ExecutionInstanceGUID
 			,@MachineName
-			,@PackageId
+			,@PackageID
 			,@ServerExecutionId
 			,@StartTime
 			,@UserName
