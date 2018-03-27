@@ -1,0 +1,18 @@
+<#* BIML Code to save the compiled BIML to file: SaveBimlScript.biml *#>
+
+<!--Directives:--> 
+<#@ template tier="100" #> 
+<#@ import namespace="Varigence.Biml.CoreLowerer.SchemaManagement"  #> 
+<#@ import namespace="System.Xml"  #> 
+
+<Biml xmlns="http://schemas.varigence.com/biml.xsd">  
+  <#  
+      string xBiml = RootNode.GetBiml();  
+      XmlDocument xmlDoc = new XmlDocument();  
+      xmlDoc.LoadXml(xBiml);  
+      string sFile = @"C:\Users\rajje\Documents\Visual Studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\SaveBimlScript.xml";  
+        
+      xmlDoc.Save(sFile);  
+   #> 
+</Biml>  
+
