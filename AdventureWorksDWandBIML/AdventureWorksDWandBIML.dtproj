@@ -26,7 +26,7 @@
           <SSIS:Property SSIS:Name="CreatorComputerName">PHULL207</SSIS:Property>
           <SSIS:Property SSIS:Name="Description">
           </SSIS:Property>
-          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAiCOl8Y6qgUS3M1GWvtDmYwAAAAACAAAAAAAQZgAAAAEAACAAAABktiNfFecILwGThQQ2JP4qQ9bgVoX64RYd0IvxEaRjHAAAAAAOgAAAAAIAACAAAADQzva6M/+uS29KlZq/V5f8Yp34+XKvyY13bTRqZIPWMJAAAABkVDpBXpvQCUzooGvNNhs76dJO3HK5AQYdV6b2UuVZbnIxJySB2JpytxzvbTxdmUDgDZCwU2iVvCG2A0+yfzgXVF5ZgHoPrUyOg9BUYpB22n9WSVzcnr+P1p6meO5ZENW/gNaskWG3S+3i1jmqwAb2Iv6/LyIhyI0uoPr4Zl8UtoHuJNGyKwKZuBNCZyvAhONAAAAASSPLUz37HqMeuvKP2cNbmM8gBXIstbFZEcOt81SBgRD7pljhVs1oT8m8jfzjsIlxjPZu6oykF8nmetY4PKL0RQ==</SSIS:Property>
+          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAiCOl8Y6qgUS3M1GWvtDmYwAAAAACAAAAAAAQZgAAAAEAACAAAAB9+3ENbqzWbqZj5PEhnInqPdYZaL1+K0LlVnwn5K8lkwAAAAAOgAAAAAIAACAAAADtN0GINxDvhimARhpeB/egN4+rn465cfU3L7WYRlQcCJAAAABSRp2INxx4dsuy6mDZ6utrG9/zkBlrYKCDTkGU+WZsO+puTyzHl6/zaWQU4zgGtHE9ZbpqkFZJXNtxfoNJBJTFYC4+iU5cY1hdMw6CsBLMAsaXysRXCs6KYgd1zus8X0JNqVpqMha9TE3NGF2JzxFDZgSXQr0u+QPU5aeZ4p5t8UrdwOnE6arnNqYgPhsQczFAAAAAYdrKRBYMN+oUOW0rogC9GJ6kisNuqYIx4rN9wUZhTFw0qGqpew6rLJmAx/FZ/nG/Uy3qWsemVLXPq6E2Nho0vA==</SSIS:Property>
           <SSIS:Property SSIS:Name="FormatVersion">1</SSIS:Property>
         </SSIS:Properties>
         <SSIS:Packages>
@@ -48,7 +48,7 @@
                 <SSIS:Property SSIS:Name="IncludeInDebugDump">0</SSIS:Property>
                 <SSIS:Property SSIS:Name="Required">0</SSIS:Property>
                 <SSIS:Property SSIS:Name="Sensitive">0</SSIS:Property>
-                <SSIS:Property SSIS:Name="Value">Data Source=localhost;Initial Catalog=BimlDW;Provider=SQLNCLI11.1;Integrated Security=SSPI;</SSIS:Property>
+                <SSIS:Property SSIS:Name="Value">data source=localhost;initial catalog=BimlDW;integrated security=SSPI;</SSIS:Property>
                 <SSIS:Property SSIS:Name="DataType">18</SSIS:Property>
               </SSIS:Properties>
             </SSIS:Parameter>
@@ -167,20 +167,28 @@
   <ControlFlowParts />
   <Miscellaneous>
     <ProjectItem>
-      <Name>1_1_Extract__Master.biml</Name>
-      <FullPath>1_1_Extract__Master.biml</FullPath>
+      <Name>1_10_Connections.biml</Name>
+      <FullPath>1_10_Connections.biml</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>1_40_Extract__Master.biml</Name>
+      <FullPath>1_40_Extract__Master.biml</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>1_x_AuditBegin.biml</Name>
       <FullPath>1_x_AuditBegin.biml</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>1_x_AuditEnd.biml</Name>
+      <FullPath>1_x_AuditEnd.biml</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>1_x_AuditVariables.biml</Name>
       <FullPath>1_x_AuditVariables.biml</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>1_x_AuditEnd.biml</Name>
-      <FullPath>1_x_AuditEnd.biml</FullPath>
+      <Name>1_10_CommonVariables.biml</Name>
+      <FullPath>1_10_CommonVariables.biml</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>SaveBimlScript.xml</Name>

@@ -1,4 +1,5 @@
-<ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+<#@ property name="ConnName" type="String"#>
+<ExecuteSQL Name="SQL Audit Begin" ConnectionName="<#=ConnName#>" ResultSet="SingleRow">
     <DirectInput>
         exec dbo.spIns_Audit ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,

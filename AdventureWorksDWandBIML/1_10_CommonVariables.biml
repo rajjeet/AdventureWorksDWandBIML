@@ -1,0 +1,4 @@
+<#
+    var stagingConnName = @"OLEDB_Staging";
+    var stagingConnString = @"Data Source=localhost;Integrated Security=SSPI;Initial Catalog=BimlDW";
+#>

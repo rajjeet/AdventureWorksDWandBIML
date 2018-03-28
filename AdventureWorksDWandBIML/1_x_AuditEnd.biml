@@ -1,4 +1,5 @@
-<ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_Staging">
+<#@ property name="ConnName" type="String"#>
+<ExecuteSQL Name="SQL Audit End" ConnectionName="<#=ConnName#>">
     <DirectInput>
         exec spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
     </DirectInput>
