@@ -1,0 +1,183 @@
+<Biml xmlns="http://schemas.varigence.com/biml.xsd">
+  <Connections>
+    <OleDbConnection Name="OLEDB_Staging" CreateInProject="true" ConnectionString="Server=.;Integrated Security=SSPI;Initial Catalog=BimlDW;Provider=SQLNCLI11.1;" />
+    <OleDbConnection Name="OLEDB_Source" CreateInProject="true" ConnectionString="Server=.;Integrated Security=SSPI;Initial Catalog=AdventureWorks2012;Provider=SQLNCLI11.1;" />
+  </Connections>
+  <Tables>
+    <Table Name="Product" SchemaName="sourceDb.Production">
+      <Columns>
+        <Column Name="ProductID" />
+        <Column Name="Name" DataType="String" Length="50" />
+        <Column Name="ProductNumber" DataType="String" Length="25" />
+        <Column Name="MakeFlag" DataType="Boolean" />
+        <Column Name="FinishedGoodsFlag" DataType="Boolean" />
+        <Column Name="Color" DataType="String" Length="15" IsNullable="true" />
+        <Column Name="SafetyStockLevel" DataType="Int16" />
+        <Column Name="ReorderPoint" DataType="Int16" />
+        <Column Name="StandardCost" DataType="Currency" />
+        <Column Name="ListPrice" DataType="Currency" />
+        <Column Name="Size" DataType="String" Length="5" IsNullable="true" />
+        <Column Name="SizeUnitMeasureCode" DataType="StringFixedLength" Length="3" IsNullable="true" />
+        <Column Name="WeightUnitMeasureCode" DataType="StringFixedLength" Length="3" IsNullable="true" />
+        <Column Name="Weight" DataType="Decimal" Precision="8" Scale="2" IsNullable="true" />
+        <Column Name="DaysToManufacture" />
+        <Column Name="ProductLine" DataType="StringFixedLength" Length="2" IsNullable="true" />
+        <Column Name="Class" DataType="StringFixedLength" Length="2" IsNullable="true" />
+        <Column Name="Style" DataType="StringFixedLength" Length="2" IsNullable="true" />
+        <Column Name="ProductSubcategoryID" IsNullable="true" />
+        <Column Name="ProductModelID" IsNullable="true" />
+        <Column Name="SellStartDate" DataType="DateTime" />
+        <Column Name="SellEndDate" DataType="DateTime" IsNullable="true" />
+        <Column Name="DiscontinuedDate" DataType="DateTime" IsNullable="true" />
+        <Column Name="rowguid" DataType="Guid" />
+        <Column Name="ModifiedDate" DataType="DateTime" />
+      </Columns>
+    </Table>
+    <Table Name="ProductCategory" SchemaName="sourceDb.Production">
+      <Columns>
+        <Column Name="ProductCategoryID" />
+        <Column Name="Name" DataType="String" Length="50" />
+        <Column Name="rowguid" DataType="Guid" />
+        <Column Name="ModifiedDate" DataType="DateTime" />
+      </Columns>
+    </Table>
+    <Table Name="ProductSubcategory" SchemaName="sourceDb.Production">
+      <Columns>
+        <Column Name="ProductSubcategoryID" />
+        <Column Name="ProductCategoryID" />
+        <Column Name="Name" DataType="String" Length="50" />
+        <Column Name="rowguid" DataType="Guid" />
+        <Column Name="ModifiedDate" DataType="DateTime" />
+      </Columns>
+    </Table>
+    <Table Name="SalesOrderDetail" SchemaName="sourceDb.Sales">
+      <Columns>
+        <Column Name="SalesOrderID" />
+        <Column Name="SalesOrderDetailID" />
+        <Column Name="CarrierTrackingNumber" DataType="String" Length="25" IsNullable="true" />
+        <Column Name="OrderQty" DataType="Int16" />
+        <Column Name="ProductID" />
+        <Column Name="SpecialOfferID" />
+        <Column Name="UnitPrice" DataType="Currency" />
+        <Column Name="UnitPriceDiscount" DataType="Currency" />
+        <Column Name="LineTotal" DataType="Decimal" Precision="38" Scale="6" />
+        <Column Name="rowguid" DataType="Guid" />
+        <Column Name="ModifiedDate" DataType="DateTime" />
+      </Columns>
+    </Table>
+    <Table Name="SalesOrderHeader" SchemaName="sourceDb.Sales">
+      <Columns>
+        <Column Name="SalesOrderID" />
+        <Column Name="RevisionNumber" DataType="Byte" />
+        <Column Name="OrderDate" DataType="DateTime" />
+        <Column Name="DueDate" DataType="DateTime" />
+        <Column Name="ShipDate" DataType="DateTime" IsNullable="true" />
+        <Column Name="Status" DataType="Byte" />
+        <Column Name="OnlineOrderFlag" DataType="Boolean" />
+        <Column Name="SalesOrderNumber" DataType="String" Length="25" />
+        <Column Name="PurchaseOrderNumber" DataType="String" Length="25" IsNullable="true" />
+        <Column Name="AccountNumber" DataType="String" Length="15" IsNullable="true" />
+        <Column Name="CustomerID" />
+        <Column Name="SalesPersonID" IsNullable="true" />
+        <Column Name="TerritoryID" IsNullable="true" />
+        <Column Name="BillToAddressID" />
+        <Column Name="ShipToAddressID" />
+        <Column Name="ShipMethodID" />
+        <Column Name="CreditCardID" IsNullable="true" />
+        <Column Name="CreditCardApprovalCode" DataType="AnsiString" Length="15" IsNullable="true" />
+        <Column Name="CurrencyRateID" IsNullable="true" />
+        <Column Name="SubTotal" DataType="Currency" />
+        <Column Name="TaxAmt" DataType="Currency" />
+        <Column Name="Freight" DataType="Currency" />
+        <Column Name="TotalDue" DataType="Currency" />
+        <Column Name="Comment" DataType="String" Length="128" IsNullable="true" />
+        <Column Name="rowguid" DataType="Guid" />
+        <Column Name="ModifiedDate" DataType="DateTime" />
+      </Columns>
+    </Table>
+  </Tables>
+  <Packages>
+    <Package Name="Extract__Master" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey">
+      <Variables>
+        <Variable Name="AuditId" DataType="Int32">-1</Variable>
+        <Variable Name="TableSchemaName" DataType="String">-</Variable>
+        <Variable Name="TableName" DataType="String">Extract__Master.dtsx</Variable>
+        <Variable Name="ExtractRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="InsertRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="UpdateRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="ErrorRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="InitialTableRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="FinalTableRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="TableMaxDateTime" DataType="DateTime">1900-01-01</Variable>
+        <Variable Name="IsSuccessful" DataType="String">N</Variable>
+      </Variables>
+      <Tasks>
+        <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+          <Results>
+            <Result Name="0" VariableName="User.AuditId" />
+          </Results>
+          <Parameters>
+            <Parameter Name="@ParentAuditId" VariableName="ParentAuditId" DataType="Int32" />
+            <Parameter Name="@ExecutionInstanceGUID" VariableName="System.ExecutionInstanceGUID" DataType="Guid" />
+            <Parameter Name="@MachineName" VariableName="System.MachineName" DataType="String" />
+            <Parameter Name="@PackageID" VariableName="System.PackageID" DataType="Guid" />
+            <Parameter Name="@ServerExecutionId" VariableName="System.ServerExecutionID" DataType="String" />
+            <Parameter Name="@StartTime" VariableName="System.StartTime" DataType="DateTime" />
+            <Parameter Name="@UserName" VariableName="System.UserName" DataType="String" />
+            <Parameter Name="@VersionBuild" VariableName="System.VersionBuild" DataType="Int16" />
+            <Parameter Name="@VersionGUID" VariableName="System.VersionGUID" DataType="Guid" />
+            <Parameter Name="@VersionMajor" VariableName="System.VersionMajor" DataType="Int32" />
+            <Parameter Name="@VersionMinor" VariableName="System.VersionMinor" DataType="Int32" />
+            <Parameter Name="@TableSchemaName" VariableName="User.TableSchemaName" DataType="String" />
+            <Parameter Name="@TableName" VariableName="User.TableName" DataType="String" />
+            <Parameter Name="@ExtractRowCnt" VariableName="User.ExtractRowCnt" DataType="Int32" />
+            <Parameter Name="@InsertRowCnt" VariableName="User.InsertRowCnt" DataType="Int32" />
+            <Parameter Name="@UpdateRowCnt" VariableName="User.UpdateRowCnt" DataType="Int32" />
+            <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
+            <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
+            <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
+            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
+            <Parameter Name="@IsSuccessful" VariableName="User.IsSuccessful" DataType="String" />
+          </Parameters>
+          <DirectInput>
+        exec dbo.spIns_Audit ?, ?, ?, ?, ?,
+                             ?, ?, ?, ?, ?,
+                             ?, ?, ?, ?, ?,
+                             ?, ?, ?, ?, ?, ?
+                        
+    </DirectInput>
+        </ExecuteSQL>
+        <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_Staging">
+          <Parameters>
+            <Parameter Name="@AuditId" VariableName="User.AuditId" DataType="Int32" />
+            <Parameter Name="@ExtractRowCnt" VariableName="User.ExtractRowCnt" DataType="Int32" />
+            <Parameter Name="@InsertRowCnt" VariableName="User.InsertRowCnt" DataType="Int32" />
+            <Parameter Name="@UpdateRowCnt" VariableName="User.UpdateRowCnt" DataType="Int32" />
+            <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
+            <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
+            <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
+            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
+          </Parameters>
+          <DirectInput>
+        exec spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+    </DirectInput>
+        </ExecuteSQL>
+      </Tasks>
+      <Connections>
+        <Connection ConnectionName="OLEDB_Staging" />
+      </Connections>
+      <Parameters>
+        <Parameter Name="ParentAuditId" DataType="Int32">-1</Parameter>
+      </Parameters>
+    </Package>
+  </Packages>
+  <Schemas>
+    <Schema Name="Production" DatabaseName="sourceDb" />
+    <Schema Name="Sales" DatabaseName="sourceDb" />
+    <Schema Name="stage" DatabaseName="stagingDb" />
+  </Schemas>
+  <Databases>
+    <Database Name="sourceDb" ConnectionName="OLEDB_Source" />
+    <Database Name="stagingDb" ConnectionName="OLEDB_Staging" />
+  </Databases>
+</Biml>

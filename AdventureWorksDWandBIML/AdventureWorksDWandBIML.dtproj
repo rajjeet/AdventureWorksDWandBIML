@@ -26,7 +26,7 @@
           <SSIS:Property SSIS:Name="CreatorComputerName">PHULL207</SSIS:Property>
           <SSIS:Property SSIS:Name="Description">
           </SSIS:Property>
-          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAiCOl8Y6qgUS3M1GWvtDmYwAAAAACAAAAAAAQZgAAAAEAACAAAAB9+3ENbqzWbqZj5PEhnInqPdYZaL1+K0LlVnwn5K8lkwAAAAAOgAAAAAIAACAAAADtN0GINxDvhimARhpeB/egN4+rn465cfU3L7WYRlQcCJAAAABSRp2INxx4dsuy6mDZ6utrG9/zkBlrYKCDTkGU+WZsO+puTyzHl6/zaWQU4zgGtHE9ZbpqkFZJXNtxfoNJBJTFYC4+iU5cY1hdMw6CsBLMAsaXysRXCs6KYgd1zus8X0JNqVpqMha9TE3NGF2JzxFDZgSXQr0u+QPU5aeZ4p5t8UrdwOnE6arnNqYgPhsQczFAAAAAYdrKRBYMN+oUOW0rogC9GJ6kisNuqYIx4rN9wUZhTFw0qGqpew6rLJmAx/FZ/nG/Uy3qWsemVLXPq6E2Nho0vA==</SSIS:Property>
+          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAiCOl8Y6qgUS3M1GWvtDmYwAAAAACAAAAAAAQZgAAAAEAACAAAACYefk36o1AHMFVSrMrhIciHjrFQcO9x8rYyGjuIXbStgAAAAAOgAAAAAIAACAAAAC+IXbSwr/4fRwrY8yLlaK4Uvc++WzywiuFPDO1kfw4WpAAAADOzKrH1T2cKwN66DyBcu6kxkpi6ltnjGFZpN1KT2k6wK9FfvCAJ+vyWz7Doy3Pc+NcSECMA4LxNbGvU7PnrWptzup0Gp7jStHDCpT5BDo2SZCBCivz/v7nGB3eF1uj5079vX9XABDVyWl5Dp8nxRj7K6GzcG39DY8dtBj25tv1T10umRtH1pZbPbBsXhfOJqdAAAAAroryU3N2TG/a1qBxnXMbji4bbp5TuMTnoFidaC7yX560Bw8+x7UZ2TEParF8KdN5Ov2lAWJPR398NVg/AgjHtw==</SSIS:Property>
           <SSIS:Property SSIS:Name="FormatVersion">1</SSIS:Property>
         </SSIS:Properties>
         <SSIS:Packages>
@@ -167,6 +167,10 @@
   <ControlFlowParts />
   <Miscellaneous>
     <ProjectItem>
+      <Name>1_10_CommonVariables.biml</Name>
+      <FullPath>1_10_CommonVariables.biml</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>1_10_Connections.biml</Name>
       <FullPath>1_10_Connections.biml</FullPath>
     </ProjectItem>
@@ -187,8 +191,8 @@
       <FullPath>1_x_AuditVariables.biml</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>1_10_CommonVariables.biml</Name>
-      <FullPath>1_10_CommonVariables.biml</FullPath>
+      <Name>1_20_GenerateStagingSchema.biml</Name>
+      <FullPath>1_20_GenerateStagingSchema.biml</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>SaveBimlScript.xml</Name>

@@ -1,0 +1,42 @@
+<#@ template tier="20" language="C#"#>
+<#@ include file="1_10_CommonVariables.biml"#>
+<#@ import namespace="Varigence.Biml.CoreLowerer.SchemaManagement"#>
+
+<Biml xmlns="http://schemas.varigence.com/biml.xsd">
+
+    <# var includedSchemas = new List<String>{"Production", "Sales"}; #>
+    <# var includedTables = new List<String>{"Product", "ProductSubcategory", "ProductCategory", "SalesOrderHeader", "SalesOrderDetail"}; #>
+    
+    <# var sourceConn = RootNode.OleDbConnections[sourceConnName]; #>
+    <# var sourceDbSchema = sourceConn.GetDatabaseSchema(includedSchemas, includedTables,
+        ImportOptions.ExcludeCheckConstraint |
+        ImportOptions.ExcludeColumnDefault | 
+        ImportOptions.ExcludeForeignKey | 
+        ImportOptions.ExcludeIdentity |
+        ImportOptions.ExcludeIndex | 
+        ImportOptions.ExcludePrimaryKey |
+        ImportOptions.ExcludeUniqueKey |
+        ImportOptions.ExcludeViews); #>
+    
+    <Databases>
+        <Database Name="sourceDb" ConnectionName="<#=sourceConnName#>" />
+        <Database Name="stagingDb" ConnectionName="<#=stagingConnName#>" />
+    </Databases>
+    
+    <Schemas>
+        <# foreach(var schema in sourceDbSchema.SchemaNodes) { #>
+        <Schema DatabaseName="sourceDb" Name="<#=schema.Name#>" />
+        <# } #>
+        <Schema Name="stage" DatabaseName="stagingDb" />
+    </Schemas>
+        
+    <Tables>
+        <# foreach(var table in sourceDbSchema.TableNodes) { #>
+            <Table Name="<#=table.Name#>" SchemaName="sourceDb.<#=table.Schema.Name#>" >
+                <Columns>
+                    <#= table.Columns.GetBiml() #>
+                </Columns>
+            </Table>
+        <# } #>
+    </Tables>
+</Biml>

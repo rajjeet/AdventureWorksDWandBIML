@@ -1,4 +1,4 @@
-<#* BIML Code to save the compiled BIML to file: SaveBimlScript.biml *#>
+<#* BIML Code to save the compiled BIML to file: GenerateCompiledBiml.biml *#>
 
 <!--Directives:--> 
 <#@ template tier="100" #> 
@@ -10,7 +10,7 @@
       string xBiml = RootNode.GetBiml();  
       XmlDocument xmlDoc = new XmlDocument();  
       xmlDoc.LoadXml(xBiml);  
-      string sFile = @"C:\Users\rajje\Documents\Visual Studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\SaveBimlScript.xml";  
+      string sFile = @"C:\Users\rajje\Documents\Visual Studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\GenerateCompiledBiml.xml";  
         
       xmlDoc.Save(sFile);  
    #> 
