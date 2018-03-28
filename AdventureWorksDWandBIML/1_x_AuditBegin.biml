@@ -1,4 +1,4 @@
-<#@ property name="ConnName" type="String"#>
+<#@ property name="ConnName" type="String" #>
 <ExecuteSQL Name="SQL Audit Begin" ConnectionName="<#=ConnName#>" ResultSet="SingleRow">
     <DirectInput>
         exec dbo.spIns_Audit ?, ?, ?, ?, ?,
@@ -11,7 +11,7 @@
         <Result Name="0" VariableName="User.AuditId" />
     </Results>
     <Parameters>
-        <Parameter Name="@ParentAuditId" DataType="Int32" VariableName="Extract__Master.ParentAuditId" />
+        <Parameter Name="@ParentAuditId" DataType="Int32" VariableName="User.ParentAuditId" />
         <Parameter Name="@ExecutionInstanceGUID" DataType="Guid" VariableName="System.ExecutionInstanceGUID" />
         <Parameter Name="@MachineName" DataType="String" VariableName="System.MachineName" />
         <Parameter Name="@PackageID" DataType="Guid" VariableName="System.PackageID" />
