@@ -2,7 +2,7 @@
 <#@ include file="1_10_CommonVariables.biml"#>
 <Biml xmlns="http://schemas.varigence.com/biml.xsd">
     <Connections>
-        <OleDbConnection Name="<#=stagingConnName#>" ConnectionString="<#=stagingConnString#>" CreateInProject="true"/>
+        <OleDbConnection Name="<#=stagingConnName#>" ConnectionString="<#=stagingConnString#>" CreateInProject="true"/> 
         <OleDbConnection Name="<#=sourceConnName#>" ConnectionString="<#=sourceConnString#>" CreateInProject="true"/>
     </Connections>
 </Biml>

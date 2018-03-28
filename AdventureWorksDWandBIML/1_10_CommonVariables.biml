@@ -1,7 +1,10 @@
 <#
+    var stagingSchemaName = @"stage";
     var stagingConnName = @"OLEDB_Staging";
-    var stagingConnString = @"Server=.;Integrated Security=SSPI;Initial Catalog=BimlDW;Provider=SQLNCLI11.1;";
+    var stagingConnString = @"Data Source=localhost;Integrated Security=SSPI;Initial Catalog=BimlDW;Provider=SQLNCLI11.1;";
     
     var sourceConnName = @"OLEDB_Source";
-    var sourceConnString = @"Server=.;Integrated Security=SSPI;Initial Catalog=AdventureWorks2012;Provider=SQLNCLI11.1;";
+    var sourceConnString = @"Data Source=localhost;Integrated Security=SSPI;Initial Catalog=AdventureWorks2012;Provider=SQLNCLI11.1;";
+    var includedSourceSchemas = new List<String>{"Production", "Sales"};
+    var includedSourceTables = new List<String>{"Product", "ProductSubcategory", "ProductCategory", "SalesOrderHeader", "SalesOrderDetail"};
 #>

@@ -57,6 +57,11 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
+    <Folder Include="dbo\" />
+    <Folder Include="dbo\Tables\" />
+    <Folder Include="stage\" />
+    <Folder Include="stage\Tables\" />
+    <Folder Include="Security\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="InitializeDB.sql" />
@@ -66,5 +71,12 @@
     <Build Include="Audit.sql" />
     <Build Include="spIns_Audit.sql" />
     <Build Include="spUpd_Audit.sql" />
+    <Build Include="dbo\Tables\ErrorLog_1.sql" />
+    <Build Include="stage\Tables\SalesOrderHeader.sql" />
+    <Build Include="stage\Tables\Product.sql" />
+    <Build Include="stage\Tables\ProductSubcategory.sql" />
+    <Build Include="stage\Tables\ProductCategory.sql" />
+    <Build Include="stage\Tables\SalesOrderDetail.sql" />
+    <Build Include="Security\stage.sql" />
   </ItemGroup>
 </Project>

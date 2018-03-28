@@ -4,11 +4,8 @@
 
 <Biml xmlns="http://schemas.varigence.com/biml.xsd">
 
-    <# var includedSchemas = new List<String>{"Production", "Sales"}; #>
-    <# var includedTables = new List<String>{"Product", "ProductSubcategory", "ProductCategory", "SalesOrderHeader", "SalesOrderDetail"}; #>
-    
     <# var sourceConn = RootNode.OleDbConnections[sourceConnName]; #>
-    <# var sourceDbSchema = sourceConn.GetDatabaseSchema(includedSchemas, includedTables,
+    <# var sourceDbSchema = sourceConn.GetDatabaseSchema(includedSourceSchemas, includedSourceTables,
         ImportOptions.ExcludeCheckConstraint |
         ImportOptions.ExcludeColumnDefault | 
         ImportOptions.ExcludeForeignKey | 
@@ -27,7 +24,7 @@
         <# foreach(var schema in sourceDbSchema.SchemaNodes) { #>
         <Schema DatabaseName="sourceDb" Name="<#=schema.Name#>" />
         <# } #>
-        <Schema Name="stage" DatabaseName="stagingDb" />
+        <Schema Name="<#=stagingSchemaName#>" DatabaseName="stagingDb" />
     </Schemas>
         
     <Tables>

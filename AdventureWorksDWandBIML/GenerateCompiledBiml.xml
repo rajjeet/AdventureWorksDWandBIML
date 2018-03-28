@@ -1,7 +1,7 @@
 <Biml xmlns="http://schemas.varigence.com/biml.xsd">
   <Connections>
-    <OleDbConnection Name="OLEDB_Staging" CreateInProject="true" ConnectionString="Server=.;Integrated Security=SSPI;Initial Catalog=BimlDW;Provider=SQLNCLI11.1;" />
-    <OleDbConnection Name="OLEDB_Source" CreateInProject="true" ConnectionString="Server=.;Integrated Security=SSPI;Initial Catalog=AdventureWorks2012;Provider=SQLNCLI11.1;" />
+    <OleDbConnection Name="OLEDB_Staging" CreateInProject="true" ConnectionString="Data Source=localhost;Integrated Security=SSPI;Initial Catalog=BimlDW;Provider=SQLNCLI11.1;" />
+    <OleDbConnection Name="OLEDB_Source" CreateInProject="true" ConnectionString="Data Source=localhost;Integrated Security=SSPI;Initial Catalog=AdventureWorks2012;Provider=SQLNCLI11.1;" />
   </Connections>
   <Tables>
     <Table Name="Product" SchemaName="sourceDb.Production">
@@ -97,6 +97,229 @@
     </Table>
   </Tables>
   <Packages>
+    <Package Name="Generate Staging Schema" ProtectionLevel="EncryptSensitiveWithUserKey">
+      <Tasks>
+        <ExecuteSQL Name="SQL Drop and Create Production_Product" ConnectionName="OLEDB_Staging">
+          <DirectInput>SET ANSI_NULLS ON
+SET QUOTED_IDENTIFIER ON
+GO
+
+-------------------------------------------------------------------
+IF EXISTS (SELECT * from sys.objects WHERE object_id = OBJECT_ID(N'[stage].[Product]') AND type IN (N'U'))
+DROP TABLE [stage].[Product]
+GO
+
+CREATE TABLE [stage].[Product]
+(
+-- Columns Definition
+	[ProductID] int NOT NULL 
+,	[Name] nvarchar(50) NOT NULL 
+,	[ProductNumber] nvarchar(25) NOT NULL 
+,	[MakeFlag] bit NOT NULL 
+,	[FinishedGoodsFlag] bit NOT NULL 
+,	[Color] nvarchar(15) 
+,	[SafetyStockLevel] smallint NOT NULL 
+,	[ReorderPoint] smallint NOT NULL 
+,	[StandardCost] money NOT NULL 
+,	[ListPrice] money NOT NULL 
+,	[Size] nvarchar(5) 
+,	[SizeUnitMeasureCode] nchar(3) 
+,	[WeightUnitMeasureCode] nchar(3) 
+,	[Weight] decimal(8,2) 
+,	[DaysToManufacture] int NOT NULL 
+,	[ProductLine] nchar(2) 
+,	[Class] nchar(2) 
+,	[Style] nchar(2) 
+,	[ProductSubcategoryID] int 
+,	[ProductModelID] int 
+,	[SellStartDate] datetime NOT NULL 
+,	[SellEndDate] datetime 
+,	[DiscontinuedDate] datetime 
+,	[rowguid] uniqueidentifier NOT NULL 
+,	[ModifiedDate] datetime NOT NULL 
+
+-- Constraints
+
+)
+ON "default"
+WITH (DATA_COMPRESSION = NONE)
+GO
+
+-------------------------------------------------------------------
+
+
+
+
+
+                    </DirectInput>
+        </ExecuteSQL>
+        <ExecuteSQL Name="SQL Drop and Create Production_ProductCategory" ConnectionName="OLEDB_Staging">
+          <DirectInput>SET ANSI_NULLS ON
+SET QUOTED_IDENTIFIER ON
+GO
+
+-------------------------------------------------------------------
+IF EXISTS (SELECT * from sys.objects WHERE object_id = OBJECT_ID(N'[stage].[ProductCategory]') AND type IN (N'U'))
+DROP TABLE [stage].[ProductCategory]
+GO
+
+CREATE TABLE [stage].[ProductCategory]
+(
+-- Columns Definition
+	[ProductCategoryID] int NOT NULL 
+,	[Name] nvarchar(50) NOT NULL 
+,	[rowguid] uniqueidentifier NOT NULL 
+,	[ModifiedDate] datetime NOT NULL 
+
+-- Constraints
+
+)
+ON "default"
+WITH (DATA_COMPRESSION = NONE)
+GO
+
+-------------------------------------------------------------------
+
+
+
+
+
+                    </DirectInput>
+        </ExecuteSQL>
+        <ExecuteSQL Name="SQL Drop and Create Production_ProductSubcategory" ConnectionName="OLEDB_Staging">
+          <DirectInput>SET ANSI_NULLS ON
+SET QUOTED_IDENTIFIER ON
+GO
+
+-------------------------------------------------------------------
+IF EXISTS (SELECT * from sys.objects WHERE object_id = OBJECT_ID(N'[stage].[ProductSubcategory]') AND type IN (N'U'))
+DROP TABLE [stage].[ProductSubcategory]
+GO
+
+CREATE TABLE [stage].[ProductSubcategory]
+(
+-- Columns Definition
+	[ProductSubcategoryID] int NOT NULL 
+,	[ProductCategoryID] int NOT NULL 
+,	[Name] nvarchar(50) NOT NULL 
+,	[rowguid] uniqueidentifier NOT NULL 
+,	[ModifiedDate] datetime NOT NULL 
+
+-- Constraints
+
+)
+ON "default"
+WITH (DATA_COMPRESSION = NONE)
+GO
+
+-------------------------------------------------------------------
+
+
+
+
+
+                    </DirectInput>
+        </ExecuteSQL>
+        <ExecuteSQL Name="SQL Drop and Create Sales_SalesOrderDetail" ConnectionName="OLEDB_Staging">
+          <DirectInput>SET ANSI_NULLS ON
+SET QUOTED_IDENTIFIER ON
+GO
+
+-------------------------------------------------------------------
+IF EXISTS (SELECT * from sys.objects WHERE object_id = OBJECT_ID(N'[stage].[SalesOrderDetail]') AND type IN (N'U'))
+DROP TABLE [stage].[SalesOrderDetail]
+GO
+
+CREATE TABLE [stage].[SalesOrderDetail]
+(
+-- Columns Definition
+	[SalesOrderID] int NOT NULL 
+,	[SalesOrderDetailID] int NOT NULL 
+,	[CarrierTrackingNumber] nvarchar(25) 
+,	[OrderQty] smallint NOT NULL 
+,	[ProductID] int NOT NULL 
+,	[SpecialOfferID] int NOT NULL 
+,	[UnitPrice] money NOT NULL 
+,	[UnitPriceDiscount] money NOT NULL 
+,	[LineTotal] decimal(38,6) NOT NULL 
+,	[rowguid] uniqueidentifier NOT NULL 
+,	[ModifiedDate] datetime NOT NULL 
+
+-- Constraints
+
+)
+ON "default"
+WITH (DATA_COMPRESSION = NONE)
+GO
+
+-------------------------------------------------------------------
+
+
+
+
+
+                    </DirectInput>
+        </ExecuteSQL>
+        <ExecuteSQL Name="SQL Drop and Create Sales_SalesOrderHeader" ConnectionName="OLEDB_Staging">
+          <DirectInput>SET ANSI_NULLS ON
+SET QUOTED_IDENTIFIER ON
+GO
+
+-------------------------------------------------------------------
+IF EXISTS (SELECT * from sys.objects WHERE object_id = OBJECT_ID(N'[stage].[SalesOrderHeader]') AND type IN (N'U'))
+DROP TABLE [stage].[SalesOrderHeader]
+GO
+
+CREATE TABLE [stage].[SalesOrderHeader]
+(
+-- Columns Definition
+	[SalesOrderID] int NOT NULL 
+,	[RevisionNumber] tinyint NOT NULL 
+,	[OrderDate] datetime NOT NULL 
+,	[DueDate] datetime NOT NULL 
+,	[ShipDate] datetime 
+,	[Status] tinyint NOT NULL 
+,	[OnlineOrderFlag] bit NOT NULL 
+,	[SalesOrderNumber] nvarchar(25) NOT NULL 
+,	[PurchaseOrderNumber] nvarchar(25) 
+,	[AccountNumber] nvarchar(15) 
+,	[CustomerID] int NOT NULL 
+,	[SalesPersonID] int 
+,	[TerritoryID] int 
+,	[BillToAddressID] int NOT NULL 
+,	[ShipToAddressID] int NOT NULL 
+,	[ShipMethodID] int NOT NULL 
+,	[CreditCardID] int 
+,	[CreditCardApprovalCode] varchar(15) 
+,	[CurrencyRateID] int 
+,	[SubTotal] money NOT NULL 
+,	[TaxAmt] money NOT NULL 
+,	[Freight] money NOT NULL 
+,	[TotalDue] money NOT NULL 
+,	[Comment] nvarchar(128) 
+,	[rowguid] uniqueidentifier NOT NULL 
+,	[ModifiedDate] datetime NOT NULL 
+
+-- Constraints
+
+)
+ON "default"
+WITH (DATA_COMPRESSION = NONE)
+GO
+
+-------------------------------------------------------------------
+
+
+
+
+
+                    </DirectInput>
+        </ExecuteSQL>
+      </Tasks>
+      <Connections>
+        <Connection ConnectionName="OLEDB_Staging" />
+      </Connections>
+    </Package>
     <Package Name="Extract__Master" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey">
       <Variables>
         <Variable Name="AuditId" DataType="Int32">-1</Variable>

@@ -26,11 +26,12 @@
           <SSIS:Property SSIS:Name="CreatorComputerName">PHULL207</SSIS:Property>
           <SSIS:Property SSIS:Name="Description">
           </SSIS:Property>
-          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAiCOl8Y6qgUS3M1GWvtDmYwAAAAACAAAAAAAQZgAAAAEAACAAAACYefk36o1AHMFVSrMrhIciHjrFQcO9x8rYyGjuIXbStgAAAAAOgAAAAAIAACAAAAC+IXbSwr/4fRwrY8yLlaK4Uvc++WzywiuFPDO1kfw4WpAAAADOzKrH1T2cKwN66DyBcu6kxkpi6ltnjGFZpN1KT2k6wK9FfvCAJ+vyWz7Doy3Pc+NcSECMA4LxNbGvU7PnrWptzup0Gp7jStHDCpT5BDo2SZCBCivz/v7nGB3eF1uj5079vX9XABDVyWl5Dp8nxRj7K6GzcG39DY8dtBj25tv1T10umRtH1pZbPbBsXhfOJqdAAAAAroryU3N2TG/a1qBxnXMbji4bbp5TuMTnoFidaC7yX560Bw8+x7UZ2TEParF8KdN5Ov2lAWJPR398NVg/AgjHtw==</SSIS:Property>
+          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAiCOl8Y6qgUS3M1GWvtDmYwAAAAACAAAAAAAQZgAAAAEAACAAAACKnizD7JsLPiK9ZgNWEPs3XhyyDmBe58tP4VZ9FV5CBgAAAAAOgAAAAAIAACAAAABtj5H2nLJCtUKZpO8VPRwMMxFqPQDn5Dx4oH7j4scqcpAAAACgAwscMkevcozh211eXggD99XPAMS/wEhYCpHTJrlpFA5m1V5GFBiVRxvZmMUQ87vMDDYBWOz6qzAeUu+ZCXnoTmuSJZQ/paL6agWUmRc1ZFkIUMtpunqsi7lfBiTRDH6znrIG55nvB1qVekdtnzgN+4txe0bnpBhMvNrcOpA0FXjCJQ/1RzwIqqNQ4unIFUpAAAAA/6lI7YqPW8rq+VabiXYUOmue8iecViCYtWWCumERmIXFnrTdRiBekAMAB96rxk9/iN7lQKh9mNhWrKcoVj1s9w==</SSIS:Property>
           <SSIS:Property SSIS:Name="FormatVersion">1</SSIS:Property>
         </SSIS:Properties>
         <SSIS:Packages>
           <SSIS:Package SSIS:Name="Extract__Master.dtsx" SSIS:EntryPoint="1" />
+          <SSIS:Package SSIS:Name="Generate Staging Schema.dtsx" SSIS:EntryPoint="1" />
         </SSIS:Packages>
         <SSIS:ConnectionManagers>
           <SSIS:ConnectionManager SSIS:Name="OLEDB_Staging.conmgr" />
@@ -48,7 +49,7 @@
                 <SSIS:Property SSIS:Name="IncludeInDebugDump">0</SSIS:Property>
                 <SSIS:Property SSIS:Name="Required">0</SSIS:Property>
                 <SSIS:Property SSIS:Name="Sensitive">0</SSIS:Property>
-                <SSIS:Property SSIS:Name="Value">data source=localhost;initial catalog=BimlDW;integrated security=SSPI;</SSIS:Property>
+                <SSIS:Property SSIS:Name="Value">Data Source=localhost;Initial Catalog=BimlDW;Provider=SQLNCLI11.1;Integrated Security=SSPI;</SSIS:Property>
                 <SSIS:Property SSIS:Name="DataType">18</SSIS:Property>
               </SSIS:Properties>
             </SSIS:Parameter>
@@ -159,6 +160,23 @@
                 </SSIS:Parameter>
               </SSIS:Parameters>
             </SSIS:PackageMetaData>
+            <SSIS:PackageMetaData SSIS:Name="Generate Staging Schema.dtsx">
+              <SSIS:Properties>
+                <SSIS:Property SSIS:Name="ID">{9429FD0F-350C-439E-82FD-2DC8E551739E}</SSIS:Property>
+                <SSIS:Property SSIS:Name="Name">Generate Staging Schema</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionMajor">0</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionBuild">0</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionComments">
+                </SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionGUID">{3E789428-C4C4-43DC-B978-569FCD7A4157}</SSIS:Property>
+                <SSIS:Property SSIS:Name="PackageFormatVersion">8</SSIS:Property>
+                <SSIS:Property SSIS:Name="Description">
+                </SSIS:Property>
+                <SSIS:Property SSIS:Name="ProtectionLevel">1</SSIS:Property>
+              </SSIS:Properties>
+              <SSIS:Parameters />
+            </SSIS:PackageMetaData>
           </SSIS:PackageInfo>
         </SSIS:DeploymentInfo>
       </SSIS:Project>
@@ -173,6 +191,10 @@
     <ProjectItem>
       <Name>1_10_Connections.biml</Name>
       <FullPath>1_10_Connections.biml</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>1_20_StagingSchema.biml</Name>
+      <FullPath>1_20_StagingSchema.biml</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>1_40_Extract__Master.biml</Name>
@@ -191,16 +213,12 @@
       <FullPath>1_x_AuditVariables.biml</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>1_20_GenerateStagingSchema.biml</Name>
-      <FullPath>1_20_GenerateStagingSchema.biml</FullPath>
+      <Name>1_30_StagingModel.biml</Name>
+      <FullPath>1_30_StagingModel.biml</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>SaveBimlScript.xml</Name>
-      <FullPath>SaveBimlScript.xml</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>x_100_SaveBimlScript.biml</Name>
-      <FullPath>x_100_SaveBimlScript.biml</FullPath>
+      <Name>x_100_GenerateCompiledBiml.biml</Name>
+      <FullPath>x_100_GenerateCompiledBiml.biml</FullPath>
     </ProjectItem>
   </Miscellaneous>
   <Configurations>
