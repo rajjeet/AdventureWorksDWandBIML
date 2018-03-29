@@ -2,6 +2,11 @@
   <Connections>
     <OleDbConnection Name="OLEDB_Staging" CreateInProject="true" ConnectionString="Data Source=localhost;Integrated Security=SSPI;Initial Catalog=BimlDW;Provider=SQLNCLI11.1;" />
     <OleDbConnection Name="OLEDB_Source" CreateInProject="true" ConnectionString="Data Source=localhost;Integrated Security=SSPI;Initial Catalog=AdventureWorks2012;Provider=SQLNCLI11.1;" />
+    <FlatFileConnection Name="FFC stage_Product" FilePath="C:\Users\rajje\Documents\visual studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\errors\stage_Product.txt" FileFormat="FFF stage_Product" />
+    <FlatFileConnection Name="FFC stage_ProductCategory" FilePath="C:\Users\rajje\Documents\visual studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\errors\stage_ProductCategory.txt" FileFormat="FFF stage_ProductCategory" />
+    <FlatFileConnection Name="FFC stage_ProductSubcategory" FilePath="C:\Users\rajje\Documents\visual studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\errors\stage_ProductSubcategory.txt" FileFormat="FFF stage_ProductSubcategory" />
+    <FlatFileConnection Name="FFC stage_SalesOrderDetail" FilePath="C:\Users\rajje\Documents\visual studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\errors\stage_SalesOrderDetail.txt" FileFormat="FFF stage_SalesOrderDetail" />
+    <FlatFileConnection Name="FFC stage_SalesOrderHeader" FilePath="C:\Users\rajje\Documents\visual studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\errors\stage_SalesOrderHeader.txt" FileFormat="FFF stage_SalesOrderHeader" />
   </Connections>
   <Tables>
     <Table Name="Product" SchemaName="sourceDb.Production">
@@ -320,11 +325,12 @@ GO
         <Connection ConnectionName="OLEDB_Staging" />
       </Connections>
     </Package>
-    <Package Name="Extract__Master" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey">
+    <Package Name="Extract Production_Product" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey">
       <Variables>
+        <Variable Name="ParentAuditId" DataType="Int32" EvaluateAsExpression="true">@[$Package::ParentAuditId]</Variable>
         <Variable Name="AuditId" DataType="Int32">-1</Variable>
-        <Variable Name="TableSchemaName" DataType="String">-</Variable>
-        <Variable Name="TableName" DataType="String">Extract__Master.dtsx</Variable>
+        <Variable Name="TableSchemaName" DataType="String">Production</Variable>
+        <Variable Name="TableName" DataType="String">Product</Variable>
         <Variable Name="ExtractRowCnt" DataType="Int32">-1</Variable>
         <Variable Name="InsertRowCnt" DataType="Int32">-1</Variable>
         <Variable Name="UpdateRowCnt" DataType="Int32">-1</Variable>
@@ -335,12 +341,16 @@ GO
         <Variable Name="IsSuccessful" DataType="String">N</Variable>
       </Variables>
       <Tasks>
+        <ExecuteSQL Name="SQL Truncate stage_Product" ConnectionName="OLEDB_Staging">
+          <DirectInput>TRUNCATE TABLE [stage].[Product];</DirectInput>
+        </ExecuteSQL>
+        <Expression Name="EXP Set InitialTableRowCnt" Expression="@[User::InitialTableRowCnt] = 0" />
         <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
           <Results>
             <Result Name="0" VariableName="User.AuditId" />
           </Results>
           <Parameters>
-            <Parameter Name="@ParentAuditId" VariableName="ParentAuditId" DataType="Int32" />
+            <Parameter Name="@ParentAuditId" VariableName="User.ParentAuditId" DataType="Int32" />
             <Parameter Name="@ExecutionInstanceGUID" VariableName="System.ExecutionInstanceGUID" DataType="Guid" />
             <Parameter Name="@MachineName" VariableName="System.MachineName" DataType="String" />
             <Parameter Name="@PackageID" VariableName="System.PackageID" DataType="Guid" />
@@ -370,6 +380,30 @@ GO
                         
     </DirectInput>
         </ExecuteSQL>
+        <Dataflow Name="DFT Extract Production_Product to Staging">
+          <Transformations>
+            <OleDbSource Name="OLEDBSRC Production_Product" ConnectionName="OLEDB_Source">
+              <ExternalTableInput Table="[Production].[Product]" />
+            </OleDbSource>
+            <RowCount Name="RC Extract" VariableName="User.ExtractRowCnt" />
+            <OleDbDestination Name="OLEDBDEST stage_Product" ConnectionName="OLEDB_Staging">
+              <ErrorHandling ErrorRowDisposition="RedirectRow" TruncationRowDisposition="RedirectRow" />
+              <ExternalTableOutput Table="[stage].[Product]" />
+            </OleDbDestination>
+            <RowCount Name="RC Error" VariableName="User.ErrorRowCnt">
+              <InputPath OutputPathName="OLEDBDEST stage_Product.Error" />
+            </RowCount>
+            <FlatFileDestination Name="FF Errors stage_Product" ConnectionName="FFC stage_Product">
+              <InputPath OutputPathName="RC Error.Output" />
+            </FlatFileDestination>
+          </Transformations>
+        </Dataflow>
+        <ExecuteSQL Name="SQL Count stage_Product" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+          <Results>
+            <Result Name="0" VariableName="User.FinalTableRowCnt" />
+          </Results>
+          <DirectInput>SELECT COUNT(*) FROM [stage].[Product];</DirectInput>
+        </ExecuteSQL>
         <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_Staging">
           <Parameters>
             <Parameter Name="@AuditId" VariableName="User.AuditId" DataType="Int32" />
@@ -387,7 +421,415 @@ GO
         </ExecuteSQL>
       </Tasks>
       <Connections>
-        <Connection ConnectionName="OLEDB_Staging" />
+        <Connection ConnectionName="FFC stage_Product" />
+      </Connections>
+      <Parameters>
+        <Parameter Name="ParentAuditId" DataType="Int32">-1</Parameter>
+      </Parameters>
+    </Package>
+    <Package Name="Extract Production_ProductCategory" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey">
+      <Variables>
+        <Variable Name="ParentAuditId" DataType="Int32" EvaluateAsExpression="true">@[$Package::ParentAuditId]</Variable>
+        <Variable Name="AuditId" DataType="Int32">-1</Variable>
+        <Variable Name="TableSchemaName" DataType="String">Production</Variable>
+        <Variable Name="TableName" DataType="String">ProductCategory</Variable>
+        <Variable Name="ExtractRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="InsertRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="UpdateRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="ErrorRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="InitialTableRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="FinalTableRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="TableMaxDateTime" DataType="DateTime">1900-01-01</Variable>
+        <Variable Name="IsSuccessful" DataType="String">N</Variable>
+      </Variables>
+      <Tasks>
+        <ExecuteSQL Name="SQL Truncate stage_ProductCategory" ConnectionName="OLEDB_Staging">
+          <DirectInput>TRUNCATE TABLE [stage].[ProductCategory];</DirectInput>
+        </ExecuteSQL>
+        <Expression Name="EXP Set InitialTableRowCnt" Expression="@[User::InitialTableRowCnt] = 0" />
+        <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+          <Results>
+            <Result Name="0" VariableName="User.AuditId" />
+          </Results>
+          <Parameters>
+            <Parameter Name="@ParentAuditId" VariableName="User.ParentAuditId" DataType="Int32" />
+            <Parameter Name="@ExecutionInstanceGUID" VariableName="System.ExecutionInstanceGUID" DataType="Guid" />
+            <Parameter Name="@MachineName" VariableName="System.MachineName" DataType="String" />
+            <Parameter Name="@PackageID" VariableName="System.PackageID" DataType="Guid" />
+            <Parameter Name="@ServerExecutionId" VariableName="System.ServerExecutionID" DataType="String" />
+            <Parameter Name="@StartTime" VariableName="System.StartTime" DataType="DateTime" />
+            <Parameter Name="@UserName" VariableName="System.UserName" DataType="String" />
+            <Parameter Name="@VersionBuild" VariableName="System.VersionBuild" DataType="Int16" />
+            <Parameter Name="@VersionGUID" VariableName="System.VersionGUID" DataType="Guid" />
+            <Parameter Name="@VersionMajor" VariableName="System.VersionMajor" DataType="Int32" />
+            <Parameter Name="@VersionMinor" VariableName="System.VersionMinor" DataType="Int32" />
+            <Parameter Name="@TableSchemaName" VariableName="User.TableSchemaName" DataType="String" />
+            <Parameter Name="@TableName" VariableName="User.TableName" DataType="String" />
+            <Parameter Name="@ExtractRowCnt" VariableName="User.ExtractRowCnt" DataType="Int32" />
+            <Parameter Name="@InsertRowCnt" VariableName="User.InsertRowCnt" DataType="Int32" />
+            <Parameter Name="@UpdateRowCnt" VariableName="User.UpdateRowCnt" DataType="Int32" />
+            <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
+            <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
+            <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
+            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
+            <Parameter Name="@IsSuccessful" VariableName="User.IsSuccessful" DataType="String" />
+          </Parameters>
+          <DirectInput>
+        exec dbo.spIns_Audit ?, ?, ?, ?, ?,
+                             ?, ?, ?, ?, ?,
+                             ?, ?, ?, ?, ?,
+                             ?, ?, ?, ?, ?, ?
+                        
+    </DirectInput>
+        </ExecuteSQL>
+        <Dataflow Name="DFT Extract Production_ProductCategory to Staging">
+          <Transformations>
+            <OleDbSource Name="OLEDBSRC Production_ProductCategory" ConnectionName="OLEDB_Source">
+              <ExternalTableInput Table="[Production].[ProductCategory]" />
+            </OleDbSource>
+            <RowCount Name="RC Extract" VariableName="User.ExtractRowCnt" />
+            <OleDbDestination Name="OLEDBDEST stage_ProductCategory" ConnectionName="OLEDB_Staging">
+              <ErrorHandling ErrorRowDisposition="RedirectRow" TruncationRowDisposition="RedirectRow" />
+              <ExternalTableOutput Table="[stage].[ProductCategory]" />
+            </OleDbDestination>
+            <RowCount Name="RC Error" VariableName="User.ErrorRowCnt">
+              <InputPath OutputPathName="OLEDBDEST stage_ProductCategory.Error" />
+            </RowCount>
+            <FlatFileDestination Name="FF Errors stage_ProductCategory" ConnectionName="FFC stage_ProductCategory">
+              <InputPath OutputPathName="RC Error.Output" />
+            </FlatFileDestination>
+          </Transformations>
+        </Dataflow>
+        <ExecuteSQL Name="SQL Count stage_ProductCategory" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+          <Results>
+            <Result Name="0" VariableName="User.FinalTableRowCnt" />
+          </Results>
+          <DirectInput>SELECT COUNT(*) FROM [stage].[ProductCategory];</DirectInput>
+        </ExecuteSQL>
+        <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_Staging">
+          <Parameters>
+            <Parameter Name="@AuditId" VariableName="User.AuditId" DataType="Int32" />
+            <Parameter Name="@ExtractRowCnt" VariableName="User.ExtractRowCnt" DataType="Int32" />
+            <Parameter Name="@InsertRowCnt" VariableName="User.InsertRowCnt" DataType="Int32" />
+            <Parameter Name="@UpdateRowCnt" VariableName="User.UpdateRowCnt" DataType="Int32" />
+            <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
+            <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
+            <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
+            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
+          </Parameters>
+          <DirectInput>
+        exec spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+    </DirectInput>
+        </ExecuteSQL>
+      </Tasks>
+      <Connections>
+        <Connection ConnectionName="FFC stage_ProductCategory" />
+      </Connections>
+      <Parameters>
+        <Parameter Name="ParentAuditId" DataType="Int32">-1</Parameter>
+      </Parameters>
+    </Package>
+    <Package Name="Extract Production_ProductSubcategory" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey">
+      <Variables>
+        <Variable Name="ParentAuditId" DataType="Int32" EvaluateAsExpression="true">@[$Package::ParentAuditId]</Variable>
+        <Variable Name="AuditId" DataType="Int32">-1</Variable>
+        <Variable Name="TableSchemaName" DataType="String">Production</Variable>
+        <Variable Name="TableName" DataType="String">ProductSubcategory</Variable>
+        <Variable Name="ExtractRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="InsertRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="UpdateRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="ErrorRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="InitialTableRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="FinalTableRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="TableMaxDateTime" DataType="DateTime">1900-01-01</Variable>
+        <Variable Name="IsSuccessful" DataType="String">N</Variable>
+      </Variables>
+      <Tasks>
+        <ExecuteSQL Name="SQL Truncate stage_ProductSubcategory" ConnectionName="OLEDB_Staging">
+          <DirectInput>TRUNCATE TABLE [stage].[ProductSubcategory];</DirectInput>
+        </ExecuteSQL>
+        <Expression Name="EXP Set InitialTableRowCnt" Expression="@[User::InitialTableRowCnt] = 0" />
+        <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+          <Results>
+            <Result Name="0" VariableName="User.AuditId" />
+          </Results>
+          <Parameters>
+            <Parameter Name="@ParentAuditId" VariableName="User.ParentAuditId" DataType="Int32" />
+            <Parameter Name="@ExecutionInstanceGUID" VariableName="System.ExecutionInstanceGUID" DataType="Guid" />
+            <Parameter Name="@MachineName" VariableName="System.MachineName" DataType="String" />
+            <Parameter Name="@PackageID" VariableName="System.PackageID" DataType="Guid" />
+            <Parameter Name="@ServerExecutionId" VariableName="System.ServerExecutionID" DataType="String" />
+            <Parameter Name="@StartTime" VariableName="System.StartTime" DataType="DateTime" />
+            <Parameter Name="@UserName" VariableName="System.UserName" DataType="String" />
+            <Parameter Name="@VersionBuild" VariableName="System.VersionBuild" DataType="Int16" />
+            <Parameter Name="@VersionGUID" VariableName="System.VersionGUID" DataType="Guid" />
+            <Parameter Name="@VersionMajor" VariableName="System.VersionMajor" DataType="Int32" />
+            <Parameter Name="@VersionMinor" VariableName="System.VersionMinor" DataType="Int32" />
+            <Parameter Name="@TableSchemaName" VariableName="User.TableSchemaName" DataType="String" />
+            <Parameter Name="@TableName" VariableName="User.TableName" DataType="String" />
+            <Parameter Name="@ExtractRowCnt" VariableName="User.ExtractRowCnt" DataType="Int32" />
+            <Parameter Name="@InsertRowCnt" VariableName="User.InsertRowCnt" DataType="Int32" />
+            <Parameter Name="@UpdateRowCnt" VariableName="User.UpdateRowCnt" DataType="Int32" />
+            <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
+            <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
+            <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
+            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
+            <Parameter Name="@IsSuccessful" VariableName="User.IsSuccessful" DataType="String" />
+          </Parameters>
+          <DirectInput>
+        exec dbo.spIns_Audit ?, ?, ?, ?, ?,
+                             ?, ?, ?, ?, ?,
+                             ?, ?, ?, ?, ?,
+                             ?, ?, ?, ?, ?, ?
+                        
+    </DirectInput>
+        </ExecuteSQL>
+        <Dataflow Name="DFT Extract Production_ProductSubcategory to Staging">
+          <Transformations>
+            <OleDbSource Name="OLEDBSRC Production_ProductSubcategory" ConnectionName="OLEDB_Source">
+              <ExternalTableInput Table="[Production].[ProductSubcategory]" />
+            </OleDbSource>
+            <RowCount Name="RC Extract" VariableName="User.ExtractRowCnt" />
+            <OleDbDestination Name="OLEDBDEST stage_ProductSubcategory" ConnectionName="OLEDB_Staging">
+              <ErrorHandling ErrorRowDisposition="RedirectRow" TruncationRowDisposition="RedirectRow" />
+              <ExternalTableOutput Table="[stage].[ProductSubcategory]" />
+            </OleDbDestination>
+            <RowCount Name="RC Error" VariableName="User.ErrorRowCnt">
+              <InputPath OutputPathName="OLEDBDEST stage_ProductSubcategory.Error" />
+            </RowCount>
+            <FlatFileDestination Name="FF Errors stage_ProductSubcategory" ConnectionName="FFC stage_ProductSubcategory">
+              <InputPath OutputPathName="RC Error.Output" />
+            </FlatFileDestination>
+          </Transformations>
+        </Dataflow>
+        <ExecuteSQL Name="SQL Count stage_ProductSubcategory" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+          <Results>
+            <Result Name="0" VariableName="User.FinalTableRowCnt" />
+          </Results>
+          <DirectInput>SELECT COUNT(*) FROM [stage].[ProductSubcategory];</DirectInput>
+        </ExecuteSQL>
+        <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_Staging">
+          <Parameters>
+            <Parameter Name="@AuditId" VariableName="User.AuditId" DataType="Int32" />
+            <Parameter Name="@ExtractRowCnt" VariableName="User.ExtractRowCnt" DataType="Int32" />
+            <Parameter Name="@InsertRowCnt" VariableName="User.InsertRowCnt" DataType="Int32" />
+            <Parameter Name="@UpdateRowCnt" VariableName="User.UpdateRowCnt" DataType="Int32" />
+            <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
+            <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
+            <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
+            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
+          </Parameters>
+          <DirectInput>
+        exec spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+    </DirectInput>
+        </ExecuteSQL>
+      </Tasks>
+      <Connections>
+        <Connection ConnectionName="FFC stage_ProductSubcategory" />
+      </Connections>
+      <Parameters>
+        <Parameter Name="ParentAuditId" DataType="Int32">-1</Parameter>
+      </Parameters>
+    </Package>
+    <Package Name="Extract Sales_SalesOrderDetail" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey">
+      <Variables>
+        <Variable Name="ParentAuditId" DataType="Int32" EvaluateAsExpression="true">@[$Package::ParentAuditId]</Variable>
+        <Variable Name="AuditId" DataType="Int32">-1</Variable>
+        <Variable Name="TableSchemaName" DataType="String">Sales</Variable>
+        <Variable Name="TableName" DataType="String">SalesOrderDetail</Variable>
+        <Variable Name="ExtractRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="InsertRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="UpdateRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="ErrorRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="InitialTableRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="FinalTableRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="TableMaxDateTime" DataType="DateTime">1900-01-01</Variable>
+        <Variable Name="IsSuccessful" DataType="String">N</Variable>
+      </Variables>
+      <Tasks>
+        <ExecuteSQL Name="SQL Truncate stage_SalesOrderDetail" ConnectionName="OLEDB_Staging">
+          <DirectInput>TRUNCATE TABLE [stage].[SalesOrderDetail];</DirectInput>
+        </ExecuteSQL>
+        <Expression Name="EXP Set InitialTableRowCnt" Expression="@[User::InitialTableRowCnt] = 0" />
+        <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+          <Results>
+            <Result Name="0" VariableName="User.AuditId" />
+          </Results>
+          <Parameters>
+            <Parameter Name="@ParentAuditId" VariableName="User.ParentAuditId" DataType="Int32" />
+            <Parameter Name="@ExecutionInstanceGUID" VariableName="System.ExecutionInstanceGUID" DataType="Guid" />
+            <Parameter Name="@MachineName" VariableName="System.MachineName" DataType="String" />
+            <Parameter Name="@PackageID" VariableName="System.PackageID" DataType="Guid" />
+            <Parameter Name="@ServerExecutionId" VariableName="System.ServerExecutionID" DataType="String" />
+            <Parameter Name="@StartTime" VariableName="System.StartTime" DataType="DateTime" />
+            <Parameter Name="@UserName" VariableName="System.UserName" DataType="String" />
+            <Parameter Name="@VersionBuild" VariableName="System.VersionBuild" DataType="Int16" />
+            <Parameter Name="@VersionGUID" VariableName="System.VersionGUID" DataType="Guid" />
+            <Parameter Name="@VersionMajor" VariableName="System.VersionMajor" DataType="Int32" />
+            <Parameter Name="@VersionMinor" VariableName="System.VersionMinor" DataType="Int32" />
+            <Parameter Name="@TableSchemaName" VariableName="User.TableSchemaName" DataType="String" />
+            <Parameter Name="@TableName" VariableName="User.TableName" DataType="String" />
+            <Parameter Name="@ExtractRowCnt" VariableName="User.ExtractRowCnt" DataType="Int32" />
+            <Parameter Name="@InsertRowCnt" VariableName="User.InsertRowCnt" DataType="Int32" />
+            <Parameter Name="@UpdateRowCnt" VariableName="User.UpdateRowCnt" DataType="Int32" />
+            <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
+            <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
+            <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
+            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
+            <Parameter Name="@IsSuccessful" VariableName="User.IsSuccessful" DataType="String" />
+          </Parameters>
+          <DirectInput>
+        exec dbo.spIns_Audit ?, ?, ?, ?, ?,
+                             ?, ?, ?, ?, ?,
+                             ?, ?, ?, ?, ?,
+                             ?, ?, ?, ?, ?, ?
+                        
+    </DirectInput>
+        </ExecuteSQL>
+        <Dataflow Name="DFT Extract Sales_SalesOrderDetail to Staging">
+          <Transformations>
+            <OleDbSource Name="OLEDBSRC Sales_SalesOrderDetail" ConnectionName="OLEDB_Source">
+              <ExternalTableInput Table="[Sales].[SalesOrderDetail]" />
+            </OleDbSource>
+            <RowCount Name="RC Extract" VariableName="User.ExtractRowCnt" />
+            <OleDbDestination Name="OLEDBDEST stage_SalesOrderDetail" ConnectionName="OLEDB_Staging">
+              <ErrorHandling ErrorRowDisposition="RedirectRow" TruncationRowDisposition="RedirectRow" />
+              <ExternalTableOutput Table="[stage].[SalesOrderDetail]" />
+            </OleDbDestination>
+            <RowCount Name="RC Error" VariableName="User.ErrorRowCnt">
+              <InputPath OutputPathName="OLEDBDEST stage_SalesOrderDetail.Error" />
+            </RowCount>
+            <FlatFileDestination Name="FF Errors stage_SalesOrderDetail" ConnectionName="FFC stage_SalesOrderDetail">
+              <InputPath OutputPathName="RC Error.Output" />
+            </FlatFileDestination>
+          </Transformations>
+        </Dataflow>
+        <ExecuteSQL Name="SQL Count stage_SalesOrderDetail" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+          <Results>
+            <Result Name="0" VariableName="User.FinalTableRowCnt" />
+          </Results>
+          <DirectInput>SELECT COUNT(*) FROM [stage].[SalesOrderDetail];</DirectInput>
+        </ExecuteSQL>
+        <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_Staging">
+          <Parameters>
+            <Parameter Name="@AuditId" VariableName="User.AuditId" DataType="Int32" />
+            <Parameter Name="@ExtractRowCnt" VariableName="User.ExtractRowCnt" DataType="Int32" />
+            <Parameter Name="@InsertRowCnt" VariableName="User.InsertRowCnt" DataType="Int32" />
+            <Parameter Name="@UpdateRowCnt" VariableName="User.UpdateRowCnt" DataType="Int32" />
+            <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
+            <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
+            <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
+            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
+          </Parameters>
+          <DirectInput>
+        exec spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+    </DirectInput>
+        </ExecuteSQL>
+      </Tasks>
+      <Connections>
+        <Connection ConnectionName="FFC stage_SalesOrderDetail" />
+      </Connections>
+      <Parameters>
+        <Parameter Name="ParentAuditId" DataType="Int32">-1</Parameter>
+      </Parameters>
+    </Package>
+    <Package Name="Extract Sales_SalesOrderHeader" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey">
+      <Variables>
+        <Variable Name="ParentAuditId" DataType="Int32" EvaluateAsExpression="true">@[$Package::ParentAuditId]</Variable>
+        <Variable Name="AuditId" DataType="Int32">-1</Variable>
+        <Variable Name="TableSchemaName" DataType="String">Sales</Variable>
+        <Variable Name="TableName" DataType="String">SalesOrderHeader</Variable>
+        <Variable Name="ExtractRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="InsertRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="UpdateRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="ErrorRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="InitialTableRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="FinalTableRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="TableMaxDateTime" DataType="DateTime">1900-01-01</Variable>
+        <Variable Name="IsSuccessful" DataType="String">N</Variable>
+      </Variables>
+      <Tasks>
+        <ExecuteSQL Name="SQL Truncate stage_SalesOrderHeader" ConnectionName="OLEDB_Staging">
+          <DirectInput>TRUNCATE TABLE [stage].[SalesOrderHeader];</DirectInput>
+        </ExecuteSQL>
+        <Expression Name="EXP Set InitialTableRowCnt" Expression="@[User::InitialTableRowCnt] = 0" />
+        <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+          <Results>
+            <Result Name="0" VariableName="User.AuditId" />
+          </Results>
+          <Parameters>
+            <Parameter Name="@ParentAuditId" VariableName="User.ParentAuditId" DataType="Int32" />
+            <Parameter Name="@ExecutionInstanceGUID" VariableName="System.ExecutionInstanceGUID" DataType="Guid" />
+            <Parameter Name="@MachineName" VariableName="System.MachineName" DataType="String" />
+            <Parameter Name="@PackageID" VariableName="System.PackageID" DataType="Guid" />
+            <Parameter Name="@ServerExecutionId" VariableName="System.ServerExecutionID" DataType="String" />
+            <Parameter Name="@StartTime" VariableName="System.StartTime" DataType="DateTime" />
+            <Parameter Name="@UserName" VariableName="System.UserName" DataType="String" />
+            <Parameter Name="@VersionBuild" VariableName="System.VersionBuild" DataType="Int16" />
+            <Parameter Name="@VersionGUID" VariableName="System.VersionGUID" DataType="Guid" />
+            <Parameter Name="@VersionMajor" VariableName="System.VersionMajor" DataType="Int32" />
+            <Parameter Name="@VersionMinor" VariableName="System.VersionMinor" DataType="Int32" />
+            <Parameter Name="@TableSchemaName" VariableName="User.TableSchemaName" DataType="String" />
+            <Parameter Name="@TableName" VariableName="User.TableName" DataType="String" />
+            <Parameter Name="@ExtractRowCnt" VariableName="User.ExtractRowCnt" DataType="Int32" />
+            <Parameter Name="@InsertRowCnt" VariableName="User.InsertRowCnt" DataType="Int32" />
+            <Parameter Name="@UpdateRowCnt" VariableName="User.UpdateRowCnt" DataType="Int32" />
+            <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
+            <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
+            <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
+            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
+            <Parameter Name="@IsSuccessful" VariableName="User.IsSuccessful" DataType="String" />
+          </Parameters>
+          <DirectInput>
+        exec dbo.spIns_Audit ?, ?, ?, ?, ?,
+                             ?, ?, ?, ?, ?,
+                             ?, ?, ?, ?, ?,
+                             ?, ?, ?, ?, ?, ?
+                        
+    </DirectInput>
+        </ExecuteSQL>
+        <Dataflow Name="DFT Extract Sales_SalesOrderHeader to Staging">
+          <Transformations>
+            <OleDbSource Name="OLEDBSRC Sales_SalesOrderHeader" ConnectionName="OLEDB_Source">
+              <ExternalTableInput Table="[Sales].[SalesOrderHeader]" />
+            </OleDbSource>
+            <RowCount Name="RC Extract" VariableName="User.ExtractRowCnt" />
+            <OleDbDestination Name="OLEDBDEST stage_SalesOrderHeader" ConnectionName="OLEDB_Staging">
+              <ErrorHandling ErrorRowDisposition="RedirectRow" TruncationRowDisposition="RedirectRow" />
+              <ExternalTableOutput Table="[stage].[SalesOrderHeader]" />
+            </OleDbDestination>
+            <RowCount Name="RC Error" VariableName="User.ErrorRowCnt">
+              <InputPath OutputPathName="OLEDBDEST stage_SalesOrderHeader.Error" />
+            </RowCount>
+            <FlatFileDestination Name="FF Errors stage_SalesOrderHeader" ConnectionName="FFC stage_SalesOrderHeader">
+              <InputPath OutputPathName="RC Error.Output" />
+            </FlatFileDestination>
+          </Transformations>
+        </Dataflow>
+        <ExecuteSQL Name="SQL Count stage_SalesOrderHeader" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+          <Results>
+            <Result Name="0" VariableName="User.FinalTableRowCnt" />
+          </Results>
+          <DirectInput>SELECT COUNT(*) FROM [stage].[SalesOrderHeader];</DirectInput>
+        </ExecuteSQL>
+        <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_Staging">
+          <Parameters>
+            <Parameter Name="@AuditId" VariableName="User.AuditId" DataType="Int32" />
+            <Parameter Name="@ExtractRowCnt" VariableName="User.ExtractRowCnt" DataType="Int32" />
+            <Parameter Name="@InsertRowCnt" VariableName="User.InsertRowCnt" DataType="Int32" />
+            <Parameter Name="@UpdateRowCnt" VariableName="User.UpdateRowCnt" DataType="Int32" />
+            <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
+            <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
+            <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
+            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
+          </Parameters>
+          <DirectInput>
+        exec spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+    </DirectInput>
+        </ExecuteSQL>
+      </Tasks>
+      <Connections>
+        <Connection ConnectionName="FFC stage_SalesOrderHeader" />
       </Connections>
       <Parameters>
         <Parameter Name="ParentAuditId" DataType="Int32">-1</Parameter>
@@ -399,6 +841,109 @@ GO
     <Schema Name="Sales" DatabaseName="sourceDb" />
     <Schema Name="stage" DatabaseName="stagingDb" />
   </Schemas>
+  <FileFormats>
+    <FlatFileFormat Name="FFF stage_Product">
+      <Columns>
+        <Column Name="ProductID" Delimiter="," />
+        <Column Name="Name" Length="50" DataType="String" Delimiter="," />
+        <Column Name="ProductNumber" Length="25" DataType="String" Delimiter="," />
+        <Column Name="MakeFlag" DataType="Boolean" Delimiter="," />
+        <Column Name="FinishedGoodsFlag" DataType="Boolean" Delimiter="," />
+        <Column Name="Color" Length="15" DataType="String" Delimiter="," />
+        <Column Name="SafetyStockLevel" DataType="Int16" Delimiter="," />
+        <Column Name="ReorderPoint" DataType="Int16" Delimiter="," />
+        <Column Name="StandardCost" DataType="Currency" Delimiter="," />
+        <Column Name="ListPrice" DataType="Currency" Delimiter="," />
+        <Column Name="Size" Length="5" DataType="String" Delimiter="," />
+        <Column Name="SizeUnitMeasureCode" Length="3" DataType="StringFixedLength" Delimiter="," />
+        <Column Name="WeightUnitMeasureCode" Length="3" DataType="StringFixedLength" Delimiter="," />
+        <Column Name="Weight" DataType="Decimal" Delimiter="," />
+        <Column Name="DaysToManufacture" Delimiter="," />
+        <Column Name="ProductLine" Length="2" DataType="StringFixedLength" Delimiter="," />
+        <Column Name="Class" Length="2" DataType="StringFixedLength" Delimiter="," />
+        <Column Name="Style" Length="2" DataType="StringFixedLength" Delimiter="," />
+        <Column Name="ProductSubcategoryID" Delimiter="," />
+        <Column Name="ProductModelID" Delimiter="," />
+        <Column Name="SellStartDate" DataType="DateTime" Delimiter="," />
+        <Column Name="SellEndDate" DataType="DateTime" Delimiter="," />
+        <Column Name="DiscontinuedDate" DataType="DateTime" Delimiter="," />
+        <Column Name="rowguid" DataType="Guid" Delimiter="," />
+        <Column Name="ModifiedDate" DataType="DateTime" Delimiter="," />
+        <Column Name="ErrorCode" Delimiter="," />
+        <Column Name="ErrorColumn" Delimiter="CRLF" />
+      </Columns>
+    </FlatFileFormat>
+    <FlatFileFormat Name="FFF stage_ProductCategory">
+      <Columns>
+        <Column Name="ProductCategoryID" Delimiter="," />
+        <Column Name="Name" Length="50" DataType="String" Delimiter="," />
+        <Column Name="rowguid" DataType="Guid" Delimiter="," />
+        <Column Name="ModifiedDate" DataType="DateTime" Delimiter="," />
+        <Column Name="ErrorCode" Delimiter="," />
+        <Column Name="ErrorColumn" Delimiter="CRLF" />
+      </Columns>
+    </FlatFileFormat>
+    <FlatFileFormat Name="FFF stage_ProductSubcategory">
+      <Columns>
+        <Column Name="ProductSubcategoryID" Delimiter="," />
+        <Column Name="ProductCategoryID" Delimiter="," />
+        <Column Name="Name" Length="50" DataType="String" Delimiter="," />
+        <Column Name="rowguid" DataType="Guid" Delimiter="," />
+        <Column Name="ModifiedDate" DataType="DateTime" Delimiter="," />
+        <Column Name="ErrorCode" Delimiter="," />
+        <Column Name="ErrorColumn" Delimiter="CRLF" />
+      </Columns>
+    </FlatFileFormat>
+    <FlatFileFormat Name="FFF stage_SalesOrderDetail">
+      <Columns>
+        <Column Name="SalesOrderID" Delimiter="," />
+        <Column Name="SalesOrderDetailID" Delimiter="," />
+        <Column Name="CarrierTrackingNumber" Length="25" DataType="String" Delimiter="," />
+        <Column Name="OrderQty" DataType="Int16" Delimiter="," />
+        <Column Name="ProductID" Delimiter="," />
+        <Column Name="SpecialOfferID" Delimiter="," />
+        <Column Name="UnitPrice" DataType="Currency" Delimiter="," />
+        <Column Name="UnitPriceDiscount" DataType="Currency" Delimiter="," />
+        <Column Name="LineTotal" DataType="Decimal" Delimiter="," />
+        <Column Name="rowguid" DataType="Guid" Delimiter="," />
+        <Column Name="ModifiedDate" DataType="DateTime" Delimiter="," />
+        <Column Name="ErrorCode" Delimiter="," />
+        <Column Name="ErrorColumn" Delimiter="CRLF" />
+      </Columns>
+    </FlatFileFormat>
+    <FlatFileFormat Name="FFF stage_SalesOrderHeader">
+      <Columns>
+        <Column Name="SalesOrderID" Delimiter="," />
+        <Column Name="RevisionNumber" DataType="Byte" Delimiter="," />
+        <Column Name="OrderDate" DataType="DateTime" Delimiter="," />
+        <Column Name="DueDate" DataType="DateTime" Delimiter="," />
+        <Column Name="ShipDate" DataType="DateTime" Delimiter="," />
+        <Column Name="Status" DataType="Byte" Delimiter="," />
+        <Column Name="OnlineOrderFlag" DataType="Boolean" Delimiter="," />
+        <Column Name="SalesOrderNumber" Length="25" DataType="String" Delimiter="," />
+        <Column Name="PurchaseOrderNumber" Length="25" DataType="String" Delimiter="," />
+        <Column Name="AccountNumber" Length="15" DataType="String" Delimiter="," />
+        <Column Name="CustomerID" Delimiter="," />
+        <Column Name="SalesPersonID" Delimiter="," />
+        <Column Name="TerritoryID" Delimiter="," />
+        <Column Name="BillToAddressID" Delimiter="," />
+        <Column Name="ShipToAddressID" Delimiter="," />
+        <Column Name="ShipMethodID" Delimiter="," />
+        <Column Name="CreditCardID" Delimiter="," />
+        <Column Name="CreditCardApprovalCode" Length="15" DataType="AnsiString" Delimiter="," />
+        <Column Name="CurrencyRateID" Delimiter="," />
+        <Column Name="SubTotal" DataType="Currency" Delimiter="," />
+        <Column Name="TaxAmt" DataType="Currency" Delimiter="," />
+        <Column Name="Freight" DataType="Currency" Delimiter="," />
+        <Column Name="TotalDue" DataType="Currency" Delimiter="," />
+        <Column Name="Comment" Length="128" DataType="String" Delimiter="," />
+        <Column Name="rowguid" DataType="Guid" Delimiter="," />
+        <Column Name="ModifiedDate" DataType="DateTime" Delimiter="," />
+        <Column Name="ErrorCode" Delimiter="," />
+        <Column Name="ErrorColumn" Delimiter="CRLF" />
+      </Columns>
+    </FlatFileFormat>
+  </FileFormats>
   <Databases>
     <Database Name="sourceDb" ConnectionName="OLEDB_Source" />
     <Database Name="stagingDb" ConnectionName="OLEDB_Staging" />

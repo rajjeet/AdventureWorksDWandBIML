@@ -6,6 +6,9 @@
         <Package Name="Extract <#=table.Schema.Name#>_<#=table.Name#>" 
                     ProtectionLevel="EncryptSensitiveWithUserKey"
                     ConstraintMode="Linear">
+            <Connections>
+                <Connection ConnectionName="FFC <#=stagingSchemaName#>_<#=table.Name#>" />
+            </Connections>
             <Parameters>
                 <Parameter Name="ParentAuditId" DataType="Int32">-1</Parameter>
             </Parameters>
@@ -34,6 +37,10 @@
                     <RowCount Name="RC Error" VariableName="User.ErrorRowCnt"> 
                         <InputPath OutputPathName="OLEDBDEST <#=stagingSchemaName#>_<#=table.Name#>.Error" />
                     </RowCount>
+                    <FlatFileDestination Name="FF Errors <#=stagingSchemaName#>_<#=table.Name#>" 
+                                        ConnectionName="FFC <#=stagingSchemaName#>_<#=table.Name#>">
+                        <InputPath OutputPathName="RC Error.Output" />
+                    </FlatFileDestination>
                     </Transformations>
                 </Dataflow>
                 <ExecuteSQL Name="SQL Count <#=stagingSchemaName#>_<#=table.Name#>" 
