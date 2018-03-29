@@ -42,12 +42,12 @@
                 <Annotations>
                     <Annotation AnnotationType="Tag" Tag="SourceQuery">
                         SELECT <#=table.GetColumnList("", "[", "]")#>
-                        FROM <#=table.SchemaQualifiedName#>;
+                        FROM <#=table.SchemaQualifiedName#>
                     </Annotation>
                     <Annotation AnnotationType="Tag" Tag="Type">Staging</Annotation>
                     <# if (incrementalTables.Contains(table.Name)) { #>
                     <Annotation AnnotationType="Tag" Tag="IsIncremental">1</Annotation>
-                    <Annotation AnnotationType="Tag" Tag="IncrementColumn">Modified</Annotation>
+                    <Annotation AnnotationType="Tag" Tag="IncrementColumn">ModifiedDate</Annotation>
                     <# } #>
                 </Annotations>
             </Table>

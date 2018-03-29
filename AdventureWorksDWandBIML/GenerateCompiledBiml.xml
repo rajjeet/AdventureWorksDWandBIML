@@ -13,7 +13,7 @@
       <Annotations>
         <Annotation Tag="SourceQuery">
                         SELECT [ProductID], [Name], [ProductNumber], [MakeFlag], [FinishedGoodsFlag], [Color], [SafetyStockLevel], [ReorderPoint], [StandardCost], [ListPrice], [Size], [SizeUnitMeasureCode], [WeightUnitMeasureCode], [Weight], [DaysToManufacture], [ProductLine], [Class], [Style], [ProductSubcategoryID], [ProductModelID], [SellStartDate], [SellEndDate], [DiscontinuedDate], [rowguid], [ModifiedDate]
-                        FROM [Production].[Product];
+                        FROM [Production].[Product]
                     </Annotation>
         <Annotation Tag="Type">Staging</Annotation>
       </Annotations>
@@ -49,7 +49,7 @@
       <Annotations>
         <Annotation Tag="SourceQuery">
                         SELECT [ProductCategoryID], [Name], [rowguid], [ModifiedDate]
-                        FROM [Production].[ProductCategory];
+                        FROM [Production].[ProductCategory]
                     </Annotation>
         <Annotation Tag="Type">Staging</Annotation>
       </Annotations>
@@ -64,7 +64,7 @@
       <Annotations>
         <Annotation Tag="SourceQuery">
                         SELECT [ProductSubcategoryID], [ProductCategoryID], [Name], [rowguid], [ModifiedDate]
-                        FROM [Production].[ProductSubcategory];
+                        FROM [Production].[ProductSubcategory]
                     </Annotation>
         <Annotation Tag="Type">Staging</Annotation>
       </Annotations>
@@ -80,11 +80,11 @@
       <Annotations>
         <Annotation Tag="SourceQuery">
                         SELECT [SalesOrderID], [SalesOrderDetailID], [CarrierTrackingNumber], [OrderQty], [ProductID], [SpecialOfferID], [UnitPrice], [UnitPriceDiscount], [LineTotal], [rowguid], [ModifiedDate]
-                        FROM [Sales].[SalesOrderDetail];
+                        FROM [Sales].[SalesOrderDetail]
                     </Annotation>
         <Annotation Tag="Type">Staging</Annotation>
         <Annotation Tag="IsIncremental">1</Annotation>
-        <Annotation Tag="IncrementColumn">Modified</Annotation>
+        <Annotation Tag="IncrementColumn">ModifiedDate</Annotation>
       </Annotations>
       <Columns>
         <Column Name="SalesOrderID" />
@@ -104,11 +104,11 @@
       <Annotations>
         <Annotation Tag="SourceQuery">
                         SELECT [SalesOrderID], [RevisionNumber], [OrderDate], [DueDate], [ShipDate], [Status], [OnlineOrderFlag], [SalesOrderNumber], [PurchaseOrderNumber], [AccountNumber], [CustomerID], [SalesPersonID], [TerritoryID], [BillToAddressID], [ShipToAddressID], [ShipMethodID], [CreditCardID], [CreditCardApprovalCode], [CurrencyRateID], [SubTotal], [TaxAmt], [Freight], [TotalDue], [Comment], [rowguid], [ModifiedDate]
-                        FROM [Sales].[SalesOrderHeader];
+                        FROM [Sales].[SalesOrderHeader]
                     </Annotation>
         <Annotation Tag="Type">Staging</Annotation>
         <Annotation Tag="IsIncremental">1</Annotation>
-        <Annotation Tag="IncrementColumn">Modified</Annotation>
+        <Annotation Tag="IncrementColumn">ModifiedDate</Annotation>
       </Annotations>
       <Columns>
         <Column Name="SalesOrderID" />
@@ -372,7 +372,7 @@ GO
         <Variable Name="TableName" DataType="String">Product</Variable>
         <Variable Name="SourceQuery" DataType="String">
                         SELECT [ProductID], [Name], [ProductNumber], [MakeFlag], [FinishedGoodsFlag], [Color], [SafetyStockLevel], [ReorderPoint], [StandardCost], [ListPrice], [Size], [SizeUnitMeasureCode], [WeightUnitMeasureCode], [Weight], [DaysToManufacture], [ProductLine], [Class], [Style], [ProductSubcategoryID], [ProductModelID], [SellStartDate], [SellEndDate], [DiscontinuedDate], [rowguid], [ModifiedDate]
-                        FROM [Production].[Product];
+                        FROM [Production].[Product]
                     </Variable>
         <Variable Name="ExtractRowCnt" DataType="Int32">-1</Variable>
         <Variable Name="InsertRowCnt" DataType="Int32">-1</Variable>
@@ -483,7 +483,7 @@ GO
         <Variable Name="TableName" DataType="String">ProductCategory</Variable>
         <Variable Name="SourceQuery" DataType="String">
                         SELECT [ProductCategoryID], [Name], [rowguid], [ModifiedDate]
-                        FROM [Production].[ProductCategory];
+                        FROM [Production].[ProductCategory]
                     </Variable>
         <Variable Name="ExtractRowCnt" DataType="Int32">-1</Variable>
         <Variable Name="InsertRowCnt" DataType="Int32">-1</Variable>
@@ -594,7 +594,7 @@ GO
         <Variable Name="TableName" DataType="String">ProductSubcategory</Variable>
         <Variable Name="SourceQuery" DataType="String">
                         SELECT [ProductSubcategoryID], [ProductCategoryID], [Name], [rowguid], [ModifiedDate]
-                        FROM [Production].[ProductSubcategory];
+                        FROM [Production].[ProductSubcategory]
                     </Variable>
         <Variable Name="ExtractRowCnt" DataType="Int32">-1</Variable>
         <Variable Name="InsertRowCnt" DataType="Int32">-1</Variable>
@@ -705,8 +705,9 @@ GO
         <Variable Name="TableName" DataType="String">SalesOrderDetail</Variable>
         <Variable Name="SourceQuery" DataType="String">
                         SELECT [SalesOrderID], [SalesOrderDetailID], [CarrierTrackingNumber], [OrderQty], [ProductID], [SpecialOfferID], [UnitPrice], [UnitPriceDiscount], [LineTotal], [rowguid], [ModifiedDate]
-                        FROM [Sales].[SalesOrderDetail];
+                        FROM [Sales].[SalesOrderDetail]
                     </Variable>
+        <Variable Name="SourceQueryWhere" DataType="String"> WHERE [ModifiedDate] &gt; </Variable>
         <Variable Name="ExtractRowCnt" DataType="Int32">-1</Variable>
         <Variable Name="InsertRowCnt" DataType="Int32">-1</Variable>
         <Variable Name="UpdateRowCnt" DataType="Int32">-1</Variable>
@@ -726,6 +727,16 @@ GO
           </Results>
           <DirectInput>SELECT COUNT(*) FROM [stage].[SalesOrderDetail];</DirectInput>
         </ExecuteSQL>
+        <ExecuteSQL Name="SQL Max Table DateTime" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+          <Results>
+            <Result Name="0" VariableName="User.TableMaxDateTime" />
+          </Results>
+          <DirectInput>
+                        SELECT MAX([TableMaxDateTime]) FROM [dbo].[Audit] 
+                            WHERE [TableSchemaName] = 'Sales' AND [TableName] = 'SalesOrderDetail';
+                    </DirectInput>
+        </ExecuteSQL>
+        <Expression Name="EXP SourceQuery" Expression="@[User::SourceQuery] = @[$Project::InitialLoad] ?                                              @[User::SourceQuery] :                                             @[User::SourceQuery] + @[User::SourceQueryWhere] +                                                 &quot;'&quot; + (DT_WSTR, 30) @[User::TableMaxDateTime] +  &quot;'&quot;" />
         <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
           <Results>
             <Result Name="0" VariableName="User.AuditId" />
@@ -816,8 +827,9 @@ GO
         <Variable Name="TableName" DataType="String">SalesOrderHeader</Variable>
         <Variable Name="SourceQuery" DataType="String">
                         SELECT [SalesOrderID], [RevisionNumber], [OrderDate], [DueDate], [ShipDate], [Status], [OnlineOrderFlag], [SalesOrderNumber], [PurchaseOrderNumber], [AccountNumber], [CustomerID], [SalesPersonID], [TerritoryID], [BillToAddressID], [ShipToAddressID], [ShipMethodID], [CreditCardID], [CreditCardApprovalCode], [CurrencyRateID], [SubTotal], [TaxAmt], [Freight], [TotalDue], [Comment], [rowguid], [ModifiedDate]
-                        FROM [Sales].[SalesOrderHeader];
+                        FROM [Sales].[SalesOrderHeader]
                     </Variable>
+        <Variable Name="SourceQueryWhere" DataType="String"> WHERE [ModifiedDate] &gt; </Variable>
         <Variable Name="ExtractRowCnt" DataType="Int32">-1</Variable>
         <Variable Name="InsertRowCnt" DataType="Int32">-1</Variable>
         <Variable Name="UpdateRowCnt" DataType="Int32">-1</Variable>
@@ -837,6 +849,16 @@ GO
           </Results>
           <DirectInput>SELECT COUNT(*) FROM [stage].[SalesOrderHeader];</DirectInput>
         </ExecuteSQL>
+        <ExecuteSQL Name="SQL Max Table DateTime" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+          <Results>
+            <Result Name="0" VariableName="User.TableMaxDateTime" />
+          </Results>
+          <DirectInput>
+                        SELECT MAX([TableMaxDateTime]) FROM [dbo].[Audit] 
+                            WHERE [TableSchemaName] = 'Sales' AND [TableName] = 'SalesOrderHeader';
+                    </DirectInput>
+        </ExecuteSQL>
+        <Expression Name="EXP SourceQuery" Expression="@[User::SourceQuery] = @[$Project::InitialLoad] ?                                              @[User::SourceQuery] :                                             @[User::SourceQuery] + @[User::SourceQueryWhere] +                                                 &quot;'&quot; + (DT_WSTR, 30) @[User::TableMaxDateTime] +  &quot;'&quot;" />
         <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
           <Results>
             <Result Name="0" VariableName="User.AuditId" />

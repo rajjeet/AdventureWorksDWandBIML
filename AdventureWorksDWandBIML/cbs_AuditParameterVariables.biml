@@ -1,6 +1,9 @@
 <#@ property name="tableSchemaName" type="String" #>
 <#@ property name="tableName" type="String" #>
+<#@ property name="tableType" type="String" #>
+<#@ property name="isIncremental" type="String" #>
 <#@ property name="sourceQuery" type="String"#>
+<#@ property name="incrementColumn" type="String"#>
 
 <Parameters>
     <Parameter Name="ParentAuditId" DataType="Int32">-1</Parameter>
@@ -11,6 +14,11 @@
     <Variable Name="TableSchemaName" DataType="String"><#=tableSchemaName#></Variable>
     <Variable Name="TableName" DataType="String"><#=tableName#></Variable>
     <Variable Name="SourceQuery" DataType="String"><#=sourceQuery#></Variable>
+    <# if (tableType == "Staging") {#>
+        <# if (isIncremental == "1") { #>
+        <Variable Name="SourceQueryWhere" DataType="String"> WHERE [<#=incrementColumn#>] > </Variable>
+        <# } #>
+    <# } #>
     <Variable Name="ExtractRowCnt" DataType="Int32">-1</Variable>
     <Variable Name="InsertRowCnt" DataType="Int32">-1</Variable>
     <Variable Name="UpdateRowCnt" DataType="Int32">-1</Variable>

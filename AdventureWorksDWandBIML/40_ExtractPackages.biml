@@ -10,14 +10,36 @@
                 <Connection ConnectionName="FFC <#=stagingSchemaName#>_<#=table.Name#>" />
             </Connections>
 
-            <#=CallBimlScript("cbs_AuditParameterVariables.biml", table.Schema.Name, table.Name, table.GetTag("SourceQuery"))#>
+            <#=CallBimlScript("cbs_AuditParameterVariables.biml", 
+                table.Schema.Name, table.Name, table.GetTag("Type"), table.GetTag("IsIncremental"), 
+                table.GetTag("SourceQuery"), table.GetTag("IncrementColumn"))#>
             
             <Tasks>
                 
                 <#=CallBimlScript("cbs_ExecuteSQLTruncate.biml", stagingSchemaName, table.Name, stagingConnName)#>
-                <#=CallBimlScript("cbs_ExecuteSQLCountRows.biml", stagingSchemaName, table.Name, stagingConnName, "User.InitialTableRowCnt", "Initial")#>
+                <#=CallBimlScript("cbs_ExecuteSQLCountRows.biml", stagingSchemaName, table.Name, stagingConnName, 
+                    "User.InitialTableRowCnt", "Initial")#>
+                
+                <# if (table.GetTag("IsIncremental").ToString() == "1") { #>
+                <ExecuteSQL Name="SQL Max Table DateTime" ConnectionName="<#=stagingConnName#>" ResultSet="SingleRow">
+                    <DirectInput>
+                        SELECT MAX([TableMaxDateTime]) FROM [dbo].[Audit] 
+                            WHERE [TableSchemaName] = '<#=table.Schema.Name#>' AND [TableName] = '<#=table.Name#>';
+                    </DirectInput>
+                    <Results>
+                        <Result Name="0" VariableName="User.TableMaxDateTime" />
+                    </Results>
+                </ExecuteSQL>
+                <Expression Name="EXP SourceQuery" 
+                            Expression="@[User::SourceQuery] = @[$Project::InitialLoad] ? 
+                                            @[User::SourceQuery] :
+                                            @[User::SourceQuery] + @[User::SourceQueryWhere] +
+                                                &quot;'&quot; + (DT_WSTR, 30) @[User::TableMaxDateTime] +  &quot;'&quot;" />
+                <# } #>
+                
                 <#=CallBimlScript("x_AuditBegin.biml", stagingConnName)#>
                 
+
                 <Dataflow Name="DFT Extract <#=table.Schema.Name#>_<#=table.Name#> to Staging">
                     <Transformations>
                     <OleDbSource Name="OLEDBSRC <#=table.Schema.Name#>_<#=table.Name#>" 
@@ -39,7 +61,8 @@
                     </FlatFileDestination>
                     </Transformations>
                 </Dataflow>
-                <#=CallBimlScript("cbs_ExecuteSQLCountRows.biml", stagingSchemaName, table.Name, stagingConnName, "User.FinalTableRowCnt", "Final")#>
+                <#=CallBimlScript("cbs_ExecuteSQLCountRows.biml", stagingSchemaName, table.Name, stagingConnName, 
+                    "User.FinalTableRowCnt", "Final")#>
                 <#=CallBimlScript("x_AuditEnd.biml", stagingConnName)#> 
             </Tasks>
         </Package>
