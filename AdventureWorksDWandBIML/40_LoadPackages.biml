@@ -1,5 +1,5 @@
 <#@ template tier="40" language="C#" #>
-<#@ include file="1_10_CommonVariables.biml"#>
+<#@ include file="x_CommonVariables.biml"#>
 <Biml xmlns="http://schemas.varigence.com/biml.xsd">
     <Packages>
         <Package Name="Extract__Master" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey">
@@ -10,12 +10,12 @@
                 <Parameter Name="ParentAuditId" DataType="Int32">-1</Parameter>
             </Parameters>
             <Variables>
-                <#=CallBimlScript("1_x_AuditVariables.biml", "-", "Extract__Master.dtsx")#>
+                <#=CallBimlScript("x_AuditVariables.biml", "-", "Extract__Master.dtsx", "no query" )#>
             </Variables>
             <Tasks>
-                <#=CallBimlScript("1_x_AuditBegin.biml", stagingConnName)#>
+                <#=CallBimlScript("x_AuditBegin.biml", stagingConnName)#>
                   
-                <#=CallBimlScript("1_x_AuditEnd.biml", stagingConnName)#>
+                <#=CallBimlScript("x_AuditEnd.biml", stagingConnName)#>
             </Tasks>
         </Package>
     </Packages>

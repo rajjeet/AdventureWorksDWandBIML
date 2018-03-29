@@ -10,6 +10,13 @@
   </Connections>
   <Tables>
     <Table Name="Product" SchemaName="sourceDb.Production">
+      <Annotations>
+        <Annotation Tag="SourceQuery">
+                        SELECT [ProductID], [Name], [ProductNumber], [MakeFlag], [FinishedGoodsFlag], [Color], [SafetyStockLevel], [ReorderPoint], [StandardCost], [ListPrice], [Size], [SizeUnitMeasureCode], [WeightUnitMeasureCode], [Weight], [DaysToManufacture], [ProductLine], [Class], [Style], [ProductSubcategoryID], [ProductModelID], [SellStartDate], [SellEndDate], [DiscontinuedDate], [rowguid], [ModifiedDate]
+                        FROM [Production].[Product];
+                    </Annotation>
+        <Annotation Tag="Type">Staging</Annotation>
+      </Annotations>
       <Columns>
         <Column Name="ProductID" />
         <Column Name="Name" DataType="String" Length="50" />
@@ -39,6 +46,13 @@
       </Columns>
     </Table>
     <Table Name="ProductCategory" SchemaName="sourceDb.Production">
+      <Annotations>
+        <Annotation Tag="SourceQuery">
+                        SELECT [ProductCategoryID], [Name], [rowguid], [ModifiedDate]
+                        FROM [Production].[ProductCategory];
+                    </Annotation>
+        <Annotation Tag="Type">Staging</Annotation>
+      </Annotations>
       <Columns>
         <Column Name="ProductCategoryID" />
         <Column Name="Name" DataType="String" Length="50" />
@@ -47,6 +61,13 @@
       </Columns>
     </Table>
     <Table Name="ProductSubcategory" SchemaName="sourceDb.Production">
+      <Annotations>
+        <Annotation Tag="SourceQuery">
+                        SELECT [ProductSubcategoryID], [ProductCategoryID], [Name], [rowguid], [ModifiedDate]
+                        FROM [Production].[ProductSubcategory];
+                    </Annotation>
+        <Annotation Tag="Type">Staging</Annotation>
+      </Annotations>
       <Columns>
         <Column Name="ProductSubcategoryID" />
         <Column Name="ProductCategoryID" />
@@ -56,6 +77,13 @@
       </Columns>
     </Table>
     <Table Name="SalesOrderDetail" SchemaName="sourceDb.Sales">
+      <Annotations>
+        <Annotation Tag="SourceQuery">
+                        SELECT [SalesOrderID], [SalesOrderDetailID], [CarrierTrackingNumber], [OrderQty], [ProductID], [SpecialOfferID], [UnitPrice], [UnitPriceDiscount], [LineTotal], [rowguid], [ModifiedDate]
+                        FROM [Sales].[SalesOrderDetail];
+                    </Annotation>
+        <Annotation Tag="Type">Staging</Annotation>
+      </Annotations>
       <Columns>
         <Column Name="SalesOrderID" />
         <Column Name="SalesOrderDetailID" />
@@ -71,6 +99,13 @@
       </Columns>
     </Table>
     <Table Name="SalesOrderHeader" SchemaName="sourceDb.Sales">
+      <Annotations>
+        <Annotation Tag="SourceQuery">
+                        SELECT [SalesOrderID], [RevisionNumber], [OrderDate], [DueDate], [ShipDate], [Status], [OnlineOrderFlag], [SalesOrderNumber], [PurchaseOrderNumber], [AccountNumber], [CustomerID], [SalesPersonID], [TerritoryID], [BillToAddressID], [ShipToAddressID], [ShipMethodID], [CreditCardID], [CreditCardApprovalCode], [CurrencyRateID], [SubTotal], [TaxAmt], [Freight], [TotalDue], [Comment], [rowguid], [ModifiedDate]
+                        FROM [Sales].[SalesOrderHeader];
+                    </Annotation>
+        <Annotation Tag="Type">Staging</Annotation>
+      </Annotations>
       <Columns>
         <Column Name="SalesOrderID" />
         <Column Name="RevisionNumber" DataType="Byte" />
@@ -331,6 +366,10 @@ GO
         <Variable Name="AuditId" DataType="Int32">-1</Variable>
         <Variable Name="TableSchemaName" DataType="String">Production</Variable>
         <Variable Name="TableName" DataType="String">Product</Variable>
+        <Variable Name="SourceQuery" DataType="String">
+                        SELECT [ProductID], [Name], [ProductNumber], [MakeFlag], [FinishedGoodsFlag], [Color], [SafetyStockLevel], [ReorderPoint], [StandardCost], [ListPrice], [Size], [SizeUnitMeasureCode], [WeightUnitMeasureCode], [Weight], [DaysToManufacture], [ProductLine], [Class], [Style], [ProductSubcategoryID], [ProductModelID], [SellStartDate], [SellEndDate], [DiscontinuedDate], [rowguid], [ModifiedDate]
+                        FROM [Production].[Product];
+                    </Variable>
         <Variable Name="ExtractRowCnt" DataType="Int32">-1</Variable>
         <Variable Name="InsertRowCnt" DataType="Int32">-1</Variable>
         <Variable Name="UpdateRowCnt" DataType="Int32">-1</Variable>
@@ -383,7 +422,7 @@ GO
         <Dataflow Name="DFT Extract Production_Product to Staging">
           <Transformations>
             <OleDbSource Name="OLEDBSRC Production_Product" ConnectionName="OLEDB_Source">
-              <ExternalTableInput Table="[Production].[Product]" />
+              <VariableInput VariableName="User.SourceQuery" />
             </OleDbSource>
             <RowCount Name="RC Extract" VariableName="User.ExtractRowCnt" />
             <OleDbDestination Name="OLEDBDEST stage_Product" ConnectionName="OLEDB_Staging">
@@ -433,6 +472,10 @@ GO
         <Variable Name="AuditId" DataType="Int32">-1</Variable>
         <Variable Name="TableSchemaName" DataType="String">Production</Variable>
         <Variable Name="TableName" DataType="String">ProductCategory</Variable>
+        <Variable Name="SourceQuery" DataType="String">
+                        SELECT [ProductCategoryID], [Name], [rowguid], [ModifiedDate]
+                        FROM [Production].[ProductCategory];
+                    </Variable>
         <Variable Name="ExtractRowCnt" DataType="Int32">-1</Variable>
         <Variable Name="InsertRowCnt" DataType="Int32">-1</Variable>
         <Variable Name="UpdateRowCnt" DataType="Int32">-1</Variable>
@@ -485,7 +528,7 @@ GO
         <Dataflow Name="DFT Extract Production_ProductCategory to Staging">
           <Transformations>
             <OleDbSource Name="OLEDBSRC Production_ProductCategory" ConnectionName="OLEDB_Source">
-              <ExternalTableInput Table="[Production].[ProductCategory]" />
+              <VariableInput VariableName="User.SourceQuery" />
             </OleDbSource>
             <RowCount Name="RC Extract" VariableName="User.ExtractRowCnt" />
             <OleDbDestination Name="OLEDBDEST stage_ProductCategory" ConnectionName="OLEDB_Staging">
@@ -535,6 +578,10 @@ GO
         <Variable Name="AuditId" DataType="Int32">-1</Variable>
         <Variable Name="TableSchemaName" DataType="String">Production</Variable>
         <Variable Name="TableName" DataType="String">ProductSubcategory</Variable>
+        <Variable Name="SourceQuery" DataType="String">
+                        SELECT [ProductSubcategoryID], [ProductCategoryID], [Name], [rowguid], [ModifiedDate]
+                        FROM [Production].[ProductSubcategory];
+                    </Variable>
         <Variable Name="ExtractRowCnt" DataType="Int32">-1</Variable>
         <Variable Name="InsertRowCnt" DataType="Int32">-1</Variable>
         <Variable Name="UpdateRowCnt" DataType="Int32">-1</Variable>
@@ -587,7 +634,7 @@ GO
         <Dataflow Name="DFT Extract Production_ProductSubcategory to Staging">
           <Transformations>
             <OleDbSource Name="OLEDBSRC Production_ProductSubcategory" ConnectionName="OLEDB_Source">
-              <ExternalTableInput Table="[Production].[ProductSubcategory]" />
+              <VariableInput VariableName="User.SourceQuery" />
             </OleDbSource>
             <RowCount Name="RC Extract" VariableName="User.ExtractRowCnt" />
             <OleDbDestination Name="OLEDBDEST stage_ProductSubcategory" ConnectionName="OLEDB_Staging">
@@ -637,6 +684,10 @@ GO
         <Variable Name="AuditId" DataType="Int32">-1</Variable>
         <Variable Name="TableSchemaName" DataType="String">Sales</Variable>
         <Variable Name="TableName" DataType="String">SalesOrderDetail</Variable>
+        <Variable Name="SourceQuery" DataType="String">
+                        SELECT [SalesOrderID], [SalesOrderDetailID], [CarrierTrackingNumber], [OrderQty], [ProductID], [SpecialOfferID], [UnitPrice], [UnitPriceDiscount], [LineTotal], [rowguid], [ModifiedDate]
+                        FROM [Sales].[SalesOrderDetail];
+                    </Variable>
         <Variable Name="ExtractRowCnt" DataType="Int32">-1</Variable>
         <Variable Name="InsertRowCnt" DataType="Int32">-1</Variable>
         <Variable Name="UpdateRowCnt" DataType="Int32">-1</Variable>
@@ -689,7 +740,7 @@ GO
         <Dataflow Name="DFT Extract Sales_SalesOrderDetail to Staging">
           <Transformations>
             <OleDbSource Name="OLEDBSRC Sales_SalesOrderDetail" ConnectionName="OLEDB_Source">
-              <ExternalTableInput Table="[Sales].[SalesOrderDetail]" />
+              <VariableInput VariableName="User.SourceQuery" />
             </OleDbSource>
             <RowCount Name="RC Extract" VariableName="User.ExtractRowCnt" />
             <OleDbDestination Name="OLEDBDEST stage_SalesOrderDetail" ConnectionName="OLEDB_Staging">
@@ -739,6 +790,10 @@ GO
         <Variable Name="AuditId" DataType="Int32">-1</Variable>
         <Variable Name="TableSchemaName" DataType="String">Sales</Variable>
         <Variable Name="TableName" DataType="String">SalesOrderHeader</Variable>
+        <Variable Name="SourceQuery" DataType="String">
+                        SELECT [SalesOrderID], [RevisionNumber], [OrderDate], [DueDate], [ShipDate], [Status], [OnlineOrderFlag], [SalesOrderNumber], [PurchaseOrderNumber], [AccountNumber], [CustomerID], [SalesPersonID], [TerritoryID], [BillToAddressID], [ShipToAddressID], [ShipMethodID], [CreditCardID], [CreditCardApprovalCode], [CurrencyRateID], [SubTotal], [TaxAmt], [Freight], [TotalDue], [Comment], [rowguid], [ModifiedDate]
+                        FROM [Sales].[SalesOrderHeader];
+                    </Variable>
         <Variable Name="ExtractRowCnt" DataType="Int32">-1</Variable>
         <Variable Name="InsertRowCnt" DataType="Int32">-1</Variable>
         <Variable Name="UpdateRowCnt" DataType="Int32">-1</Variable>
@@ -791,7 +846,7 @@ GO
         <Dataflow Name="DFT Extract Sales_SalesOrderHeader to Staging">
           <Transformations>
             <OleDbSource Name="OLEDBSRC Sales_SalesOrderHeader" ConnectionName="OLEDB_Source">
-              <ExternalTableInput Table="[Sales].[SalesOrderHeader]" />
+              <VariableInput VariableName="User.SourceQuery" />
             </OleDbSource>
             <RowCount Name="RC Extract" VariableName="User.ExtractRowCnt" />
             <OleDbDestination Name="OLEDBDEST stage_SalesOrderHeader" ConnectionName="OLEDB_Staging">
@@ -830,6 +885,81 @@ GO
       </Tasks>
       <Connections>
         <Connection ConnectionName="FFC stage_SalesOrderHeader" />
+      </Connections>
+      <Parameters>
+        <Parameter Name="ParentAuditId" DataType="Int32">-1</Parameter>
+      </Parameters>
+    </Package>
+    <Package Name="Extract__Master" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey">
+      <Variables>
+        <Variable Name="ParentAuditId" DataType="Int32" EvaluateAsExpression="true">@[$Package::ParentAuditId]</Variable>
+        <Variable Name="AuditId" DataType="Int32">-1</Variable>
+        <Variable Name="TableSchemaName" DataType="String">-</Variable>
+        <Variable Name="TableName" DataType="String">Extract__Master.dtsx</Variable>
+        <Variable Name="SourceQuery" DataType="String">no query</Variable>
+        <Variable Name="ExtractRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="InsertRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="UpdateRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="ErrorRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="InitialTableRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="FinalTableRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="TableMaxDateTime" DataType="DateTime">1900-01-01</Variable>
+        <Variable Name="IsSuccessful" DataType="String">N</Variable>
+      </Variables>
+      <Tasks>
+        <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+          <Results>
+            <Result Name="0" VariableName="User.AuditId" />
+          </Results>
+          <Parameters>
+            <Parameter Name="@ParentAuditId" VariableName="User.ParentAuditId" DataType="Int32" />
+            <Parameter Name="@ExecutionInstanceGUID" VariableName="System.ExecutionInstanceGUID" DataType="Guid" />
+            <Parameter Name="@MachineName" VariableName="System.MachineName" DataType="String" />
+            <Parameter Name="@PackageID" VariableName="System.PackageID" DataType="Guid" />
+            <Parameter Name="@ServerExecutionId" VariableName="System.ServerExecutionID" DataType="String" />
+            <Parameter Name="@StartTime" VariableName="System.StartTime" DataType="DateTime" />
+            <Parameter Name="@UserName" VariableName="System.UserName" DataType="String" />
+            <Parameter Name="@VersionBuild" VariableName="System.VersionBuild" DataType="Int16" />
+            <Parameter Name="@VersionGUID" VariableName="System.VersionGUID" DataType="Guid" />
+            <Parameter Name="@VersionMajor" VariableName="System.VersionMajor" DataType="Int32" />
+            <Parameter Name="@VersionMinor" VariableName="System.VersionMinor" DataType="Int32" />
+            <Parameter Name="@TableSchemaName" VariableName="User.TableSchemaName" DataType="String" />
+            <Parameter Name="@TableName" VariableName="User.TableName" DataType="String" />
+            <Parameter Name="@ExtractRowCnt" VariableName="User.ExtractRowCnt" DataType="Int32" />
+            <Parameter Name="@InsertRowCnt" VariableName="User.InsertRowCnt" DataType="Int32" />
+            <Parameter Name="@UpdateRowCnt" VariableName="User.UpdateRowCnt" DataType="Int32" />
+            <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
+            <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
+            <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
+            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
+            <Parameter Name="@IsSuccessful" VariableName="User.IsSuccessful" DataType="String" />
+          </Parameters>
+          <DirectInput>
+        exec dbo.spIns_Audit ?, ?, ?, ?, ?,
+                             ?, ?, ?, ?, ?,
+                             ?, ?, ?, ?, ?,
+                             ?, ?, ?, ?, ?, ?
+                        
+    </DirectInput>
+        </ExecuteSQL>
+        <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_Staging">
+          <Parameters>
+            <Parameter Name="@AuditId" VariableName="User.AuditId" DataType="Int32" />
+            <Parameter Name="@ExtractRowCnt" VariableName="User.ExtractRowCnt" DataType="Int32" />
+            <Parameter Name="@InsertRowCnt" VariableName="User.InsertRowCnt" DataType="Int32" />
+            <Parameter Name="@UpdateRowCnt" VariableName="User.UpdateRowCnt" DataType="Int32" />
+            <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
+            <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
+            <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
+            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
+          </Parameters>
+          <DirectInput>
+        exec spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+    </DirectInput>
+        </ExecuteSQL>
+      </Tasks>
+      <Connections>
+        <Connection ConnectionName="OLEDB_Staging" />
       </Connections>
       <Parameters>
         <Parameter Name="ParentAuditId" DataType="Int32">-1</Parameter>

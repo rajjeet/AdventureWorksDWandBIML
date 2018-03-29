@@ -1,5 +1,5 @@
 <#@ template tier="10" language="C#"#>
-<#@ include file="1_10_CommonVariables.biml"#>
+<#@ include file="x_CommonVariables.biml"#>
 <Biml xmlns="http://schemas.varigence.com/biml.xsd">
     <Connections>
         <OleDbConnection Name="<#=stagingConnName#>" ConnectionString="<#=stagingConnString#>" CreateInProject="true"/> 

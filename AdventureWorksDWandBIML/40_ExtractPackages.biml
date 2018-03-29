@@ -1,8 +1,8 @@
-<#@ template tier="35" language="C#"#>
-<#@ include file="1_10_CommonVariables.biml"#>
+<#@ template tier="40" language="C#"#>
+<#@ include file="x_CommonVariables.biml"#>
 <Biml xmlns="http://schemas.varigence.com/biml.xsd">
     <Packages>
-        <# foreach(var table in RootNode.Tables) { #>
+        <# foreach(var table in RootNode.Tables.Where(t => t.GetTag("Type") == "Staging")) { #>
         <Package Name="Extract <#=table.Schema.Name#>_<#=table.Name#>" 
                     ProtectionLevel="EncryptSensitiveWithUserKey"
                     ConstraintMode="Linear">
@@ -13,7 +13,7 @@
                 <Parameter Name="ParentAuditId" DataType="Int32">-1</Parameter>
             </Parameters>
             <Variables>
-                <#=CallBimlScript("1_x_AuditVariables.biml", table.Schema.Name, table.Name)#>
+                <#=CallBimlScript("x_AuditVariables.biml", table.Schema.Name, table.Name, table.GetTag("SourceQuery"))#>
             </Variables>
             <Tasks>
                 <ExecuteSQL Name="SQL Truncate <#=stagingSchemaName#>_<#=table.Name#>" 
@@ -21,12 +21,12 @@
                     <DirectInput>TRUNCATE TABLE [<#=stagingSchemaName#>].[<#=table.Name#>];</DirectInput>
                 </ExecuteSQL>
                 <Expression Name="EXP Set InitialTableRowCnt" Expression="@[User::InitialTableRowCnt] = 0" />
-                <#=CallBimlScript("1_x_AuditBegin.biml", stagingConnName)#>
+                <#=CallBimlScript("x_AuditBegin.biml", stagingConnName)#>
                 <Dataflow Name="DFT Extract <#=table.Schema.Name#>_<#=table.Name#> to Staging">
                     <Transformations>
                     <OleDbSource Name="OLEDBSRC <#=table.Schema.Name#>_<#=table.Name#>" 
                                     ConnectionName="<#=sourceConnName#>">
-                       <ExternalTableInput Table="<#=table.SchemaQualifiedName#>" />
+                       <VariableInput VariableName="User.SourceQuery" />
                     </OleDbSource>
                     <RowCount Name="RC Extract" VariableName="User.ExtractRowCnt" />
                     <OleDbDestination Name="OLEDBDEST <#=stagingSchemaName#>_<#=table.Name#>" 
@@ -50,7 +50,7 @@
                         <Result Name="0" VariableName="User.FinalTableRowCnt" />
                     </Results>
                 </ExecuteSQL>
-                <#=CallBimlScript("1_x_AuditEnd.biml", stagingConnName)#> 
+                <#=CallBimlScript("x_AuditEnd.biml", stagingConnName)#> 
             </Tasks>
         </Package>
         <# } #>

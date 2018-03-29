@@ -1,5 +1,5 @@
 <#@ template tier="20" language="C#"#>
-<#@ include file="1_10_CommonVariables.biml"#>
+<#@ include file="x_CommonVariables.biml"#>
 <#@ import namespace="Varigence.Biml.CoreLowerer.SchemaManagement"#>
 
 <Biml xmlns="http://schemas.varigence.com/biml.xsd">
@@ -33,6 +33,13 @@
                 <Columns>
                     <#= table.Columns.GetBiml() #>
                 </Columns>
+                <Annotations>
+                    <Annotation AnnotationType="Tag" Tag="SourceQuery">
+                        SELECT <#=table.GetColumnList("", "[", "]")#>
+                        FROM <#=table.SchemaQualifiedName#>;
+                    </Annotation>
+                    <Annotation AnnotationType="Tag" Tag="Type">Staging</Annotation>
+                </Annotations>
             </Table>
         <# } #>
     </Tables>

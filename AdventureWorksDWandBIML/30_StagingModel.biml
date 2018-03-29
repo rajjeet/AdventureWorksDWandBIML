@@ -1,5 +1,5 @@
 <#@ template tier="30" language="C#"#>
-<#@ include file="1_10_CommonVariables.biml" #>
+<#@ include file="x_CommonVariables.biml" #>
 <Biml xmlns="http://schemas.varigence.com/biml.xsd">
     <Packages>
         <Package Name="Generate Staging Schema" ProtectionLevel="EncryptSensitiveWithUserKey">
@@ -7,7 +7,7 @@
                 <Connection ConnectionName="<#=stagingConnName#>" />
             </Connections>
             <Tasks>
-                <# foreach(var table in RootNode.Tables) { #>
+                <# foreach(var table in RootNode.Tables.Where(t => t.GetTag("Type") == "Staging")) { #>
                 <ExecuteSQL Name="SQL Drop and Create <#= table.Schema #>_<#=table.Name#>" ConnectionName="<#=stagingConnName#>">
                     <DirectInput><#= table.GetDropAndCreateDdl()
                         .Replace("[" + table.Schema.Name + "].[", "[" + stagingSchemaName + "].[") #>

@@ -1,10 +1,12 @@
 <#@ property name="tableSchemaName" type="String" required="True"#>
 <#@ property name="tableName" type="String" required="True"#>
+<#@ property name="sourceQuery" type="String"#>
 
     <Variable Name="ParentAuditId" DataType="Int32" EvaluateAsExpression="true">@[$Package::ParentAuditId]</Variable>
     <Variable Name="AuditId" DataType="Int32">-1</Variable>
     <Variable Name="TableSchemaName" DataType="String"><#=tableSchemaName#></Variable>
     <Variable Name="TableName" DataType="String"><#=tableName#></Variable>
+    <Variable Name="SourceQuery" DataType="String"><#=sourceQuery#></Variable>
     <Variable Name="ExtractRowCnt" DataType="Int32">-1</Variable>
     <Variable Name="InsertRowCnt" DataType="Int32">-1</Variable>
     <Variable Name="UpdateRowCnt" DataType="Int32">-1</Variable>
