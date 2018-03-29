@@ -4,16 +4,22 @@
 
 <Biml xmlns="http://schemas.varigence.com/biml.xsd">
 
-    <# var sourceConn = RootNode.OleDbConnections[sourceConnName]; #>
-    <# var sourceDbSchema = sourceConn.GetDatabaseSchema(includedSourceSchemas, includedSourceTables,
-        ImportOptions.ExcludeCheckConstraint |
-        ImportOptions.ExcludeColumnDefault | 
-        ImportOptions.ExcludeForeignKey | 
-        ImportOptions.ExcludeIdentity |
-        ImportOptions.ExcludeIndex | 
-        ImportOptions.ExcludePrimaryKey |
-        ImportOptions.ExcludeUniqueKey |
-        ImportOptions.ExcludeViews); #>
+    <#
+        var includedSourceSchemas = new List<String>{"Production", "Sales"};
+        var includedSourceTables = new List<String>{"Product", "ProductSubcategory", "ProductCategory", "SalesOrderHeader", "SalesOrderDetail"};
+        var incrementalTables = new List<String>{"SalesOrderHeader", "SalesOrderDetail"};
+    
+         var sourceConn = RootNode.OleDbConnections[sourceConnName]; 
+         var sourceDbSchema = sourceConn.GetDatabaseSchema(includedSourceSchemas, includedSourceTables,
+            ImportOptions.ExcludeCheckConstraint |
+            ImportOptions.ExcludeColumnDefault | 
+            ImportOptions.ExcludeForeignKey | 
+            ImportOptions.ExcludeIdentity |
+            ImportOptions.ExcludeIndex | 
+            ImportOptions.ExcludePrimaryKey |
+            ImportOptions.ExcludeUniqueKey |
+            ImportOptions.ExcludeViews); 
+    #>
     
     <Databases>
         <Database Name="sourceDb" ConnectionName="<#=sourceConnName#>" />
@@ -39,6 +45,10 @@
                         FROM <#=table.SchemaQualifiedName#>;
                     </Annotation>
                     <Annotation AnnotationType="Tag" Tag="Type">Staging</Annotation>
+                    <# if (incrementalTables.Contains(table.Name)) { #>
+                    <Annotation AnnotationType="Tag" Tag="IsIncremental">1</Annotation>
+                    <Annotation AnnotationType="Tag" Tag="IncrementColumn">Modified</Annotation>
+                    <# } #>
                 </Annotations>
             </Table>
         <# } #>

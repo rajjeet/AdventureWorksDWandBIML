@@ -9,17 +9,13 @@
             <Connections>
                 <Connection ConnectionName="FFC <#=stagingSchemaName#>_<#=table.Name#>" />
             </Connections>
-            <Parameters>
-                <Parameter Name="ParentAuditId" DataType="Int32">-1</Parameter>
-            </Parameters>
-            <Variables>
-                <#=CallBimlScript("x_AuditVariables.biml", table.Schema.Name, table.Name, table.GetTag("SourceQuery"))#>
-            </Variables>
+
+            <#=CallBimlScript("cbs_AuditVariables.biml", table.Schema.Name, table.Name, table.GetTag("SourceQuery"))#>
+            
             <Tasks>
-                <ExecuteSQL Name="SQL Truncate <#=stagingSchemaName#>_<#=table.Name#>" 
-                            ConnectionName="<#=stagingConnName#>">
-                    <DirectInput>TRUNCATE TABLE [<#=stagingSchemaName#>].[<#=table.Name#>];</DirectInput>
-                </ExecuteSQL>
+                
+                <#=CallBimlScript("cbs_TruncateExecuteSQL.biml", stagingSchemaName, table.Name, stagingConnName)#>
+                
                 <Expression Name="EXP Set InitialTableRowCnt" Expression="@[User::InitialTableRowCnt] = 0" />
                 <#=CallBimlScript("x_AuditBegin.biml", stagingConnName)#>
                 <Dataflow Name="DFT Extract <#=table.Schema.Name#>_<#=table.Name#> to Staging">

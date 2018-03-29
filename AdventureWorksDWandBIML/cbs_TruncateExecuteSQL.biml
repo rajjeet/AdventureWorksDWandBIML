@@ -1,0 +1,8 @@
+<#@ property name="schemaName" type="String" #>
+<#@ property name="tableName" type="String"#>
+<#@ property name="connName" type="String"#>
+
+<ExecuteSQL Name="SQL Truncate <#=schemaName#>_<#=tableName#>" 
+            ConnectionName="<#=connName#>">
+    <DirectInput>TRUNCATE TABLE [<#=schemaName#>].[<#=tableName#>];</DirectInput>
+</ExecuteSQL>
