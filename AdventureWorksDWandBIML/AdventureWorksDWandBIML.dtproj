@@ -26,7 +26,7 @@
           <SSIS:Property SSIS:Name="CreatorComputerName">PHULL207</SSIS:Property>
           <SSIS:Property SSIS:Name="Description">
           </SSIS:Property>
-          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAiCOl8Y6qgUS3M1GWvtDmYwAAAAACAAAAAAAQZgAAAAEAACAAAAAtDXcLKdvtZBpDWXDyDUCRFqCWQpngaGBAkUSOPzIIjgAAAAAOgAAAAAIAACAAAABsyaSJaNYMQwn8bitXtyGrEDGmb3YQQPMQUFbbPY3HuZAAAABxVq6AC3yiKtLEGNBv5fOFmhcX4iO88xANsyGuu+TpPjJUiwpXfFbzMSEeixF56ynqdC34mEJ2OLYh9c1UtLEBnIXIeH8Ti/TUpMtKMInmIA3dbjJHarVa4DEOFKY8MD7YqCi5jhN8vhx86ZDedWlyF8Mh0VenvrXzhZu6ctf05kUyl230iMbpsNrV358soglAAAAA9DqGFc7eI+38dicF2ruGby111BUShL59RDZ8vCIFh+O12xfefbgxzOkUkaSIfGh4tq5Xjszwy3Eulzg6tY3esQ==</SSIS:Property>
+          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAiCOl8Y6qgUS3M1GWvtDmYwAAAAACAAAAAAAQZgAAAAEAACAAAAA8w1UPclxFG3fMrBJzSsnteGxkBW8ZsXPBr5oybW1QaQAAAAAOgAAAAAIAACAAAABQKnQTnN5iRPXl4iE0m2Fp6jMTuGvBSQMznZbvS3BuXZAAAAA9i6iTg906wpfa06inUVEYjGdEEv1Y0zX/ZIYpri8Kb4wVIBkx4nBObePw4iSjVSalKCA9N/XrfDq9U+IdU1DJeNmgV3vETTUf1YMi8fBAT9ghfsQj5Z013sYxwUD0+uDi2LSMB2E3iKVr7CQzIoyH1v5bFihSdQXaYF+bnEEEQt9Q9iyweiyw5mAWleWv7AhAAAAAjL/OhsMuh8wyHnGU2tPSGit59VbicuhDtns6ve4RdfGztko2lYjVh6/yqdE8SE7Vv8qrx6CbhcGN3ycKWm5wVQ==</SSIS:Property>
           <SSIS:Property SSIS:Name="FormatVersion">1</SSIS:Property>
         </SSIS:Properties>
         <SSIS:Packages>
@@ -1373,12 +1373,16 @@
       <FullPath>40_ExtractPackages.biml</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>cbs_TruncateExecuteSQL.biml</Name>
-      <FullPath>cbs_TruncateExecuteSQL.biml</FullPath>
+      <Name>cbs_ExecuteSQLCountRows.biml</Name>
+      <FullPath>cbs_ExecuteSQLCountRows.biml</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>cbs_AuditVariables.biml</Name>
       <FullPath>cbs_AuditVariables.biml</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>cbs_ExecuteSQLTruncate.biml</Name>
+      <FullPath>cbs_ExecuteSQLTruncate.biml</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>x_AuditBegin.biml</Name>

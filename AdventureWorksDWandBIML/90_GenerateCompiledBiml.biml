@@ -1,7 +1,7 @@
 <#* BIML Code to save the compiled BIML to file: GenerateCompiledBiml.biml *#>
 
 <!--Directives:--> 
-<#@ template tier="100" #> 
+<#@ template tier="90" #> 
 <#@ import namespace="Varigence.Biml.CoreLowerer.SchemaManagement"  #> 
 <#@ import namespace="System.Xml"  #> 
 

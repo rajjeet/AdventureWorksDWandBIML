@@ -83,6 +83,8 @@
                         FROM [Sales].[SalesOrderDetail];
                     </Annotation>
         <Annotation Tag="Type">Staging</Annotation>
+        <Annotation Tag="IsIncremental">1</Annotation>
+        <Annotation Tag="IncrementColumn">Modified</Annotation>
       </Annotations>
       <Columns>
         <Column Name="SalesOrderID" />
@@ -105,6 +107,8 @@
                         FROM [Sales].[SalesOrderHeader];
                     </Annotation>
         <Annotation Tag="Type">Staging</Annotation>
+        <Annotation Tag="IsIncremental">1</Annotation>
+        <Annotation Tag="IncrementColumn">Modified</Annotation>
       </Annotations>
       <Columns>
         <Column Name="SalesOrderID" />
@@ -383,7 +387,12 @@ GO
         <ExecuteSQL Name="SQL Truncate stage_Product" ConnectionName="OLEDB_Staging">
           <DirectInput>TRUNCATE TABLE [stage].[Product];</DirectInput>
         </ExecuteSQL>
-        <Expression Name="EXP Set InitialTableRowCnt" Expression="@[User::InitialTableRowCnt] = 0" />
+        <ExecuteSQL Name="SQL Count Initial stage_Product" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+          <Results>
+            <Result Name="0" VariableName="User.InitialTableRowCnt" />
+          </Results>
+          <DirectInput>SELECT COUNT(*) FROM [stage].[Product];</DirectInput>
+        </ExecuteSQL>
         <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
           <Results>
             <Result Name="0" VariableName="User.AuditId" />
@@ -437,7 +446,7 @@ GO
             </FlatFileDestination>
           </Transformations>
         </Dataflow>
-        <ExecuteSQL Name="SQL Count stage_Product" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+        <ExecuteSQL Name="SQL Count Final stage_Product" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
           <Results>
             <Result Name="0" VariableName="User.FinalTableRowCnt" />
           </Results>
@@ -489,7 +498,12 @@ GO
         <ExecuteSQL Name="SQL Truncate stage_ProductCategory" ConnectionName="OLEDB_Staging">
           <DirectInput>TRUNCATE TABLE [stage].[ProductCategory];</DirectInput>
         </ExecuteSQL>
-        <Expression Name="EXP Set InitialTableRowCnt" Expression="@[User::InitialTableRowCnt] = 0" />
+        <ExecuteSQL Name="SQL Count Initial stage_ProductCategory" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+          <Results>
+            <Result Name="0" VariableName="User.InitialTableRowCnt" />
+          </Results>
+          <DirectInput>SELECT COUNT(*) FROM [stage].[ProductCategory];</DirectInput>
+        </ExecuteSQL>
         <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
           <Results>
             <Result Name="0" VariableName="User.AuditId" />
@@ -543,7 +557,7 @@ GO
             </FlatFileDestination>
           </Transformations>
         </Dataflow>
-        <ExecuteSQL Name="SQL Count stage_ProductCategory" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+        <ExecuteSQL Name="SQL Count Final stage_ProductCategory" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
           <Results>
             <Result Name="0" VariableName="User.FinalTableRowCnt" />
           </Results>
@@ -595,7 +609,12 @@ GO
         <ExecuteSQL Name="SQL Truncate stage_ProductSubcategory" ConnectionName="OLEDB_Staging">
           <DirectInput>TRUNCATE TABLE [stage].[ProductSubcategory];</DirectInput>
         </ExecuteSQL>
-        <Expression Name="EXP Set InitialTableRowCnt" Expression="@[User::InitialTableRowCnt] = 0" />
+        <ExecuteSQL Name="SQL Count Initial stage_ProductSubcategory" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+          <Results>
+            <Result Name="0" VariableName="User.InitialTableRowCnt" />
+          </Results>
+          <DirectInput>SELECT COUNT(*) FROM [stage].[ProductSubcategory];</DirectInput>
+        </ExecuteSQL>
         <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
           <Results>
             <Result Name="0" VariableName="User.AuditId" />
@@ -649,7 +668,7 @@ GO
             </FlatFileDestination>
           </Transformations>
         </Dataflow>
-        <ExecuteSQL Name="SQL Count stage_ProductSubcategory" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+        <ExecuteSQL Name="SQL Count Final stage_ProductSubcategory" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
           <Results>
             <Result Name="0" VariableName="User.FinalTableRowCnt" />
           </Results>
@@ -701,7 +720,12 @@ GO
         <ExecuteSQL Name="SQL Truncate stage_SalesOrderDetail" ConnectionName="OLEDB_Staging">
           <DirectInput>TRUNCATE TABLE [stage].[SalesOrderDetail];</DirectInput>
         </ExecuteSQL>
-        <Expression Name="EXP Set InitialTableRowCnt" Expression="@[User::InitialTableRowCnt] = 0" />
+        <ExecuteSQL Name="SQL Count Initial stage_SalesOrderDetail" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+          <Results>
+            <Result Name="0" VariableName="User.InitialTableRowCnt" />
+          </Results>
+          <DirectInput>SELECT COUNT(*) FROM [stage].[SalesOrderDetail];</DirectInput>
+        </ExecuteSQL>
         <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
           <Results>
             <Result Name="0" VariableName="User.AuditId" />
@@ -755,7 +779,7 @@ GO
             </FlatFileDestination>
           </Transformations>
         </Dataflow>
-        <ExecuteSQL Name="SQL Count stage_SalesOrderDetail" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+        <ExecuteSQL Name="SQL Count Final stage_SalesOrderDetail" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
           <Results>
             <Result Name="0" VariableName="User.FinalTableRowCnt" />
           </Results>
@@ -807,7 +831,12 @@ GO
         <ExecuteSQL Name="SQL Truncate stage_SalesOrderHeader" ConnectionName="OLEDB_Staging">
           <DirectInput>TRUNCATE TABLE [stage].[SalesOrderHeader];</DirectInput>
         </ExecuteSQL>
-        <Expression Name="EXP Set InitialTableRowCnt" Expression="@[User::InitialTableRowCnt] = 0" />
+        <ExecuteSQL Name="SQL Count Initial stage_SalesOrderHeader" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+          <Results>
+            <Result Name="0" VariableName="User.InitialTableRowCnt" />
+          </Results>
+          <DirectInput>SELECT COUNT(*) FROM [stage].[SalesOrderHeader];</DirectInput>
+        </ExecuteSQL>
         <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
           <Results>
             <Result Name="0" VariableName="User.AuditId" />
@@ -861,7 +890,7 @@ GO
             </FlatFileDestination>
           </Transformations>
         </Dataflow>
-        <ExecuteSQL Name="SQL Count stage_SalesOrderHeader" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+        <ExecuteSQL Name="SQL Count Final stage_SalesOrderHeader" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
           <Results>
             <Result Name="0" VariableName="User.FinalTableRowCnt" />
           </Results>
@@ -885,81 +914,6 @@ GO
       </Tasks>
       <Connections>
         <Connection ConnectionName="FFC stage_SalesOrderHeader" />
-      </Connections>
-      <Parameters>
-        <Parameter Name="ParentAuditId" DataType="Int32">-1</Parameter>
-      </Parameters>
-    </Package>
-    <Package Name="Extract__Master" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey">
-      <Variables>
-        <Variable Name="ParentAuditId" DataType="Int32" EvaluateAsExpression="true">@[$Package::ParentAuditId]</Variable>
-        <Variable Name="AuditId" DataType="Int32">-1</Variable>
-        <Variable Name="TableSchemaName" DataType="String">-</Variable>
-        <Variable Name="TableName" DataType="String">Extract__Master.dtsx</Variable>
-        <Variable Name="SourceQuery" DataType="String">no query</Variable>
-        <Variable Name="ExtractRowCnt" DataType="Int32">-1</Variable>
-        <Variable Name="InsertRowCnt" DataType="Int32">-1</Variable>
-        <Variable Name="UpdateRowCnt" DataType="Int32">-1</Variable>
-        <Variable Name="ErrorRowCnt" DataType="Int32">-1</Variable>
-        <Variable Name="InitialTableRowCnt" DataType="Int32">-1</Variable>
-        <Variable Name="FinalTableRowCnt" DataType="Int32">-1</Variable>
-        <Variable Name="TableMaxDateTime" DataType="DateTime">1900-01-01</Variable>
-        <Variable Name="IsSuccessful" DataType="String">N</Variable>
-      </Variables>
-      <Tasks>
-        <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
-          <Results>
-            <Result Name="0" VariableName="User.AuditId" />
-          </Results>
-          <Parameters>
-            <Parameter Name="@ParentAuditId" VariableName="User.ParentAuditId" DataType="Int32" />
-            <Parameter Name="@ExecutionInstanceGUID" VariableName="System.ExecutionInstanceGUID" DataType="Guid" />
-            <Parameter Name="@MachineName" VariableName="System.MachineName" DataType="String" />
-            <Parameter Name="@PackageID" VariableName="System.PackageID" DataType="Guid" />
-            <Parameter Name="@ServerExecutionId" VariableName="System.ServerExecutionID" DataType="String" />
-            <Parameter Name="@StartTime" VariableName="System.StartTime" DataType="DateTime" />
-            <Parameter Name="@UserName" VariableName="System.UserName" DataType="String" />
-            <Parameter Name="@VersionBuild" VariableName="System.VersionBuild" DataType="Int16" />
-            <Parameter Name="@VersionGUID" VariableName="System.VersionGUID" DataType="Guid" />
-            <Parameter Name="@VersionMajor" VariableName="System.VersionMajor" DataType="Int32" />
-            <Parameter Name="@VersionMinor" VariableName="System.VersionMinor" DataType="Int32" />
-            <Parameter Name="@TableSchemaName" VariableName="User.TableSchemaName" DataType="String" />
-            <Parameter Name="@TableName" VariableName="User.TableName" DataType="String" />
-            <Parameter Name="@ExtractRowCnt" VariableName="User.ExtractRowCnt" DataType="Int32" />
-            <Parameter Name="@InsertRowCnt" VariableName="User.InsertRowCnt" DataType="Int32" />
-            <Parameter Name="@UpdateRowCnt" VariableName="User.UpdateRowCnt" DataType="Int32" />
-            <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
-            <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
-            <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
-            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
-            <Parameter Name="@IsSuccessful" VariableName="User.IsSuccessful" DataType="String" />
-          </Parameters>
-          <DirectInput>
-        exec dbo.spIns_Audit ?, ?, ?, ?, ?,
-                             ?, ?, ?, ?, ?,
-                             ?, ?, ?, ?, ?,
-                             ?, ?, ?, ?, ?, ?
-                        
-    </DirectInput>
-        </ExecuteSQL>
-        <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_Staging">
-          <Parameters>
-            <Parameter Name="@AuditId" VariableName="User.AuditId" DataType="Int32" />
-            <Parameter Name="@ExtractRowCnt" VariableName="User.ExtractRowCnt" DataType="Int32" />
-            <Parameter Name="@InsertRowCnt" VariableName="User.InsertRowCnt" DataType="Int32" />
-            <Parameter Name="@UpdateRowCnt" VariableName="User.UpdateRowCnt" DataType="Int32" />
-            <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
-            <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
-            <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
-            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
-          </Parameters>
-          <DirectInput>
-        exec spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
-    </DirectInput>
-        </ExecuteSQL>
-      </Tasks>
-      <Connections>
-        <Connection ConnectionName="OLEDB_Staging" />
       </Connections>
       <Parameters>
         <Parameter Name="ParentAuditId" DataType="Int32">-1</Parameter>

@@ -10,14 +10,14 @@
                 <Connection ConnectionName="FFC <#=stagingSchemaName#>_<#=table.Name#>" />
             </Connections>
 
-            <#=CallBimlScript("cbs_AuditVariables.biml", table.Schema.Name, table.Name, table.GetTag("SourceQuery"))#>
+            <#=CallBimlScript("cbs_AuditParameterVariables.biml", table.Schema.Name, table.Name, table.GetTag("SourceQuery"))#>
             
             <Tasks>
                 
-                <#=CallBimlScript("cbs_TruncateExecuteSQL.biml", stagingSchemaName, table.Name, stagingConnName)#>
-                
-                <Expression Name="EXP Set InitialTableRowCnt" Expression="@[User::InitialTableRowCnt] = 0" />
+                <#=CallBimlScript("cbs_ExecuteSQLTruncate.biml", stagingSchemaName, table.Name, stagingConnName)#>
+                <#=CallBimlScript("cbs_ExecuteSQLCountRows.biml", stagingSchemaName, table.Name, stagingConnName, "User.InitialTableRowCnt", "Initial")#>
                 <#=CallBimlScript("x_AuditBegin.biml", stagingConnName)#>
+                
                 <Dataflow Name="DFT Extract <#=table.Schema.Name#>_<#=table.Name#> to Staging">
                     <Transformations>
                     <OleDbSource Name="OLEDBSRC <#=table.Schema.Name#>_<#=table.Name#>" 
@@ -39,13 +39,7 @@
                     </FlatFileDestination>
                     </Transformations>
                 </Dataflow>
-                <ExecuteSQL Name="SQL Count <#=stagingSchemaName#>_<#=table.Name#>" 
-                            ConnectionName="<#=stagingConnName#>" ResultSet="SingleRow">
-                    <DirectInput>SELECT COUNT(*) FROM [<#=stagingSchemaName#>].[<#=table.Name#>];</DirectInput>
-                    <Results>
-                        <Result Name="0" VariableName="User.FinalTableRowCnt" />
-                    </Results>
-                </ExecuteSQL>
+                <#=CallBimlScript("cbs_ExecuteSQLCountRows.biml", stagingSchemaName, table.Name, stagingConnName, "User.FinalTableRowCnt", "Final")#>
                 <#=CallBimlScript("x_AuditEnd.biml", stagingConnName)#> 
             </Tasks>
         </Package>

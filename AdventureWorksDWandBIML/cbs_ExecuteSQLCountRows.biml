@@ -1,0 +1,14 @@
+<#@ property name="schemaName" type="String" #>
+<#@ property name="tableName" type="String"#>
+<#@ property name="connName" type="String"#>
+<#@ property name="rowCntVariable" type="String"#>
+<#@ property name="action" type="String"#>
+
+<ExecuteSQL Name="SQL Count <#=action#> <#=schemaName#>_<#=tableName#>"
+            ConnectionName="<#=connName#>" 
+            ResultSet="SingleRow">
+    <DirectInput>SELECT COUNT(*) FROM [<#=schemaName#>].[<#=tableName#>];</DirectInput>
+    <Results>
+        <Result Name="0" VariableName="<#=rowCntVariable#>" />
+    </Results>
+</ExecuteSQL>
