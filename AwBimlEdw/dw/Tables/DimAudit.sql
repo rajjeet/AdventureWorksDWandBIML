@@ -1,0 +1,26 @@
+﻿CREATE TABLE [dw].[DimAudit] (
+    [AuditId]               INT              IDENTITY (1, 1) NOT NULL,
+    [ParentAuditId]         INT              NULL,
+    [ExecutionInstanceGUID] UNIQUEIDENTIFIER NULL,
+    [MachineName]           NVARCHAR (100)   NULL,
+    [PackageId]             UNIQUEIDENTIFIER NULL,
+    [ServerExecutionId]     NVARCHAR (100)   NULL,
+    [StartTime]             DATETIME         NULL,
+    [UserName]              NVARCHAR (100)   NULL,
+    [VersionBuild]          SMALLINT         NULL,
+    [VersionGUID]           UNIQUEIDENTIFIER NULL,
+    [VersionMajor]          SMALLINT         NULL,
+    [VersionMinor]          SMALLINT         NULL,
+    [TableSchemaName]       NVARCHAR (15)    NULL,
+    [TableName]             NVARCHAR (100)   NULL,
+    [ExtractRowCnt]         INT              NULL,
+    [InsertRowCnt]          INT              NULL,
+    [UpdateRowCnt]          INT              NULL,
+    [ErrorRowCnt]           INT              NULL,
+    [InitialTableRowCnt]    INT              NULL,
+    [FinalTableRowCnt]      INT              NULL,
+    [TableMaxDateTime]      DATETIME         NULL,
+    [IsSuccessful]          NVARCHAR (1)     DEFAULT ('N') NULL,
+    CONSTRAINT [PK_AuditId] PRIMARY KEY CLUSTERED ([AuditId] ASC)
+);
+

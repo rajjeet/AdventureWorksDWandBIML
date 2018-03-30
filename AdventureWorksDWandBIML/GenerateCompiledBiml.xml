@@ -1,7 +1,8 @@
 <Biml xmlns="http://schemas.varigence.com/biml.xsd">
   <Connections>
-    <OleDbConnection Name="OLEDB_Staging" CreateInProject="true" ConnectionString="Data Source=localhost;Integrated Security=SSPI;Initial Catalog=BimlDW;Provider=SQLNCLI11.1;" />
+    <OleDbConnection Name="OLEDB_Staging" CreateInProject="true" ConnectionString="Data Source=localhost;Integrated Security=SSPI;Initial Catalog=AwBimlStaging;Provider=SQLNCLI11.1;" />
     <OleDbConnection Name="OLEDB_Source" CreateInProject="true" ConnectionString="Data Source=localhost;Integrated Security=SSPI;Initial Catalog=AdventureWorks2012;Provider=SQLNCLI11.1;" />
+    <OleDbConnection Name="OLEDB_EDW" CreateInProject="true" ConnectionString="Data Source=localhost;Integrated Security=SSPI;Initial Catalog=AwBimlEdw;Provider=SQLNCLI11.1;" />
     <FlatFileConnection Name="FFC stage_Product" FilePath="C:\Users\rajje\Documents\visual studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\errors\stage_Product.txt" FileFormat="FFF stage_Product" />
     <FlatFileConnection Name="FFC stage_ProductCategory" FilePath="C:\Users\rajje\Documents\visual studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\errors\stage_ProductCategory.txt" FileFormat="FFF stage_ProductCategory" />
     <FlatFileConnection Name="FFC stage_ProductSubcategory" FilePath="C:\Users\rajje\Documents\visual studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\errors\stage_ProductSubcategory.txt" FileFormat="FFF stage_ProductSubcategory" />
@@ -137,6 +138,226 @@
         <Column Name="Comment" DataType="String" Length="128" IsNullable="true" />
         <Column Name="rowguid" DataType="Guid" />
         <Column Name="ModifiedDate" DataType="DateTime" />
+      </Columns>
+    </Table>
+    <Table Name="DimProduct" SchemaName="edwDb.dw">
+      <Annotations>
+        <Annotation Tag="Type">Edw</Annotation>
+        <Annotation Tag="LoadOrder">3</Annotation>
+        <Annotation Tag="SCDType">2</Annotation>
+        <Annotation Tag="TableRole">Dimension</Annotation>
+      </Annotations>
+      <Columns>
+        <Column Name="ProductKey">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SK</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="ProductSubcategoryKey">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SCD2</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="ProductID">
+          <Annotations>
+            <Annotation Tag="ColumnRole">BK</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="Name" DataType="String" Length="50">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SCD2</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="ProductNumber" DataType="String" Length="25">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SCD1</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="MakeFlag" DataType="Boolean">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SCD2</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="FinishedGoodsFlag" DataType="Boolean">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SCD2</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="Color" DataType="String" Length="15">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SCD2</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="SafetyStockLevel" DataType="Int16">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SCD1</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="ReorderPoint" DataType="Int16">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SCD2</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="StandardCost" DataType="Currency">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SCD2</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="ListPrice" DataType="Currency">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SCD2</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="Size" DataType="String" Length="5">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SCD1</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="SizeUnitMeasureCode" DataType="StringFixedLength" Length="3">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SCD1</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="WeightUnitMeasureCode" DataType="StringFixedLength" Length="3">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SCD1</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="Weight" DataType="Decimal">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SCD1</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="DaysToManufacture">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SCD2</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="ProductLine" DataType="StringFixedLength" Length="2">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SCD1</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="Class" DataType="StringFixedLength" Length="2">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SCD1</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="Style" DataType="StringFixedLength" Length="2">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SCD1</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="ProductSubcategoryID">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SCD2</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="ProductModelID">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SCD1</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="SellStartDate" DataType="DateTime">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SCD2</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="SellEndDate" DataType="DateTime">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SCD2</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="DiscontinuedDate" DataType="DateTime">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SCD2</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="StartDate" DataType="DateTime">
+          <Annotations>
+            <Annotation Tag="ColumnRole">StartDate</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="EndDate" DataType="DateTime">
+          <Annotations>
+            <Annotation Tag="ColumnRole">EndDate</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="AuditId">
+          <Annotations>
+            <Annotation Tag="ColumnRole">Audit</Annotation>
+          </Annotations>
+        </Column>
+      </Columns>
+    </Table>
+    <Table Name="DimProductCategory" SchemaName="edwDb.dw">
+      <Annotations>
+        <Annotation Tag="Type">Edw</Annotation>
+        <Annotation Tag="LoadOrder">1</Annotation>
+        <Annotation Tag="SCDType">1</Annotation>
+        <Annotation Tag="TableRole">Dimension</Annotation>
+      </Annotations>
+      <Columns>
+        <Column Name="ProductCategoryKey">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SK</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="ProductCategoryID">
+          <Annotations>
+            <Annotation Tag="ColumnRole">BK</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="Name" DataType="String" Length="50">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SCD1</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="AuditId">
+          <Annotations>
+            <Annotation Tag="ColumnRole">Audit</Annotation>
+          </Annotations>
+        </Column>
+      </Columns>
+    </Table>
+    <Table Name="DimProductSubcategory" SchemaName="edwDb.dw">
+      <Annotations>
+        <Annotation Tag="Type">Edw</Annotation>
+        <Annotation Tag="LoadOrder">2</Annotation>
+        <Annotation Tag="SCDType">1</Annotation>
+        <Annotation Tag="TableRole">Dimension</Annotation>
+      </Annotations>
+      <Columns>
+        <Column Name="ProductSubcategoryKey">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SK</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="ProductSubcategoryID">
+          <Annotations>
+            <Annotation Tag="ColumnRole">BK</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="ProductCategoryKey">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SCD1</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="ProductCategoryID">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SCD1</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="Name" DataType="String" Length="50">
+          <Annotations>
+            <Annotation Tag="ColumnRole">SCD1</Annotation>
+          </Annotations>
+        </Column>
+        <Column Name="AuditId">
+          <Annotations>
+            <Annotation Tag="ColumnRole">Audit</Annotation>
+          </Annotations>
+        </Column>
       </Columns>
     </Table>
   </Tables>
@@ -393,7 +614,7 @@ GO
           </Results>
           <DirectInput>SELECT COUNT(*) FROM [stage].[Product];</DirectInput>
         </ExecuteSQL>
-        <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+        <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_EDW" ResultSet="SingleRow">
           <Results>
             <Result Name="0" VariableName="User.AuditId" />
           </Results>
@@ -421,7 +642,7 @@ GO
             <Parameter Name="@IsSuccessful" VariableName="User.IsSuccessful" DataType="String" />
           </Parameters>
           <DirectInput>
-        exec dbo.spIns_Audit ?, ?, ?, ?, ?,
+        exec dw.spIns_Audit ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?, ?
@@ -452,7 +673,7 @@ GO
           </Results>
           <DirectInput>SELECT COUNT(*) FROM [stage].[Product];</DirectInput>
         </ExecuteSQL>
-        <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_Staging">
+        <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_EDW">
           <Parameters>
             <Parameter Name="@AuditId" VariableName="User.AuditId" DataType="Int32" />
             <Parameter Name="@ExtractRowCnt" VariableName="User.ExtractRowCnt" DataType="Int32" />
@@ -464,7 +685,7 @@ GO
             <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
           </Parameters>
           <DirectInput>
-        exec spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
     </DirectInput>
         </ExecuteSQL>
       </Tasks>
@@ -504,7 +725,7 @@ GO
           </Results>
           <DirectInput>SELECT COUNT(*) FROM [stage].[ProductCategory];</DirectInput>
         </ExecuteSQL>
-        <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+        <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_EDW" ResultSet="SingleRow">
           <Results>
             <Result Name="0" VariableName="User.AuditId" />
           </Results>
@@ -532,7 +753,7 @@ GO
             <Parameter Name="@IsSuccessful" VariableName="User.IsSuccessful" DataType="String" />
           </Parameters>
           <DirectInput>
-        exec dbo.spIns_Audit ?, ?, ?, ?, ?,
+        exec dw.spIns_Audit ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?, ?
@@ -563,7 +784,7 @@ GO
           </Results>
           <DirectInput>SELECT COUNT(*) FROM [stage].[ProductCategory];</DirectInput>
         </ExecuteSQL>
-        <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_Staging">
+        <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_EDW">
           <Parameters>
             <Parameter Name="@AuditId" VariableName="User.AuditId" DataType="Int32" />
             <Parameter Name="@ExtractRowCnt" VariableName="User.ExtractRowCnt" DataType="Int32" />
@@ -575,7 +796,7 @@ GO
             <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
           </Parameters>
           <DirectInput>
-        exec spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
     </DirectInput>
         </ExecuteSQL>
       </Tasks>
@@ -615,7 +836,7 @@ GO
           </Results>
           <DirectInput>SELECT COUNT(*) FROM [stage].[ProductSubcategory];</DirectInput>
         </ExecuteSQL>
-        <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+        <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_EDW" ResultSet="SingleRow">
           <Results>
             <Result Name="0" VariableName="User.AuditId" />
           </Results>
@@ -643,7 +864,7 @@ GO
             <Parameter Name="@IsSuccessful" VariableName="User.IsSuccessful" DataType="String" />
           </Parameters>
           <DirectInput>
-        exec dbo.spIns_Audit ?, ?, ?, ?, ?,
+        exec dw.spIns_Audit ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?, ?
@@ -674,7 +895,7 @@ GO
           </Results>
           <DirectInput>SELECT COUNT(*) FROM [stage].[ProductSubcategory];</DirectInput>
         </ExecuteSQL>
-        <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_Staging">
+        <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_EDW">
           <Parameters>
             <Parameter Name="@AuditId" VariableName="User.AuditId" DataType="Int32" />
             <Parameter Name="@ExtractRowCnt" VariableName="User.ExtractRowCnt" DataType="Int32" />
@@ -686,7 +907,7 @@ GO
             <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
           </Parameters>
           <DirectInput>
-        exec spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
     </DirectInput>
         </ExecuteSQL>
       </Tasks>
@@ -727,17 +948,17 @@ GO
           </Results>
           <DirectInput>SELECT COUNT(*) FROM [stage].[SalesOrderDetail];</DirectInput>
         </ExecuteSQL>
-        <ExecuteSQL Name="SQL Max Table DateTime" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+        <ExecuteSQL Name="SQL Max Table DateTime" ConnectionName="OLEDB_EDW" ResultSet="SingleRow">
           <Results>
             <Result Name="0" VariableName="User.TableMaxDateTime" />
           </Results>
           <DirectInput>
-                        SELECT MAX([TableMaxDateTime]) FROM [dbo].[Audit] 
+                        SELECT MAX([TableMaxDateTime]) FROM [dw].[DimAudit] 
                             WHERE [TableSchemaName] = 'Sales' AND [TableName] = 'SalesOrderDetail';
                     </DirectInput>
         </ExecuteSQL>
         <Expression Name="EXP SourceQuery" Expression="@[User::SourceQuery] = @[$Project::InitialLoad] ?                                              @[User::SourceQuery] :                                             @[User::SourceQuery] + @[User::SourceQueryWhere] +                                                 &quot;'&quot; + (DT_WSTR, 30) @[User::TableMaxDateTime] +  &quot;'&quot;" />
-        <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+        <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_EDW" ResultSet="SingleRow">
           <Results>
             <Result Name="0" VariableName="User.AuditId" />
           </Results>
@@ -765,7 +986,7 @@ GO
             <Parameter Name="@IsSuccessful" VariableName="User.IsSuccessful" DataType="String" />
           </Parameters>
           <DirectInput>
-        exec dbo.spIns_Audit ?, ?, ?, ?, ?,
+        exec dw.spIns_Audit ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?, ?
@@ -796,7 +1017,7 @@ GO
           </Results>
           <DirectInput>SELECT COUNT(*) FROM [stage].[SalesOrderDetail];</DirectInput>
         </ExecuteSQL>
-        <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_Staging">
+        <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_EDW">
           <Parameters>
             <Parameter Name="@AuditId" VariableName="User.AuditId" DataType="Int32" />
             <Parameter Name="@ExtractRowCnt" VariableName="User.ExtractRowCnt" DataType="Int32" />
@@ -808,7 +1029,7 @@ GO
             <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
           </Parameters>
           <DirectInput>
-        exec spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
     </DirectInput>
         </ExecuteSQL>
       </Tasks>
@@ -849,17 +1070,17 @@ GO
           </Results>
           <DirectInput>SELECT COUNT(*) FROM [stage].[SalesOrderHeader];</DirectInput>
         </ExecuteSQL>
-        <ExecuteSQL Name="SQL Max Table DateTime" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+        <ExecuteSQL Name="SQL Max Table DateTime" ConnectionName="OLEDB_EDW" ResultSet="SingleRow">
           <Results>
             <Result Name="0" VariableName="User.TableMaxDateTime" />
           </Results>
           <DirectInput>
-                        SELECT MAX([TableMaxDateTime]) FROM [dbo].[Audit] 
+                        SELECT MAX([TableMaxDateTime]) FROM [dw].[DimAudit] 
                             WHERE [TableSchemaName] = 'Sales' AND [TableName] = 'SalesOrderHeader';
                     </DirectInput>
         </ExecuteSQL>
         <Expression Name="EXP SourceQuery" Expression="@[User::SourceQuery] = @[$Project::InitialLoad] ?                                              @[User::SourceQuery] :                                             @[User::SourceQuery] + @[User::SourceQueryWhere] +                                                 &quot;'&quot; + (DT_WSTR, 30) @[User::TableMaxDateTime] +  &quot;'&quot;" />
-        <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_Staging" ResultSet="SingleRow">
+        <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_EDW" ResultSet="SingleRow">
           <Results>
             <Result Name="0" VariableName="User.AuditId" />
           </Results>
@@ -887,7 +1108,7 @@ GO
             <Parameter Name="@IsSuccessful" VariableName="User.IsSuccessful" DataType="String" />
           </Parameters>
           <DirectInput>
-        exec dbo.spIns_Audit ?, ?, ?, ?, ?,
+        exec dw.spIns_Audit ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?, ?
@@ -918,7 +1139,7 @@ GO
           </Results>
           <DirectInput>SELECT COUNT(*) FROM [stage].[SalesOrderHeader];</DirectInput>
         </ExecuteSQL>
-        <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_Staging">
+        <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_EDW">
           <Parameters>
             <Parameter Name="@AuditId" VariableName="User.AuditId" DataType="Int32" />
             <Parameter Name="@ExtractRowCnt" VariableName="User.ExtractRowCnt" DataType="Int32" />
@@ -930,7 +1151,7 @@ GO
             <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
           </Parameters>
           <DirectInput>
-        exec spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
     </DirectInput>
         </ExecuteSQL>
       </Tasks>
@@ -945,6 +1166,7 @@ GO
   <Schemas>
     <Schema Name="Production" DatabaseName="sourceDb" />
     <Schema Name="Sales" DatabaseName="sourceDb" />
+    <Schema Name="dw" DatabaseName="edwDb" />
     <Schema Name="stage" DatabaseName="stagingDb" />
   </Schemas>
   <FileFormats>
@@ -1053,5 +1275,6 @@ GO
   <Databases>
     <Database Name="sourceDb" ConnectionName="OLEDB_Source" />
     <Database Name="stagingDb" ConnectionName="OLEDB_Staging" />
+    <Database Name="edwDb" ConnectionName="OLEDB_EDW" />
   </Databases>
 </Biml>

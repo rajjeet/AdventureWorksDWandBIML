@@ -1,10 +1,13 @@
 <#
     var stagingSchemaName = @"stage";
     var stagingConnName = @"OLEDB_Staging";
-    var stagingConnString = @"Data Source=localhost;Integrated Security=SSPI;Initial Catalog=BimlDW;Provider=SQLNCLI11.1;";
+    var stagingConnString = @"Data Source=localhost;Integrated Security=SSPI;Initial Catalog=AwBimlStaging;Provider=SQLNCLI11.1;";
     
     var sourceConnName = @"OLEDB_Source";
     var sourceConnString = @"Data Source=localhost;Integrated Security=SSPI;Initial Catalog=AdventureWorks2012;Provider=SQLNCLI11.1;";
+    
+    var edwConnName = @"OLEDB_EDW";
+    var edwConnString = @"Data Source=localhost;Integrated Security=SSPI;Initial Catalog=AwBimlEdw;Provider=SQLNCLI11.1;";
     
     var errorFFPath = @"C:\Users\rajje\Documents\visual studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\errors\";
     

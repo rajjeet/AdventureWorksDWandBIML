@@ -1,7 +1,7 @@
 <#@ property name="ConnName" type="String" #>
 <ExecuteSQL Name="SQL Audit Begin" ConnectionName="<#=ConnName#>" ResultSet="SingleRow">
     <DirectInput>
-        exec dbo.spIns_Audit ?, ?, ?, ?, ?,
+        exec dw.spIns_Audit ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?, ?

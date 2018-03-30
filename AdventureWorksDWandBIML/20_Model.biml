@@ -1,14 +1,16 @@
 <#@ template tier="20" language="C#"#>
-<#@ include file="x_CommonVariables.biml"#>
+<#@ include file="i_CommonVariables.biml"#>
+<#@ include file="i_Utilities.biml"#>
 <#@ import namespace="Varigence.Biml.CoreLowerer.SchemaManagement"#>
 
 <Biml xmlns="http://schemas.varigence.com/biml.xsd">
 
     <#
         var includedSourceSchemas = new List<String>{"Production", "Sales"};
-        var includedSourceTables = new List<String>{"Product", "ProductSubcategory", "ProductCategory", "SalesOrderHeader", "SalesOrderDetail"};
+        var includedSourceTables = new List<String>{"Product", "ProductSubcategory", 
+            "ProductCategory", "SalesOrderHeader", "SalesOrderDetail"};
         var incrementalTables = new List<String>{"SalesOrderHeader", "SalesOrderDetail"};
-    
+        
          var sourceConn = RootNode.OleDbConnections[sourceConnName]; 
          var sourceDbSchema = sourceConn.GetDatabaseSchema(includedSourceSchemas, includedSourceTables,
             ImportOptions.ExcludeCheckConstraint |
@@ -19,18 +21,38 @@
             ImportOptions.ExcludePrimaryKey |
             ImportOptions.ExcludeUniqueKey |
             ImportOptions.ExcludeViews); 
+            
+        var includedEdwSchemas = new List<String>{"dw"};        
+        var includedEdwTables = new List<String>{"DimProduct", "DimProductSubcategory", 
+            "DimProductCategory"};
+            
+        var edwConn = RootNode.OleDbConnections[edwConnName];
+        var edwDbSchema = edwConn.GetDatabaseSchema(includedEdwSchemas, includedEdwTables,
+            ImportOptions.ExcludeCheckConstraint |
+            ImportOptions.ExcludeColumnDefault | 
+            ImportOptions.ExcludeForeignKey | 
+            ImportOptions.ExcludeIdentity |
+            ImportOptions.ExcludeIndex | 
+            ImportOptions.ExcludePrimaryKey |
+            ImportOptions.ExcludeUniqueKey |
+            ImportOptions.ExcludeViews); 
+        
     #>
     
     <Databases>
         <Database Name="sourceDb" ConnectionName="<#=sourceConnName#>" />
         <Database Name="stagingDb" ConnectionName="<#=stagingConnName#>" />
+        <Database Name="edwDb" ConnectionName="<#=edwConnName#>" />
     </Databases>
     
     <Schemas>
         <# foreach(var schema in sourceDbSchema.SchemaNodes) { #>
         <Schema DatabaseName="sourceDb" Name="<#=schema.Name#>" />
         <# } #>
-        <Schema Name="<#=stagingSchemaName#>" DatabaseName="stagingDb" />
+        <# foreach(var schema in edwDbSchema.SchemaNodes) { #>
+        <Schema DatabaseName="edwDb" Name="<#=schema.Name#>" />
+        <# } #>
+        <Schema DatabaseName="stagingDb" Name="<#=stagingSchemaName#>" />
     </Schemas>
         
     <Tables>
@@ -52,5 +74,30 @@
                 </Annotations>
             </Table>
         <# } #>
+        <# foreach(var tableNode in edwDbSchema.TableNodes) { #>
+            <Table Name="<#=tableNode.Name#>" SchemaName="edwDb.<#=tableNode.Schema.Name#>">
+                <Columns>
+                    <# foreach(var columnNode in tableNode.Columns) { #>
+                    <Column Name="<#=columnNode.Name#>" DataType="<#=columnNode.DataType#>" Length="<#=columnNode.Length#>">
+                    <Annotations>
+                        <# var aColumn = GetSqlServerExtendedProperties(edwConnString, tableNode, columnNode);#>
+                        <# foreach(var annotation in aColumn.Annotations) { #>
+                            <#=annotation.GetBiml()#>
+                        <# } #>
+                    </Annotations>
+                    </Column>
+                    <# } #>
+                </Columns>
+                <Annotations>
+                <Annotation AnnotationType="Tag" Tag="Type">Edw</Annotation>
+
+                <# var aTable = GetSqlServerExtendedProperties(edwConnString, tableNode);#>
+                <# foreach(var annotation in aTable.Annotations) { #>
+                    <#=annotation.GetBiml()#>
+                <# } #>
+                </Annotations>
+
+            </Table>
+        <# } #>            
     </Tables>
 </Biml>

@@ -1,7 +1,7 @@
 <#@ property name="ConnName" type="String"#>
 <ExecuteSQL Name="SQL Audit End" ConnectionName="<#=ConnName#>">
     <DirectInput>
-        exec spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
     </DirectInput>
     <Parameters>
         <Parameter Name="@AuditId" DataType="Int32" VariableName="User.AuditId" />

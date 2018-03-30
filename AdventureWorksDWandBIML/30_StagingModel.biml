@@ -1,5 +1,5 @@
 <#@ template tier="30" language="C#"#>
-<#@ include file="x_CommonVariables.biml" #>
+<#@ include file="i_CommonVariables.biml" #>
 <Biml xmlns="http://schemas.varigence.com/biml.xsd">
     <Packages>
         <Package Name="Generate Staging Schema" ProtectionLevel="EncryptSensitiveWithUserKey">

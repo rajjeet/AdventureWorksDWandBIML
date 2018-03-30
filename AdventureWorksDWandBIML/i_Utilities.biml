@@ -1,0 +1,27 @@
+<#@ import namespace="System.Data" #>
+<#+
+    public AstTableColumnBaseNode GetSqlServerExtendedProperties(string conn, AstTableNode tableNode, AstTableColumnBaseNode columnNode) {
+        var query = @"SELECT name, value FROM fn_listextendedproperty(NULL,'schema','" +  tableNode.Schema.Name  +
+                        "' ,'table','" +  tableNode.Name  + "','Column','" + columnNode.Name +"')";
+        
+        var extProps = ExternalDataAccess.GetDataTable(conn, query);
+        
+        foreach(DataRow extProp in extProps.Rows) {
+            columnNode.AddAnnotation(AnnotationType.Tag, extProp["value"].ToString(), extProp["name"].ToString());
+        }
+        return columnNode;
+    }
+    
+    public AstTableNode GetSqlServerExtendedProperties(string conn, AstTableNode tableNode) {
+        var query = @"SELECT name, value FROM fn_listextendedproperty(NULL,'schema','" +  tableNode.Schema.Name  +
+                        "' ,'table','" +  tableNode.Name  + "', NULL, NULL)";
+        
+        var extProps = ExternalDataAccess.GetDataTable(conn, query);
+        
+        foreach(DataRow extProp in extProps.Rows) {
+            tableNode.AddAnnotation(AnnotationType.Tag, extProp["value"].ToString(), extProp["name"].ToString());
+        }
+        return tableNode;
+    }
+
+#>

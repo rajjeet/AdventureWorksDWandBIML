@@ -1,5 +1,5 @@
 <#@ template tier="40" language="C#"#>
-<#@ include file="x_CommonVariables.biml"#>
+<#@ include file="i_CommonVariables.biml"#>
 <Biml xmlns="http://schemas.varigence.com/biml.xsd">
     <Packages>
         <# foreach(var table in RootNode.Tables.Where(t => t.GetTag("Type") == "Staging")) { #>
@@ -21,9 +21,9 @@
                     "User.InitialTableRowCnt", "Initial")#>
                 
                 <# if (table.GetTag("IsIncremental").ToString() == "1") { #>
-                <ExecuteSQL Name="SQL Max Table DateTime" ConnectionName="<#=stagingConnName#>" ResultSet="SingleRow">
+                <ExecuteSQL Name="SQL Max Table DateTime" ConnectionName="<#=edwConnName#>" ResultSet="SingleRow">
                     <DirectInput>
-                        SELECT MAX([TableMaxDateTime]) FROM [dbo].[Audit] 
+                        SELECT MAX([TableMaxDateTime]) FROM [dw].[DimAudit] 
                             WHERE [TableSchemaName] = '<#=table.Schema.Name#>' AND [TableName] = '<#=table.Name#>';
                     </DirectInput>
                     <Results>
@@ -37,7 +37,7 @@
                                                 &quot;'&quot; + (DT_WSTR, 30) @[User::TableMaxDateTime] +  &quot;'&quot;" />
                 <# } #>
                 
-                <#=CallBimlScript("x_AuditBegin.biml", stagingConnName)#>
+                <#=CallBimlScript("cbs_AuditBegin.biml", edwConnName)#>
                 
 
                 <Dataflow Name="DFT Extract <#=table.Schema.Name#>_<#=table.Name#> to Staging">
@@ -63,7 +63,7 @@
                 </Dataflow>
                 <#=CallBimlScript("cbs_ExecuteSQLCountRows.biml", stagingSchemaName, table.Name, stagingConnName, 
                     "User.FinalTableRowCnt", "Final")#>
-                <#=CallBimlScript("x_AuditEnd.biml", stagingConnName)#> 
+                <#=CallBimlScript("cbs_AuditEnd.biml", edwConnName)#> 
             </Tasks>
         </Package>
         <# } #>
