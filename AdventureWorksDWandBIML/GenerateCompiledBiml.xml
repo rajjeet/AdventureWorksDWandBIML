@@ -1227,42 +1227,60 @@ GO
             <RowCount Name="RC Extract" VariableName="User.ExtractRowCnt" />
             <Lookup Name="LU dw_DimProduct" OleDbConnectionName="OLEDB_EDW" NoMatchBehavior="RedirectRowsToNoMatchOutput">
               <Outputs>
-                <Column SourceColumn="ProductSubcategoryKey" />
-                <Column SourceColumn="Name" />
-                <Column SourceColumn="ProductNumber" />
-                <Column SourceColumn="MakeFlag" />
-                <Column SourceColumn="FinishedGoodsFlag" />
-                <Column SourceColumn="Color" />
-                <Column SourceColumn="SafetyStockLevel" />
-                <Column SourceColumn="ReorderPoint" />
-                <Column SourceColumn="StandardCost" />
-                <Column SourceColumn="ListPrice" />
-                <Column SourceColumn="Size" />
-                <Column SourceColumn="SizeUnitMeasureCode" />
-                <Column SourceColumn="WeightUnitMeasureCode" />
-                <Column SourceColumn="Weight" />
-                <Column SourceColumn="DaysToManufacture" />
-                <Column SourceColumn="ProductLine" />
-                <Column SourceColumn="Class" />
-                <Column SourceColumn="Style" />
-                <Column SourceColumn="ProductSubcategoryID" />
-                <Column SourceColumn="ProductModelID" />
-                <Column SourceColumn="SellStartDate" />
-                <Column SourceColumn="SellEndDate" />
-                <Column SourceColumn="DiscontinuedDate" />
+                <Column SourceColumn="ProductSubcategoryKey" TargetColumn="dim_ProductSubcategoryKey" />
+                <Column SourceColumn="Name" TargetColumn="dim_Name" />
+                <Column SourceColumn="ProductNumber" TargetColumn="dim_ProductNumber" />
+                <Column SourceColumn="MakeFlag" TargetColumn="dim_MakeFlag" />
+                <Column SourceColumn="FinishedGoodsFlag" TargetColumn="dim_FinishedGoodsFlag" />
+                <Column SourceColumn="Color" TargetColumn="dim_Color" />
+                <Column SourceColumn="SafetyStockLevel" TargetColumn="dim_SafetyStockLevel" />
+                <Column SourceColumn="ReorderPoint" TargetColumn="dim_ReorderPoint" />
+                <Column SourceColumn="StandardCost" TargetColumn="dim_StandardCost" />
+                <Column SourceColumn="ListPrice" TargetColumn="dim_ListPrice" />
+                <Column SourceColumn="Size" TargetColumn="dim_Size" />
+                <Column SourceColumn="SizeUnitMeasureCode" TargetColumn="dim_SizeUnitMeasureCode" />
+                <Column SourceColumn="WeightUnitMeasureCode" TargetColumn="dim_WeightUnitMeasureCode" />
+                <Column SourceColumn="Weight" TargetColumn="dim_Weight" />
+                <Column SourceColumn="DaysToManufacture" TargetColumn="dim_DaysToManufacture" />
+                <Column SourceColumn="ProductLine" TargetColumn="dim_ProductLine" />
+                <Column SourceColumn="Class" TargetColumn="dim_Class" />
+                <Column SourceColumn="Style" TargetColumn="dim_Style" />
+                <Column SourceColumn="ProductSubcategoryID" TargetColumn="dim_ProductSubcategoryID" />
+                <Column SourceColumn="ProductModelID" TargetColumn="dim_ProductModelID" />
+                <Column SourceColumn="SellStartDate" TargetColumn="dim_SellStartDate" />
+                <Column SourceColumn="SellEndDate" TargetColumn="dim_SellEndDate" />
+                <Column SourceColumn="DiscontinuedDate" TargetColumn="dim_DiscontinuedDate" />
               </Outputs>
               <Inputs>
-                <Column SourceColumn="ProductID" TargetColumn="ProductID" />
+                <Column SourceColumn="ProductID" />
               </Inputs>
               <ExternalTableInput Table="[dw].[DimProduct]" />
             </Lookup>
             <RowCount Name="RC Insert" VariableName="User.InsertRowCnt">
               <InputPath OutputPathName="LU dw_DimProduct.NoMatch" />
             </RowCount>
-            <OleDbDestination Name="OLEDBDEST dw_DimProduct" ConnectionName="OLEDB_EDW">
+            <DerivedColumns Name="DC Insert">
               <InputPath OutputPathName="RC Insert.Output" />
+              <Columns>
+                <Column Name="AuditId" DataType="Int32">@[User::AuditId]</Column>
+                <Column Name="StartDate" DataType="DateTime">GetDate()</Column>
+              </Columns>
+            </DerivedColumns>
+            <OleDbDestination Name="OLEDBDEST dw_DimProduct" ConnectionName="OLEDB_EDW">
+              <InputPath OutputPathName="DC Insert.Output" />
               <ExternalTableOutput Table="[dw].[DimProduct]" />
             </OleDbDestination>
+            <ConditionalSplit Name="CS Changed Columns">
+              <InputPath OutputPathName="LU dw_DimProduct.Match" />
+              <OutputPaths>
+                <OutputPath Name="SCD2">
+                  <Expression>REPLACENULL(ProductSubcategoryKey,0) != REPLACENULL(dim_ProductSubcategoryKey,0) || REPLACENULL(Name,0) != REPLACENULL(dim_Name,0) || REPLACENULL(MakeFlag,0) != REPLACENULL(dim_MakeFlag,0) || REPLACENULL(FinishedGoodsFlag,0) != REPLACENULL(dim_FinishedGoodsFlag,0) || REPLACENULL(Color,0) != REPLACENULL(dim_Color,0) || REPLACENULL(ReorderPoint,0) != REPLACENULL(dim_ReorderPoint,0) || REPLACENULL(StandardCost,0) != REPLACENULL(dim_StandardCost,0) || REPLACENULL(ListPrice,0) != REPLACENULL(dim_ListPrice,0) || REPLACENULL(DaysToManufacture,0) != REPLACENULL(dim_DaysToManufacture,0) || REPLACENULL(ProductSubcategoryID,0) != REPLACENULL(dim_ProductSubcategoryID,0) || REPLACENULL(SellStartDate,0) != REPLACENULL(dim_SellStartDate,0) || REPLACENULL(SellEndDate,0) != REPLACENULL(dim_SellEndDate,0) || REPLACENULL(DiscontinuedDate,0) != REPLACENULL(dim_DiscontinuedDate,0)</Expression>
+                </OutputPath>
+                <OutputPath Name="SCD1">
+                  <Expression>REPLACENULL(ProductNumber,0) != REPLACENULL(dim_ProductNumber,0) || REPLACENULL(SafetyStockLevel,0) != REPLACENULL(dim_SafetyStockLevel,0) || REPLACENULL(Size,0) != REPLACENULL(dim_Size,0) || REPLACENULL(SizeUnitMeasureCode,0) != REPLACENULL(dim_SizeUnitMeasureCode,0) || REPLACENULL(WeightUnitMeasureCode,0) != REPLACENULL(dim_WeightUnitMeasureCode,0) || REPLACENULL(Weight,0) != REPLACENULL(dim_Weight,0) || REPLACENULL(ProductLine,0) != REPLACENULL(dim_ProductLine,0) || REPLACENULL(Class,0) != REPLACENULL(dim_Class,0) || REPLACENULL(Style,0) != REPLACENULL(dim_Style,0) || REPLACENULL(ProductModelID,0) != REPLACENULL(dim_ProductModelID,0)</Expression>
+                </OutputPath>
+              </OutputPaths>
+            </ConditionalSplit>
           </Transformations>
         </Dataflow>
         <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_EDW">
@@ -1350,20 +1368,35 @@ GO
             <RowCount Name="RC Extract" VariableName="User.ExtractRowCnt" />
             <Lookup Name="LU dw_DimProductCategory" OleDbConnectionName="OLEDB_EDW" NoMatchBehavior="RedirectRowsToNoMatchOutput">
               <Outputs>
-                <Column SourceColumn="Name" />
+                <Column SourceColumn="Name" TargetColumn="dim_Name" />
               </Outputs>
               <Inputs>
-                <Column SourceColumn="ProductCategoryID" TargetColumn="ProductCategoryID" />
+                <Column SourceColumn="ProductCategoryID" />
               </Inputs>
               <ExternalTableInput Table="[dw].[DimProductCategory]" />
             </Lookup>
             <RowCount Name="RC Insert" VariableName="User.InsertRowCnt">
               <InputPath OutputPathName="LU dw_DimProductCategory.NoMatch" />
             </RowCount>
-            <OleDbDestination Name="OLEDBDEST dw_DimProductCategory" ConnectionName="OLEDB_EDW">
+            <DerivedColumns Name="DC Insert">
               <InputPath OutputPathName="RC Insert.Output" />
+              <Columns>
+                <Column Name="AuditId" DataType="Int32">@[User::AuditId]</Column>
+                <Column Name="StartDate" DataType="DateTime">GetDate()</Column>
+              </Columns>
+            </DerivedColumns>
+            <OleDbDestination Name="OLEDBDEST dw_DimProductCategory" ConnectionName="OLEDB_EDW">
+              <InputPath OutputPathName="DC Insert.Output" />
               <ExternalTableOutput Table="[dw].[DimProductCategory]" />
             </OleDbDestination>
+            <ConditionalSplit Name="CS Changed Columns">
+              <InputPath OutputPathName="LU dw_DimProductCategory.Match" />
+              <OutputPaths>
+                <OutputPath Name="SCD1">
+                  <Expression>REPLACENULL(Name,0) != REPLACENULL(dim_Name,0)</Expression>
+                </OutputPath>
+              </OutputPaths>
+            </ConditionalSplit>
           </Transformations>
         </Dataflow>
         <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_EDW">
@@ -1451,22 +1484,37 @@ GO
             <RowCount Name="RC Extract" VariableName="User.ExtractRowCnt" />
             <Lookup Name="LU dw_DimProductSubcategory" OleDbConnectionName="OLEDB_EDW" NoMatchBehavior="RedirectRowsToNoMatchOutput">
               <Outputs>
-                <Column SourceColumn="ProductCategoryKey" />
-                <Column SourceColumn="ProductCategoryID" />
-                <Column SourceColumn="Name" />
+                <Column SourceColumn="ProductCategoryKey" TargetColumn="dim_ProductCategoryKey" />
+                <Column SourceColumn="ProductCategoryID" TargetColumn="dim_ProductCategoryID" />
+                <Column SourceColumn="Name" TargetColumn="dim_Name" />
               </Outputs>
               <Inputs>
-                <Column SourceColumn="ProductSubcategoryID" TargetColumn="ProductSubcategoryID" />
+                <Column SourceColumn="ProductSubcategoryID" />
               </Inputs>
               <ExternalTableInput Table="[dw].[DimProductSubcategory]" />
             </Lookup>
             <RowCount Name="RC Insert" VariableName="User.InsertRowCnt">
               <InputPath OutputPathName="LU dw_DimProductSubcategory.NoMatch" />
             </RowCount>
-            <OleDbDestination Name="OLEDBDEST dw_DimProductSubcategory" ConnectionName="OLEDB_EDW">
+            <DerivedColumns Name="DC Insert">
               <InputPath OutputPathName="RC Insert.Output" />
+              <Columns>
+                <Column Name="AuditId" DataType="Int32">@[User::AuditId]</Column>
+                <Column Name="StartDate" DataType="DateTime">GetDate()</Column>
+              </Columns>
+            </DerivedColumns>
+            <OleDbDestination Name="OLEDBDEST dw_DimProductSubcategory" ConnectionName="OLEDB_EDW">
+              <InputPath OutputPathName="DC Insert.Output" />
               <ExternalTableOutput Table="[dw].[DimProductSubcategory]" />
             </OleDbDestination>
+            <ConditionalSplit Name="CS Changed Columns">
+              <InputPath OutputPathName="LU dw_DimProductSubcategory.Match" />
+              <OutputPaths>
+                <OutputPath Name="SCD1">
+                  <Expression>REPLACENULL(ProductCategoryKey,0) != REPLACENULL(dim_ProductCategoryKey,0) || REPLACENULL(ProductCategoryID,0) != REPLACENULL(dim_ProductCategoryID,0) || REPLACENULL(Name,0) != REPLACENULL(dim_Name,0)</Expression>
+                </OutputPath>
+              </OutputPaths>
+            </ConditionalSplit>
           </Transformations>
         </Dataflow>
         <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_EDW">

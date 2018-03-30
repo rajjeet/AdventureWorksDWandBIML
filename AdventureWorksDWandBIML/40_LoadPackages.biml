@@ -1,5 +1,6 @@
 <#@ template tier="40" language="C#" #>
 <#@ include file="i_CommonVariables.biml"#>
+<#@ include file="i_Utilities.biml"#>
 <Biml xmlns="http://schemas.varigence.com/biml.xsd">
     <Packages>
         <# foreach(var table in RootNode.Tables.Where(t => t.GetTag("Type") == "Edw")) { #>
@@ -31,25 +32,46 @@
                             OleDbConnectionName="<#=edwConnName#>">
                         <ExternalTableInput Table="<#=table.SchemaQualifiedName#>" />
                         <Inputs>
-                            <Column SourceColumn="<#=columnBK#>" TargetColumn="<#=columnBK#>" />
+                            <Column SourceColumn="<#=columnBK#>"/>
                         </Inputs>
                         <Outputs>
                             <# foreach(var column in table.Columns) { #>
                                 <# if (column.GetTag("ColumnRole") == "SCD1" || column.GetTag("ColumnRole") == "SCD2") { #>
-                                    <Column SourceColumn="<#=column.Name#>" />
+                                    <Column SourceColumn="<#=column.Name#>" TargetColumn="dim_<#=column.Name#>" />
                                 <# } #>
                             <# } #>
                         </Outputs>
                     </Lookup>
+                    <!-- LOOKUP NO MATCH -->
                     <RowCount Name="RC Insert" VariableName="User.InsertRowCnt">
                         <InputPath OutputPathName="LU <#=edwSchemaName#>_<#=table.Name#>.NoMatch" />
-
                     </RowCount>
+                    <DerivedColumns Name="DC Insert">
+                        <InputPath OutputPathName="RC Insert.Output" />
+                        <Columns>
+                            <Column Name="AuditId" DataType="Int32">@[User::AuditId]</Column>
+                            <Column Name="StartDate" DataType="DateTime">GetDate()</Column>
+                        </Columns>
+                    </DerivedColumns>
                     <OleDbDestination Name="OLEDBDEST <#=table.Schema.Name#>_<#=table.Name#>" 
                                       ConnectionName="<#=edwConnName#>">
+                        <InputPath OutputPathName="DC Insert.Output" />                                          
                         <ExternalTableOutput Table="<#=table.SchemaQualifiedName#>" />
-                        <InputPath OutputPathName="RC Insert.Output" />
                     </OleDbDestination>
+                    <!-- LOOKUP MATCH -->
+                    <ConditionalSplit Name="CS Changed Columns">
+                        <InputPath OutputPathName="LU <#=edwSchemaName#>_<#=table.Name#>.Match" />
+                        <OutputPaths>
+                        <# if (table.GetTag("SCDType") == "2") { #>
+                            <OutputPath Name="SCD2">
+                                <Expression><#=GetSCDExpression(table, "2")#></Expression>
+                            </OutputPath>
+                        <# } #>
+                            <OutputPath Name="SCD1">
+                                <Expression><#=GetSCDExpression(table, "1")#></Expression>
+                            </OutputPath>
+                        </OutputPaths>
+                    </ConditionalSplit>
                 </Transformations>
             </Dataflow>
                 

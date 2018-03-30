@@ -1,4 +1,5 @@
 <#@ import namespace="System.Data" #>
+
 <#+
     public AstTableColumnBaseNode GetSqlServerExtendedProperties(string conn, AstTableNode tableNode, AstTableColumnBaseNode columnNode) {
         var query = @"SELECT name, value FROM fn_listextendedproperty(NULL,'schema','" +  tableNode.Schema.Name  +
@@ -22,6 +23,27 @@
             tableNode.AddAnnotation(AnnotationType.Tag, extProp["value"].ToString(), extProp["name"].ToString());
         }
         return tableNode;
+    }
+    
+    public string GetSCDExpression(AstTableNode tableNode, string SCDType){
+        string expression = "";
+        bool isFirstColumn = true;
+        foreach (var column in tableNode.Columns) {
+            if (column.GetTag("ColumnRole") == "SCD" + SCDType) {
+                if(isFirstColumn) {
+                    expression = GetColumnComparisonExpression(column);
+                    isFirstColumn = false;
+                } else {
+                    expression += $" || " + GetColumnComparisonExpression(column);
+                }
+            }
+        }
+        return expression;
+    }
+    
+    string GetColumnComparisonExpression(AstTableColumnBaseNode column) {
+        
+        return $"REPLACENULL({column.Name},0) != REPLACENULL(dim_{column.Name},0)";
     }
 
 #>
