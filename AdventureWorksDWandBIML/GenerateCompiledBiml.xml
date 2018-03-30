@@ -8,6 +8,9 @@
     <FlatFileConnection Name="FFC stage_ProductSubcategory" FilePath="C:\Users\rajje\Documents\visual studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\errors\stage_ProductSubcategory.txt" FileFormat="FFF stage_ProductSubcategory" />
     <FlatFileConnection Name="FFC stage_SalesOrderDetail" FilePath="C:\Users\rajje\Documents\visual studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\errors\stage_SalesOrderDetail.txt" FileFormat="FFF stage_SalesOrderDetail" />
     <FlatFileConnection Name="FFC stage_SalesOrderHeader" FilePath="C:\Users\rajje\Documents\visual studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\errors\stage_SalesOrderHeader.txt" FileFormat="FFF stage_SalesOrderHeader" />
+    <FlatFileConnection Name="FFC dw_DimProduct" FilePath="C:\Users\rajje\Documents\visual studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\errors\dw_DimProduct.txt" FileFormat="FFF dw_DimProduct" />
+    <FlatFileConnection Name="FFC dw_DimProductCategory" FilePath="C:\Users\rajje\Documents\visual studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\errors\dw_DimProductCategory.txt" FileFormat="FFF dw_DimProductCategory" />
+    <FlatFileConnection Name="FFC dw_DimProductSubcategory" FilePath="C:\Users\rajje\Documents\visual studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\errors\dw_DimProductSubcategory.txt" FileFormat="FFF dw_DimProductSubcategory" />
   </Connections>
   <Tables>
     <Table Name="Product" SchemaName="sourceDb.Production">
@@ -1225,6 +1228,11 @@ GO
               <ExternalTableInput Table="[stage].[vDimProduct]" />
             </OleDbSource>
             <RowCount Name="RC Extract" VariableName="User.ExtractRowCnt" />
+            <DerivedColumns Name="DC Audit Id">
+              <Columns>
+                <Column Name="AuditId" DataType="Int32">@[User::AuditId]</Column>
+              </Columns>
+            </DerivedColumns>
             <Lookup Name="LU dw_DimProduct" OleDbConnectionName="OLEDB_EDW" NoMatchBehavior="RedirectRowsToNoMatchOutput">
               <Outputs>
                 <Column SourceColumn="ProductSubcategoryKey" TargetColumn="dim_ProductSubcategoryKey" />
@@ -1256,20 +1264,6 @@ GO
               </Inputs>
               <ExternalTableInput Table="[dw].[DimProduct]" />
             </Lookup>
-            <RowCount Name="RC Insert" VariableName="User.InsertRowCnt">
-              <InputPath OutputPathName="LU dw_DimProduct.NoMatch" />
-            </RowCount>
-            <DerivedColumns Name="DC Insert">
-              <InputPath OutputPathName="RC Insert.Output" />
-              <Columns>
-                <Column Name="AuditId" DataType="Int32">@[User::AuditId]</Column>
-                <Column Name="StartDate" DataType="DateTime">GetDate()</Column>
-              </Columns>
-            </DerivedColumns>
-            <OleDbDestination Name="OLEDBDEST dw_DimProduct" ConnectionName="OLEDB_EDW">
-              <InputPath OutputPathName="DC Insert.Output" />
-              <ExternalTableOutput Table="[dw].[DimProduct]" />
-            </OleDbDestination>
             <ConditionalSplit Name="CS Changed Columns">
               <InputPath OutputPathName="LU dw_DimProduct.Match" />
               <OutputPaths>
@@ -1281,6 +1275,65 @@ GO
                 </OutputPath>
               </OutputPaths>
             </ConditionalSplit>
+            <Multicast Name="MC SCD2">
+              <InputPath OutputPathName="CS Changed Columns.SCD2" />
+              <OutputPaths>
+                <OutputPath Name="SCD2 Insert" />
+                <OutputPath Name="SCD2 Update" />
+              </OutputPaths>
+            </Multicast>
+            <DerivedColumns Name="DC Start Date">
+              <InputPath OutputPathName="MC SCD2.SCD2 Insert" />
+              <Columns>
+                <Column Name="StartDate" DataType="DateTime">GETDATE()</Column>
+              </Columns>
+            </DerivedColumns>
+            <UnionAll Name="UNI Insert">
+              <InputPaths>
+                <InputPath OutputPathName="DC Start Date.Output" />
+                <InputPath OutputPathName="LU dw_DimProduct.NoMatch" />
+              </InputPaths>
+            </UnionAll>
+            <DerivedColumns Name="DC End Date">
+              <InputPath OutputPathName="MC SCD2.SCD2 Update" />
+              <Columns>
+                <Column Name="EndDate" DataType="DateTime">GETDATE()</Column>
+              </Columns>
+            </DerivedColumns>
+            <UnionAll Name="UNI Update">
+              <InputPaths>
+                <InputPath OutputPathName="DC End Date.Output" />
+                <InputPath OutputPathName="CS Changed Columns.SCD1" />
+              </InputPaths>
+            </UnionAll>
+            <RowCount Name="RC Insert" VariableName="User.InsertRowCnt">
+              <InputPath OutputPathName="UNI Insert.Output" />
+            </RowCount>
+            <OleDbDestination Name="OLEDBDEST dw_DimProduct" ConnectionName="OLEDB_EDW">
+              <ErrorHandling ErrorRowDisposition="RedirectRow" TruncationRowDisposition="RedirectRow" />
+              <InputPath OutputPathName="RC Insert.Output" />
+              <ExternalTableOutput Table="[dw].[DimProduct]" />
+            </OleDbDestination>
+            <RowCount Name="RC Update" VariableName="User.UpdateRowCnt">
+              <InputPath OutputPathName="UNI Update.Output" />
+            </RowCount>
+            <OleDbDestination Name="OLEDBDEST stage_tmp_scd_DimProduct" ConnectionName="OLEDB_Staging">
+              <ErrorHandling ErrorRowDisposition="RedirectRow" TruncationRowDisposition="RedirectRow" />
+              <InputPath OutputPathName="RC Update.Output" />
+              <ExternalTableOutput Table="[stage].[tmp_scd_DimProduct]" />
+            </OleDbDestination>
+            <UnionAll Name="UNI Error">
+              <InputPaths>
+                <InputPath OutputPathName="OLEDBDEST stage_tmp_scd_DimProduct.Error" />
+                <InputPath OutputPathName="OLEDBDEST dw_DimProduct.Error" />
+              </InputPaths>
+            </UnionAll>
+            <RowCount Name="RC Error" VariableName="User.ErrorRowCnt">
+              <InputPath OutputPathName="UNI Error.Output" />
+            </RowCount>
+            <FlatFileDestination Name="FFD dw_DimProduct" ConnectionName="FFC dw_DimProduct">
+              <InputPath OutputPathName="RC Error.Output" />
+            </FlatFileDestination>
           </Transformations>
         </Dataflow>
         <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_EDW">
@@ -1366,6 +1419,11 @@ GO
               <ExternalTableInput Table="[stage].[vDimProductCategory]" />
             </OleDbSource>
             <RowCount Name="RC Extract" VariableName="User.ExtractRowCnt" />
+            <DerivedColumns Name="DC Audit Id">
+              <Columns>
+                <Column Name="AuditId" DataType="Int32">@[User::AuditId]</Column>
+              </Columns>
+            </DerivedColumns>
             <Lookup Name="LU dw_DimProductCategory" OleDbConnectionName="OLEDB_EDW" NoMatchBehavior="RedirectRowsToNoMatchOutput">
               <Outputs>
                 <Column SourceColumn="Name" TargetColumn="dim_Name" />
@@ -1375,20 +1433,6 @@ GO
               </Inputs>
               <ExternalTableInput Table="[dw].[DimProductCategory]" />
             </Lookup>
-            <RowCount Name="RC Insert" VariableName="User.InsertRowCnt">
-              <InputPath OutputPathName="LU dw_DimProductCategory.NoMatch" />
-            </RowCount>
-            <DerivedColumns Name="DC Insert">
-              <InputPath OutputPathName="RC Insert.Output" />
-              <Columns>
-                <Column Name="AuditId" DataType="Int32">@[User::AuditId]</Column>
-                <Column Name="StartDate" DataType="DateTime">GetDate()</Column>
-              </Columns>
-            </DerivedColumns>
-            <OleDbDestination Name="OLEDBDEST dw_DimProductCategory" ConnectionName="OLEDB_EDW">
-              <InputPath OutputPathName="DC Insert.Output" />
-              <ExternalTableOutput Table="[dw].[DimProductCategory]" />
-            </OleDbDestination>
             <ConditionalSplit Name="CS Changed Columns">
               <InputPath OutputPathName="LU dw_DimProductCategory.Match" />
               <OutputPaths>
@@ -1397,6 +1441,34 @@ GO
                 </OutputPath>
               </OutputPaths>
             </ConditionalSplit>
+            <RowCount Name="RC Insert" VariableName="User.InsertRowCnt">
+              <InputPath OutputPathName="LU dw_DimProductCategory.NoMatch" />
+            </RowCount>
+            <OleDbDestination Name="OLEDBDEST dw_DimProductCategory" ConnectionName="OLEDB_EDW">
+              <ErrorHandling ErrorRowDisposition="RedirectRow" TruncationRowDisposition="RedirectRow" />
+              <InputPath OutputPathName="RC Insert.Output" />
+              <ExternalTableOutput Table="[dw].[DimProductCategory]" />
+            </OleDbDestination>
+            <RowCount Name="RC Update" VariableName="User.UpdateRowCnt">
+              <InputPath OutputPathName="CS Changed Columns.SCD1" />
+            </RowCount>
+            <OleDbDestination Name="OLEDBDEST stage_tmp_scd_DimProductCategory" ConnectionName="OLEDB_Staging">
+              <ErrorHandling ErrorRowDisposition="RedirectRow" TruncationRowDisposition="RedirectRow" />
+              <InputPath OutputPathName="RC Update.Output" />
+              <ExternalTableOutput Table="[stage].[tmp_scd_DimProductCategory]" />
+            </OleDbDestination>
+            <UnionAll Name="UNI Error">
+              <InputPaths>
+                <InputPath OutputPathName="OLEDBDEST stage_tmp_scd_DimProductCategory.Error" />
+                <InputPath OutputPathName="OLEDBDEST dw_DimProductCategory.Error" />
+              </InputPaths>
+            </UnionAll>
+            <RowCount Name="RC Error" VariableName="User.ErrorRowCnt">
+              <InputPath OutputPathName="UNI Error.Output" />
+            </RowCount>
+            <FlatFileDestination Name="FFD dw_DimProductCategory" ConnectionName="FFC dw_DimProductCategory">
+              <InputPath OutputPathName="RC Error.Output" />
+            </FlatFileDestination>
           </Transformations>
         </Dataflow>
         <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_EDW">
@@ -1482,6 +1554,11 @@ GO
               <ExternalTableInput Table="[stage].[vDimProductSubcategory]" />
             </OleDbSource>
             <RowCount Name="RC Extract" VariableName="User.ExtractRowCnt" />
+            <DerivedColumns Name="DC Audit Id">
+              <Columns>
+                <Column Name="AuditId" DataType="Int32">@[User::AuditId]</Column>
+              </Columns>
+            </DerivedColumns>
             <Lookup Name="LU dw_DimProductSubcategory" OleDbConnectionName="OLEDB_EDW" NoMatchBehavior="RedirectRowsToNoMatchOutput">
               <Outputs>
                 <Column SourceColumn="ProductCategoryKey" TargetColumn="dim_ProductCategoryKey" />
@@ -1493,20 +1570,6 @@ GO
               </Inputs>
               <ExternalTableInput Table="[dw].[DimProductSubcategory]" />
             </Lookup>
-            <RowCount Name="RC Insert" VariableName="User.InsertRowCnt">
-              <InputPath OutputPathName="LU dw_DimProductSubcategory.NoMatch" />
-            </RowCount>
-            <DerivedColumns Name="DC Insert">
-              <InputPath OutputPathName="RC Insert.Output" />
-              <Columns>
-                <Column Name="AuditId" DataType="Int32">@[User::AuditId]</Column>
-                <Column Name="StartDate" DataType="DateTime">GetDate()</Column>
-              </Columns>
-            </DerivedColumns>
-            <OleDbDestination Name="OLEDBDEST dw_DimProductSubcategory" ConnectionName="OLEDB_EDW">
-              <InputPath OutputPathName="DC Insert.Output" />
-              <ExternalTableOutput Table="[dw].[DimProductSubcategory]" />
-            </OleDbDestination>
             <ConditionalSplit Name="CS Changed Columns">
               <InputPath OutputPathName="LU dw_DimProductSubcategory.Match" />
               <OutputPaths>
@@ -1515,6 +1578,34 @@ GO
                 </OutputPath>
               </OutputPaths>
             </ConditionalSplit>
+            <RowCount Name="RC Insert" VariableName="User.InsertRowCnt">
+              <InputPath OutputPathName="LU dw_DimProductSubcategory.NoMatch" />
+            </RowCount>
+            <OleDbDestination Name="OLEDBDEST dw_DimProductSubcategory" ConnectionName="OLEDB_EDW">
+              <ErrorHandling ErrorRowDisposition="RedirectRow" TruncationRowDisposition="RedirectRow" />
+              <InputPath OutputPathName="RC Insert.Output" />
+              <ExternalTableOutput Table="[dw].[DimProductSubcategory]" />
+            </OleDbDestination>
+            <RowCount Name="RC Update" VariableName="User.UpdateRowCnt">
+              <InputPath OutputPathName="CS Changed Columns.SCD1" />
+            </RowCount>
+            <OleDbDestination Name="OLEDBDEST stage_tmp_scd_DimProductSubcategory" ConnectionName="OLEDB_Staging">
+              <ErrorHandling ErrorRowDisposition="RedirectRow" TruncationRowDisposition="RedirectRow" />
+              <InputPath OutputPathName="RC Update.Output" />
+              <ExternalTableOutput Table="[stage].[tmp_scd_DimProductSubcategory]" />
+            </OleDbDestination>
+            <UnionAll Name="UNI Error">
+              <InputPaths>
+                <InputPath OutputPathName="OLEDBDEST stage_tmp_scd_DimProductSubcategory.Error" />
+                <InputPath OutputPathName="OLEDBDEST dw_DimProductSubcategory.Error" />
+              </InputPaths>
+            </UnionAll>
+            <RowCount Name="RC Error" VariableName="User.ErrorRowCnt">
+              <InputPath OutputPathName="UNI Error.Output" />
+            </RowCount>
+            <FlatFileDestination Name="FFD dw_DimProductSubcategory" ConnectionName="FFC dw_DimProductSubcategory">
+              <InputPath OutputPathName="RC Error.Output" />
+            </FlatFileDestination>
           </Transformations>
         </Dataflow>
         <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_EDW">
@@ -1642,6 +1733,62 @@ GO
         <Column Name="Comment" Length="128" DataType="String" Delimiter="," />
         <Column Name="rowguid" DataType="Guid" Delimiter="," />
         <Column Name="ModifiedDate" DataType="DateTime" Delimiter="," />
+        <Column Name="ErrorCode" Delimiter="," />
+        <Column Name="ErrorColumn" Delimiter="CRLF" />
+      </Columns>
+    </FlatFileFormat>
+    <FlatFileFormat Name="FFF dw_DimProduct">
+      <Columns>
+        <Column Name="ProductKey" Delimiter="," />
+        <Column Name="ProductSubcategoryKey" Delimiter="," />
+        <Column Name="ProductID" Delimiter="," />
+        <Column Name="Name" Length="50" DataType="String" Delimiter="," />
+        <Column Name="ProductNumber" Length="25" DataType="String" Delimiter="," />
+        <Column Name="MakeFlag" DataType="Boolean" Delimiter="," />
+        <Column Name="FinishedGoodsFlag" DataType="Boolean" Delimiter="," />
+        <Column Name="Color" Length="15" DataType="String" Delimiter="," />
+        <Column Name="SafetyStockLevel" DataType="Int16" Delimiter="," />
+        <Column Name="ReorderPoint" DataType="Int16" Delimiter="," />
+        <Column Name="StandardCost" DataType="Currency" Delimiter="," />
+        <Column Name="ListPrice" DataType="Currency" Delimiter="," />
+        <Column Name="Size" Length="5" DataType="String" Delimiter="," />
+        <Column Name="SizeUnitMeasureCode" Length="3" DataType="StringFixedLength" Delimiter="," />
+        <Column Name="WeightUnitMeasureCode" Length="3" DataType="StringFixedLength" Delimiter="," />
+        <Column Name="Weight" DataType="Decimal" Delimiter="," />
+        <Column Name="DaysToManufacture" Delimiter="," />
+        <Column Name="ProductLine" Length="2" DataType="StringFixedLength" Delimiter="," />
+        <Column Name="Class" Length="2" DataType="StringFixedLength" Delimiter="," />
+        <Column Name="Style" Length="2" DataType="StringFixedLength" Delimiter="," />
+        <Column Name="ProductSubcategoryID" Delimiter="," />
+        <Column Name="ProductModelID" Delimiter="," />
+        <Column Name="SellStartDate" DataType="DateTime" Delimiter="," />
+        <Column Name="SellEndDate" DataType="DateTime" Delimiter="," />
+        <Column Name="DiscontinuedDate" DataType="DateTime" Delimiter="," />
+        <Column Name="StartDate" DataType="DateTime" Delimiter="," />
+        <Column Name="EndDate" DataType="DateTime" Delimiter="," />
+        <Column Name="AuditId" Delimiter="," />
+        <Column Name="ErrorCode" Delimiter="," />
+        <Column Name="ErrorColumn" Delimiter="CRLF" />
+      </Columns>
+    </FlatFileFormat>
+    <FlatFileFormat Name="FFF dw_DimProductCategory">
+      <Columns>
+        <Column Name="ProductCategoryKey" Delimiter="," />
+        <Column Name="ProductCategoryID" Delimiter="," />
+        <Column Name="Name" Length="50" DataType="String" Delimiter="," />
+        <Column Name="AuditId" Delimiter="," />
+        <Column Name="ErrorCode" Delimiter="," />
+        <Column Name="ErrorColumn" Delimiter="CRLF" />
+      </Columns>
+    </FlatFileFormat>
+    <FlatFileFormat Name="FFF dw_DimProductSubcategory">
+      <Columns>
+        <Column Name="ProductSubcategoryKey" Delimiter="," />
+        <Column Name="ProductSubcategoryID" Delimiter="," />
+        <Column Name="ProductCategoryKey" Delimiter="," />
+        <Column Name="ProductCategoryID" Delimiter="," />
+        <Column Name="Name" Length="50" DataType="String" Delimiter="," />
+        <Column Name="AuditId" Delimiter="," />
         <Column Name="ErrorCode" Delimiter="," />
         <Column Name="ErrorColumn" Delimiter="CRLF" />
       </Columns>

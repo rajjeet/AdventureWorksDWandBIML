@@ -19,11 +19,19 @@
             
             <Dataflow Name="DFT Load <#=table.Schema.Name#>_<#=table.Name#>">
                 <Transformations>
+                    
                       <OleDbSource Name="OLEDBSRC <#=stagingSchemaName#>_v<#=table.Name#>" 
                                     ConnectionName="<#=stagingConnName#>">
                        <ExternalTableInput Table="[<#=stagingSchemaName#>].[v<#=table.Name#>]" />
                     </OleDbSource>
+                    
                     <RowCount Name="RC Extract" VariableName="User.ExtractRowCnt" />
+                    
+                    <DerivedColumns Name="DC Audit Id">
+                        <Columns>
+                            <Column Name="AuditId" DataType="Int32">@[User::AuditId]</Column>
+                        </Columns>
+                    </DerivedColumns>
                     
                     <# var columnBK = table.Columns.Where(c => c.GetTag("ColumnRole") == "BK").ElementAt(0); #>
                     
@@ -42,23 +50,7 @@
                             <# } #>
                         </Outputs>
                     </Lookup>
-                    <!-- LOOKUP NO MATCH -->
-                    <RowCount Name="RC Insert" VariableName="User.InsertRowCnt">
-                        <InputPath OutputPathName="LU <#=edwSchemaName#>_<#=table.Name#>.NoMatch" />
-                    </RowCount>
-                    <DerivedColumns Name="DC Insert">
-                        <InputPath OutputPathName="RC Insert.Output" />
-                        <Columns>
-                            <Column Name="AuditId" DataType="Int32">@[User::AuditId]</Column>
-                            <Column Name="StartDate" DataType="DateTime">GetDate()</Column>
-                        </Columns>
-                    </DerivedColumns>
-                    <OleDbDestination Name="OLEDBDEST <#=table.Schema.Name#>_<#=table.Name#>" 
-                                      ConnectionName="<#=edwConnName#>">
-                        <InputPath OutputPathName="DC Insert.Output" />                                          
-                        <ExternalTableOutput Table="<#=table.SchemaQualifiedName#>" />
-                    </OleDbDestination>
-                    <!-- LOOKUP MATCH -->
+
                     <ConditionalSplit Name="CS Changed Columns">
                         <InputPath OutputPathName="LU <#=edwSchemaName#>_<#=table.Name#>.Match" />
                         <OutputPaths>
@@ -72,6 +64,92 @@
                             </OutputPath>
                         </OutputPaths>
                     </ConditionalSplit>
+                    
+                    <# if (table.GetTag("SCDType") == "2") { #>
+                    <Multicast Name="MC SCD2">
+                        <InputPath OutputPathName="CS Changed Columns.SCD2" />
+                        <OutputPaths>
+                            <OutputPath Name="SCD2 Insert" />
+                            <OutputPath Name="SCD2 Update" />
+                        </OutputPaths>
+                    </Multicast>
+                    
+                    <DerivedColumns Name="DC Start Date">
+                        <InputPath OutputPathName="MC SCD2.SCD2 Insert" />
+                        <Columns>
+                            <Column Name="StartDate" DataType="DateTime">GETDATE()</Column>
+                        </Columns>
+                    </DerivedColumns>
+                    
+                    <UnionAll Name="UNI Insert">
+                        <InputPaths>
+                            <InputPath OutputPathName="DC Start Date.Output" />
+                            <InputPath OutputPathName="LU <#=edwSchemaName#>_<#=table.Name#>.NoMatch" />
+                        </InputPaths>
+                    </UnionAll>
+                    
+                    <DerivedColumns Name="DC End Date">
+                        <InputPath OutputPathName="MC SCD2.SCD2 Update" />
+                        <Columns>
+                            <Column Name="EndDate" DataType="DateTime">GETDATE()</Column>
+                        </Columns>
+                    </DerivedColumns>   
+                    
+                    <UnionAll Name="UNI Update">
+                        <InputPaths>
+                            <InputPath OutputPathName="DC End Date.Output" />
+                            <InputPath OutputPathName="CS Changed Columns.SCD1" />
+                        </InputPaths>
+                    </UnionAll>                    
+                    <# } #>
+                    
+                    <!-- INSERT -->
+                    <RowCount Name="RC Insert" VariableName="User.InsertRowCnt">
+                        <# if (table.GetTag("SCDType") == "2") { #>
+                        <InputPath OutputPathName="UNI Insert.Output" />
+                        <# } else { #>
+                        <InputPath OutputPathName="LU <#=edwSchemaName#>_<#=table.Name#>.NoMatch" />
+                        <# } #>
+                    </RowCount>
+                    
+                    <OleDbDestination Name="OLEDBDEST <#=table.Schema.Name#>_<#=table.Name#>" 
+                                      ConnectionName="<#=edwConnName#>">
+                        <InputPath OutputPathName="RC Insert.Output" />                                          
+                        <ExternalTableOutput Table="<#=table.SchemaQualifiedName#>" />
+                        <ErrorHandling ErrorRowDisposition="RedirectRow" TruncationRowDisposition="RedirectRow" />
+                    </OleDbDestination>
+                    
+                    <!-- UPDATE -->
+                    <RowCount Name="RC Update" VariableName="User.UpdateRowCnt">
+                        <# if (table.GetTag("SCDType") == "2") { #>
+                        <InputPath OutputPathName="UNI Update.Output" />
+                        <# } else { #>
+                        <InputPath OutputPathName="CS Changed Columns.SCD1" />
+                        <# } #>
+                    </RowCount>
+                    
+                    <OleDbDestination Name="OLEDBDEST <#=stagingSchemaName#>_tmp_scd_<#=table.Name#>" 
+                                      ConnectionName="<#=stagingConnName#>">
+                        <InputPath OutputPathName="RC Update.Output" />
+                        <ExternalTableOutput Table="[<#=stagingSchemaName#>].[tmp_scd_<#=table.Name#>]" />
+                        <ErrorHandling ErrorRowDisposition="RedirectRow" TruncationRowDisposition="RedirectRow" />
+                    </OleDbDestination>
+                        
+                    <UnionAll Name="UNI Error">
+                        <InputPaths>
+                            <InputPath OutputPathName="OLEDBDEST <#=stagingSchemaName#>_tmp_scd_<#=table.Name#>.Error" />
+                            <InputPath OutputPathName="OLEDBDEST <#=table.Schema.Name#>_<#=table.Name#>.Error" />
+                        </InputPaths>
+                    </UnionAll>
+                        
+                    <RowCount Name="RC Error" VariableName="User.ErrorRowCnt">
+                        <InputPath OutputPathName="UNI Error.Output" />
+                    </RowCount>
+                    
+                    <FlatFileDestination Name="FFD <#=table.Schema.Name#>_<#=table.Name#>" ConnectionName="FFC <#=table.Schema.Name#>_<#=table.Name#>">
+                        <InputPath OutputPathName="RC Error.Output" />
+                    </FlatFileDestination>
+                                        
                 </Transformations>
             </Dataflow>
                 

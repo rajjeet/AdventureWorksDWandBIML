@@ -17,6 +17,22 @@
              </Columns>
         </FlatFileFormat>
         <# } #>
+        <# foreach(var table in RootNode.Tables.Where(t => t.GetTag("Type") == "Edw")) { #>
+        <FlatFileFormat Name="FFF <#=table.Schema.Name#>_<#=table.Name#>">
+             <Columns>
+                 <# foreach(var column in table.Columns) { #>
+                <Column Name="<#=column.Name#>" 
+                        CodePage="<#=column.CodePage#>"
+                        DataType="<#=column.DataType.ToString()#>"
+                        Length="<#=column.Length.ToString()#>"
+                        Delimiter=","  />
+                 <# } #>
+                <Column Name="ErrorCode" DataType="Int32" Delimiter="," />
+                <Column Name="ErrorColumn" DataType="Int32" Delimiter="CRLF" />
+             </Columns>
+        </FlatFileFormat>
+        <# } #>
+            
     </FileFormats>
     <Connections>
         <# foreach(var table in RootNode.Tables.Where(t => t.GetTag("Type") == "Staging")) { #>
@@ -25,5 +41,11 @@
             FilePath="<#=errorFFPath#><#=stagingSchemaName#>_<#=table.Name#>.txt"
             FileFormat="FFF <#=stagingSchemaName#>_<#=table.Name#>" />
         <# } #>
+        <# foreach(var table in RootNode.Tables.Where(t => t.GetTag("Type") == "Edw")) { #>
+        <FlatFileConnection 
+            Name="FFC <#=table.Schema.Name#>_<#=table.Name#>" 
+            FilePath="<#=errorFFPath#><#=table.Schema.Name#>_<#=table.Name#>.txt"
+            FileFormat="FFF <#=table.Schema.Name#>_<#=table.Name#>" />
+        <# } #>            
     </Connections>
 </Biml>
