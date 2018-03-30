@@ -1,0 +1,35 @@
+<#@ template tier="40" language="C#" #>
+<#@ include file="i_CommonVariables.biml"#>
+<Biml xmlns="http://schemas.varigence.com/biml.xsd">
+    <Packages>
+        <# foreach(var table in RootNode.Tables.Where(t => t.GetTag("Type") == "Edw")) { #>
+        <Package Name="Load <#=table.Schema.Name#>_<#=table.Name#>" ProtectionLevel="EncryptSensitiveWithUserKey" 
+                    ConstraintMode="Linear">
+            <#=CallBimlScript("cbs_AuditParameterVariables.biml", 
+                table.Schema.Name, table.Name, table.GetTag("Type"), table.GetTag("IsIncremental"), 
+                table.GetTag("SourceQuery"), table.GetTag("IncrementColumn"))#>
+
+            <Tasks>
+                
+            <#=CallBimlScript("cbs_ExecuteSQLCountRows.biml", table.Schema.Name, table.Name, edwConnName, 
+                "User.InitialTableRowCnt", "Initial")#>
+                    
+            <#=CallBimlScript("cbs_AuditBegin.biml", edwConnName)#>
+            
+            <Dataflow Name="DFT Load <#=table.Schema.Name#>_<#=table.Name#>">
+                <Transformations>
+                      <OleDbSource Name="OLEDBSRC <#=stagingSchemaName#>_v<#=table.Name#>" 
+                                    ConnectionName="<#=stagingConnName#>">
+                       <ExternalTableInput Table="[<#=stagingSchemaName#>].[v<#=table.Name#>]" />
+                    </OleDbSource>
+                    <RowCount Name="RC Extract" VariableName="User.ExtractRowCnt" />
+                    
+                </Transformations>
+            </Dataflow>
+                
+            <#=CallBimlScript("cbs_AuditEnd.biml", edwConnName)#> 
+            </Tasks>
+        </Package>
+        <# } #>
+    </Packages>
+</Biml>

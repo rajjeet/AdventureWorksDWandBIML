@@ -121,6 +121,7 @@
     <Folder Include="stage\" />
     <Folder Include="stage\Tables\" />
     <Folder Include="Security\" />
+    <Folder Include="stage\Views\" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="stage\Tables\ProductSubcategory.sql">
@@ -145,5 +146,44 @@
     </Build>
     <Build Include="Security\stage.sql" />
     <Build Include="Security\Permissions.sql" />
+    <Build Include="stage\Tables\tmp_scd_DimProductSubcategory.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="stage\Tables\tmp_scd_DimProductCategory.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="stage\Tables\tmp_scd_DimProduct.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="stage\Views\vDimProductSubcategory.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="stage\Views\vDimProductCategory.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="stage\Views\vDimProduct.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+  </ItemGroup>
+  <ItemGroup>
+    <SqlCmdVariable Include="AwBimlEdw">
+      <DefaultValue>AwBimlEdw</DefaultValue>
+      <Value>$(SqlCmdVar__1)</Value>
+    </SqlCmdVariable>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AwBimlEdw\AwBimlEdw.sqlproj">
+      <Name>AwBimlEdw</Name>
+      <Project>{63f2ba5a-47fe-4c90-b116-687fb1c0eacd}</Project>
+      <Private>True</Private>
+      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
+      <DatabaseVariableLiteralValue>AwBimlEdw</DatabaseVariableLiteralValue>
+    </ProjectReference>
   </ItemGroup>
 </Project>

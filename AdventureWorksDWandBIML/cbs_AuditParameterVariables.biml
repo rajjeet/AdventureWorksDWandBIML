@@ -13,11 +13,11 @@
     <Variable Name="AuditId" DataType="Int32">-1</Variable>
     <Variable Name="TableSchemaName" DataType="String"><#=tableSchemaName#></Variable>
     <Variable Name="TableName" DataType="String"><#=tableName#></Variable>
-    <Variable Name="SourceQuery" DataType="String"><#=sourceQuery#></Variable>
     <# if (tableType == "Staging") {#>
         <# if (isIncremental == "1") { #>
         <Variable Name="SourceQueryWhere" DataType="String"> WHERE [<#=incrementColumn#>] > </Variable>
         <# } #>
+        <Variable Name="SourceQuery" DataType="String"><#=sourceQuery#></Variable>
     <# } #>
     <Variable Name="ExtractRowCnt" DataType="Int32">-1</Variable>
     <Variable Name="InsertRowCnt" DataType="Int32">-1</Variable>

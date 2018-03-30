@@ -26,7 +26,7 @@
           <SSIS:Property SSIS:Name="CreatorComputerName">PHULL207</SSIS:Property>
           <SSIS:Property SSIS:Name="Description">
           </SSIS:Property>
-          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAiCOl8Y6qgUS3M1GWvtDmYwAAAAACAAAAAAAQZgAAAAEAACAAAAAED88O+Q48mb6kFg4o/FJgggfgxdJpkVu461S79T4EagAAAAAOgAAAAAIAACAAAAA6JX4N/RUGePX44dP89iwOW5CS6bFH0YyUQoRqlZIBZJAAAADYychw4y9bthMJrtphtY6/vWU6mLw8/RyL/DSgMRgn5HoSkrYkcYSqSf4evgiXZwr6CrAGsGmED4sf9O0+LuvBOktXcZvp6rpvwdVwxQeAoz66pjFhLDKoIAYyDSkWkz5ooCngW7pJtsEA4axAVzXFPozXzfUH8qCt79I/i1Rr+RTrcIQwqTtuOZVauYhEfCFAAAAAe86cPYkSQR/8GdvcZtMrcOZujhX5TtaMPcCs85RoFS8Py1qQVDuj+RrCLvTLmcnuMEtdXOZnpFKMDMur1PHEkg==</SSIS:Property>
+          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAiCOl8Y6qgUS3M1GWvtDmYwAAAAACAAAAAAAQZgAAAAEAACAAAAD68rHrQfpzp1Qn6jTOTME7hzAU8suBWpfOlCXBACcg7AAAAAAOgAAAAAIAACAAAAD5d43afM7UuxS47F4LeDUeh3p86Tos9rHTZryc3BSI95AAAAB8Py1tMtJ4xIUAimIdCnK2TwOEegEMu1rvE2PK89B636ozCzovkr8r8rCgJ9f0em/oqoy7g32Rh4dYV2rBmsmRDKiBVjKRMXWIZzpWM/D0yKIo3fD6rWPvOW3aEFlPkJfyIf1bREvBawGNpF0mV8Yp6y5Ptil8uWSiZIx1V8lcc9oUWa2pMxa95lp320BeXORAAAAAcwp4XwvNKB1ZiNihwPOLiw6P2zLJnlYgZsyzxPO/wbI1rgv35ODYjNByE39dklfGzL390x7kS/tiudF9iTcHig==</SSIS:Property>
           <SSIS:Property SSIS:Name="FormatVersion">1</SSIS:Property>
         </SSIS:Properties>
         <SSIS:Packages>
@@ -36,6 +36,9 @@
           <SSIS:Package SSIS:Name="Extract Production_ProductSubcategory.dtsx" SSIS:EntryPoint="1" />
           <SSIS:Package SSIS:Name="Extract Sales_SalesOrderDetail.dtsx" SSIS:EntryPoint="1" />
           <SSIS:Package SSIS:Name="Extract Sales_SalesOrderHeader.dtsx" SSIS:EntryPoint="1" />
+          <SSIS:Package SSIS:Name="Load dw_DimProduct.dtsx" SSIS:EntryPoint="1" />
+          <SSIS:Package SSIS:Name="Load dw_DimProductCategory.dtsx" SSIS:EntryPoint="1" />
+          <SSIS:Package SSIS:Name="Load dw_DimProductSubcategory.dtsx" SSIS:EntryPoint="1" />
         </SSIS:Packages>
         <SSIS:ConnectionManagers>
           <SSIS:ConnectionManager SSIS:Name="OLEDB_Staging.conmgr" />
@@ -329,14 +332,14 @@
             </SSIS:PackageMetaData>
             <SSIS:PackageMetaData SSIS:Name="Extract Production_Product.dtsx">
               <SSIS:Properties>
-                <SSIS:Property SSIS:Name="ID">{712B9224-2E5F-49F0-BCAE-593F9C2920AB}</SSIS:Property>
+                <SSIS:Property SSIS:Name="ID">{C40E6C88-8C9A-490F-A906-1FC227C5FB6A}</SSIS:Property>
                 <SSIS:Property SSIS:Name="Name">Extract Production_Product</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMajor">0</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionBuild">0</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionComments">
                 </SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionGUID">{41FF492F-CB94-4843-ABF2-840B9A7D596B}</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionGUID">{4D2CDB83-8B7E-4F65-A2A1-994B4ECD3FB2}</SSIS:Property>
                 <SSIS:Property SSIS:Name="PackageFormatVersion">8</SSIS:Property>
                 <SSIS:Property SSIS:Name="Description">
                 </SSIS:Property>
@@ -345,7 +348,7 @@
               <SSIS:Parameters>
                 <SSIS:Parameter SSIS:Name="ParentAuditId">
                   <SSIS:Properties>
-                    <SSIS:Property SSIS:Name="ID">{40BE3615-2D68-4C4A-8EAC-7CF7BCF05F6A}</SSIS:Property>
+                    <SSIS:Property SSIS:Name="ID">{EE9AD4F1-86BD-497F-A7AF-B1A29719D7C9}</SSIS:Property>
                     <SSIS:Property SSIS:Name="CreationName">
                     </SSIS:Property>
                     <SSIS:Property SSIS:Name="Description">
@@ -504,8 +507,6 @@
                     <SSIS:Property SSIS:Name="IncludeInDebugDump">0</SSIS:Property>
                     <SSIS:Property SSIS:Name="Required">0</SSIS:Property>
                     <SSIS:Property SSIS:Name="Sensitive">0</SSIS:Property>
-                    <SSIS:Property SSIS:Name="Value">
-                    </SSIS:Property>
                     <SSIS:Property SSIS:Name="DataType">18</SSIS:Property>
                   </SSIS:Properties>
                 </SSIS:Parameter>
@@ -1179,14 +1180,14 @@
             </SSIS:PackageMetaData>
             <SSIS:PackageMetaData SSIS:Name="Extract Sales_SalesOrderHeader.dtsx">
               <SSIS:Properties>
-                <SSIS:Property SSIS:Name="ID">{5E50337D-706E-49AE-B55C-D98B7B1CDFA8}</SSIS:Property>
+                <SSIS:Property SSIS:Name="ID">{4B245449-1ADA-4DCA-8863-3F9A417B6539}</SSIS:Property>
                 <SSIS:Property SSIS:Name="Name">Extract Sales_SalesOrderHeader</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMajor">0</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionBuild">0</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionComments">
                 </SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionGUID">{940253D8-8626-4A34-9579-D8BFBA1AC369}</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionGUID">{CE9DD06B-C5BD-43FC-87F6-2A68CE0E1BB3}</SSIS:Property>
                 <SSIS:Property SSIS:Name="PackageFormatVersion">8</SSIS:Property>
                 <SSIS:Property SSIS:Name="Description">
                 </SSIS:Property>
@@ -1195,7 +1196,7 @@
               <SSIS:Parameters>
                 <SSIS:Parameter SSIS:Name="ParentAuditId">
                   <SSIS:Properties>
-                    <SSIS:Property SSIS:Name="ID">{FCC4C131-75C1-45C9-8CA2-3BBB5ECC7000}</SSIS:Property>
+                    <SSIS:Property SSIS:Name="ID">{A97D9B5A-E2A5-4447-BA37-A11121E0AD17}</SSIS:Property>
                     <SSIS:Property SSIS:Name="CreationName">
                     </SSIS:Property>
                     <SSIS:Property SSIS:Name="Description">
@@ -1354,8 +1355,6 @@
                     <SSIS:Property SSIS:Name="IncludeInDebugDump">0</SSIS:Property>
                     <SSIS:Property SSIS:Name="Required">0</SSIS:Property>
                     <SSIS:Property SSIS:Name="Sensitive">0</SSIS:Property>
-                    <SSIS:Property SSIS:Name="Value">
-                    </SSIS:Property>
                     <SSIS:Property SSIS:Name="DataType">18</SSIS:Property>
                   </SSIS:Properties>
                 </SSIS:Parameter>
@@ -1391,6 +1390,57 @@
                 </SSIS:Parameter>
               </SSIS:Parameters>
             </SSIS:PackageMetaData>
+            <SSIS:PackageMetaData SSIS:Name="Load dw_DimProduct.dtsx">
+              <SSIS:Properties>
+                <SSIS:Property SSIS:Name="ID">{085B85F1-E43C-4629-90B5-8D8BC0ACBC04}</SSIS:Property>
+                <SSIS:Property SSIS:Name="Name">Load dw_DimProduct</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionMajor">0</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionBuild">0</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionComments">
+                </SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionGUID">{52A39BAD-A5D7-415A-8423-0F53ECDA96CD}</SSIS:Property>
+                <SSIS:Property SSIS:Name="PackageFormatVersion">8</SSIS:Property>
+                <SSIS:Property SSIS:Name="Description">
+                </SSIS:Property>
+                <SSIS:Property SSIS:Name="ProtectionLevel">1</SSIS:Property>
+              </SSIS:Properties>
+              <SSIS:Parameters />
+            </SSIS:PackageMetaData>
+            <SSIS:PackageMetaData SSIS:Name="Load dw_DimProductCategory.dtsx">
+              <SSIS:Properties>
+                <SSIS:Property SSIS:Name="ID">{6779D6A5-9148-4AF2-821E-18CD9999CA8E}</SSIS:Property>
+                <SSIS:Property SSIS:Name="Name">Load dw_DimProductCategory</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionMajor">0</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionBuild">0</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionComments">
+                </SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionGUID">{179D89C1-D4AE-4901-AF42-941570EFE283}</SSIS:Property>
+                <SSIS:Property SSIS:Name="PackageFormatVersion">8</SSIS:Property>
+                <SSIS:Property SSIS:Name="Description">
+                </SSIS:Property>
+                <SSIS:Property SSIS:Name="ProtectionLevel">1</SSIS:Property>
+              </SSIS:Properties>
+              <SSIS:Parameters />
+            </SSIS:PackageMetaData>
+            <SSIS:PackageMetaData SSIS:Name="Load dw_DimProductSubcategory.dtsx">
+              <SSIS:Properties>
+                <SSIS:Property SSIS:Name="ID">{DADBB392-416D-4BF0-A3C9-824B760AE75B}</SSIS:Property>
+                <SSIS:Property SSIS:Name="Name">Load dw_DimProductSubcategory</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionMajor">0</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionBuild">0</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionComments">
+                </SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionGUID">{D36C5BDE-5526-4828-8A32-A0BFB3139BE1}</SSIS:Property>
+                <SSIS:Property SSIS:Name="PackageFormatVersion">8</SSIS:Property>
+                <SSIS:Property SSIS:Name="Description">
+                </SSIS:Property>
+                <SSIS:Property SSIS:Name="ProtectionLevel">1</SSIS:Property>
+              </SSIS:Properties>
+              <SSIS:Parameters />
+            </SSIS:PackageMetaData>
           </SSIS:PackageInfo>
         </SSIS:DeploymentInfo>
       </SSIS:Project>
@@ -1401,10 +1451,6 @@
     <ProjectItem>
       <Name>10_Connections.biml</Name>
       <FullPath>10_Connections.biml</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>90_GenerateCompiledBiml.biml</Name>
-      <FullPath>90_GenerateCompiledBiml.biml</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>20_Model.biml</Name>
@@ -1423,16 +1469,12 @@
       <FullPath>40_ExtractPackages.biml</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>cbs_ExecuteSQLCountRows.biml</Name>
-      <FullPath>cbs_ExecuteSQLCountRows.biml</FullPath>
+      <Name>90_GenerateCompiledBiml.biml</Name>
+      <FullPath>90_GenerateCompiledBiml.biml</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>cbs_AuditParameterVariables.biml</Name>
-      <FullPath>cbs_AuditParameterVariables.biml</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>cbs_ExecuteSQLTruncate.biml</Name>
-      <FullPath>cbs_ExecuteSQLTruncate.biml</FullPath>
+      <Name>40_LoadPackages.biml</Name>
+      <FullPath>40_LoadPackages.biml</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>cbs_AuditBegin.biml</Name>
@@ -1441,6 +1483,18 @@
     <ProjectItem>
       <Name>cbs_AuditEnd.biml</Name>
       <FullPath>cbs_AuditEnd.biml</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>cbs_AuditParameterVariables.biml</Name>
+      <FullPath>cbs_AuditParameterVariables.biml</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>cbs_ExecuteSQLCountRows.biml</Name>
+      <FullPath>cbs_ExecuteSQLCountRows.biml</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>cbs_ExecuteSQLTruncate.biml</Name>
+      <FullPath>cbs_ExecuteSQLTruncate.biml</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>i_CommonVariables.biml</Name>
