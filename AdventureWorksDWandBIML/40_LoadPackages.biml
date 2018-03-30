@@ -24,6 +24,23 @@
                     </OleDbSource>
                     <RowCount Name="RC Extract" VariableName="User.ExtractRowCnt" />
                     
+                    <# var columnBK = table.Columns.Where(c => c.GetTag("ColumnRole") == "BK").ElementAt(0); #>
+                    
+                    <Lookup Name="LU <#=edwSchemaName#>_<#=table.Name#>" 
+                            NoMatchBehavior="RedirectRowsToNoMatchOutput"
+                            OleDbConnectionName="<#=edwConnName#>">
+                        <ExternalTableInput Table="<#=table.SchemaQualifiedName#>" />
+                        <Inputs>
+                            <Column SourceColumn="<#=columnBK#>" TargetColumn="<#=columnBK#>" />
+                        </Inputs>
+                        <Outputs>
+                            <# foreach(var column in table.Columns) { #>
+                                <# if (column.GetTag("ColumnRole") == "SCD1" || column.GetTag("ColumnRole") == "SCD2") { #>
+                                    <Column SourceColumn="<#=column.Name#>" />
+                                <# } #>
+                            <# } #>
+                        </Outputs>
+                    </Lookup> 
                 </Transformations>
             </Dataflow>
                 

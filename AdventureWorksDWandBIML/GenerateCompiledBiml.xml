@@ -1225,6 +1225,37 @@ GO
               <ExternalTableInput Table="[stage].[vDimProduct]" />
             </OleDbSource>
             <RowCount Name="RC Extract" VariableName="User.ExtractRowCnt" />
+            <Lookup Name="LU dw_DimProduct" OleDbConnectionName="OLEDB_EDW" NoMatchBehavior="RedirectRowsToNoMatchOutput">
+              <Outputs>
+                <Column SourceColumn="ProductSubcategoryKey" />
+                <Column SourceColumn="Name" />
+                <Column SourceColumn="ProductNumber" />
+                <Column SourceColumn="MakeFlag" />
+                <Column SourceColumn="FinishedGoodsFlag" />
+                <Column SourceColumn="Color" />
+                <Column SourceColumn="SafetyStockLevel" />
+                <Column SourceColumn="ReorderPoint" />
+                <Column SourceColumn="StandardCost" />
+                <Column SourceColumn="ListPrice" />
+                <Column SourceColumn="Size" />
+                <Column SourceColumn="SizeUnitMeasureCode" />
+                <Column SourceColumn="WeightUnitMeasureCode" />
+                <Column SourceColumn="Weight" />
+                <Column SourceColumn="DaysToManufacture" />
+                <Column SourceColumn="ProductLine" />
+                <Column SourceColumn="Class" />
+                <Column SourceColumn="Style" />
+                <Column SourceColumn="ProductSubcategoryID" />
+                <Column SourceColumn="ProductModelID" />
+                <Column SourceColumn="SellStartDate" />
+                <Column SourceColumn="SellEndDate" />
+                <Column SourceColumn="DiscontinuedDate" />
+              </Outputs>
+              <Inputs>
+                <Column SourceColumn="ProductID" TargetColumn="ProductID" />
+              </Inputs>
+              <ExternalTableInput Table="[dw].[DimProduct]" />
+            </Lookup>
           </Transformations>
         </Dataflow>
         <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_EDW">
@@ -1310,6 +1341,15 @@ GO
               <ExternalTableInput Table="[stage].[vDimProductCategory]" />
             </OleDbSource>
             <RowCount Name="RC Extract" VariableName="User.ExtractRowCnt" />
+            <Lookup Name="LU dw_DimProductCategory" OleDbConnectionName="OLEDB_EDW" NoMatchBehavior="RedirectRowsToNoMatchOutput">
+              <Outputs>
+                <Column SourceColumn="Name" />
+              </Outputs>
+              <Inputs>
+                <Column SourceColumn="ProductCategoryID" TargetColumn="ProductCategoryID" />
+              </Inputs>
+              <ExternalTableInput Table="[dw].[DimProductCategory]" />
+            </Lookup>
           </Transformations>
         </Dataflow>
         <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_EDW">
@@ -1395,6 +1435,17 @@ GO
               <ExternalTableInput Table="[stage].[vDimProductSubcategory]" />
             </OleDbSource>
             <RowCount Name="RC Extract" VariableName="User.ExtractRowCnt" />
+            <Lookup Name="LU dw_DimProductSubcategory" OleDbConnectionName="OLEDB_EDW" NoMatchBehavior="RedirectRowsToNoMatchOutput">
+              <Outputs>
+                <Column SourceColumn="ProductCategoryKey" />
+                <Column SourceColumn="ProductCategoryID" />
+                <Column SourceColumn="Name" />
+              </Outputs>
+              <Inputs>
+                <Column SourceColumn="ProductSubcategoryID" TargetColumn="ProductSubcategoryID" />
+              </Inputs>
+              <ExternalTableInput Table="[dw].[DimProductSubcategory]" />
+            </Lookup>
           </Transformations>
         </Dataflow>
         <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_EDW">
