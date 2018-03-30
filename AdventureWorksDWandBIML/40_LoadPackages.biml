@@ -40,7 +40,16 @@
                                 <# } #>
                             <# } #>
                         </Outputs>
-                    </Lookup> 
+                    </Lookup>
+                    <RowCount Name="RC Insert" VariableName="User.InsertRowCnt">
+                        <InputPath OutputPathName="LU <#=edwSchemaName#>_<#=table.Name#>.NoMatch" />
+
+                    </RowCount>
+                    <OleDbDestination Name="OLEDBDEST <#=table.Schema.Name#>_<#=table.Name#>" 
+                                      ConnectionName="<#=edwConnName#>">
+                        <ExternalTableOutput Table="<#=table.SchemaQualifiedName#>" />
+                        <InputPath OutputPathName="RC Insert.Output" />
+                    </OleDbDestination>
                 </Transformations>
             </Dataflow>
                 

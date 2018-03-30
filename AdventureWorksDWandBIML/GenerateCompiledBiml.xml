@@ -1256,6 +1256,13 @@ GO
               </Inputs>
               <ExternalTableInput Table="[dw].[DimProduct]" />
             </Lookup>
+            <RowCount Name="RC Insert" VariableName="User.InsertRowCnt">
+              <InputPath OutputPathName="LU dw_DimProduct.NoMatch" />
+            </RowCount>
+            <OleDbDestination Name="OLEDBDEST dw_DimProduct" ConnectionName="OLEDB_EDW">
+              <InputPath OutputPathName="RC Insert.Output" />
+              <ExternalTableOutput Table="[dw].[DimProduct]" />
+            </OleDbDestination>
           </Transformations>
         </Dataflow>
         <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_EDW">
@@ -1350,6 +1357,13 @@ GO
               </Inputs>
               <ExternalTableInput Table="[dw].[DimProductCategory]" />
             </Lookup>
+            <RowCount Name="RC Insert" VariableName="User.InsertRowCnt">
+              <InputPath OutputPathName="LU dw_DimProductCategory.NoMatch" />
+            </RowCount>
+            <OleDbDestination Name="OLEDBDEST dw_DimProductCategory" ConnectionName="OLEDB_EDW">
+              <InputPath OutputPathName="RC Insert.Output" />
+              <ExternalTableOutput Table="[dw].[DimProductCategory]" />
+            </OleDbDestination>
           </Transformations>
         </Dataflow>
         <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_EDW">
@@ -1446,6 +1460,13 @@ GO
               </Inputs>
               <ExternalTableInput Table="[dw].[DimProductSubcategory]" />
             </Lookup>
+            <RowCount Name="RC Insert" VariableName="User.InsertRowCnt">
+              <InputPath OutputPathName="LU dw_DimProductSubcategory.NoMatch" />
+            </RowCount>
+            <OleDbDestination Name="OLEDBDEST dw_DimProductSubcategory" ConnectionName="OLEDB_EDW">
+              <InputPath OutputPathName="RC Insert.Output" />
+              <ExternalTableOutput Table="[dw].[DimProductSubcategory]" />
+            </OleDbDestination>
           </Transformations>
         </Dataflow>
         <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_EDW">
