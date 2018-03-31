@@ -1,0 +1,31 @@
+<#@ template tier="50" language="C#" #>
+<#@ include file="i_CommonVariables.biml"#>
+<Biml xmlns="http://schemas.varigence.com/biml.xsd">
+    <Packages>
+        <Package Name="Extract _Master" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey">
+            <#=CallBimlScript("cbs_AuditParameterVariables.biml", "", "Master _Extract", "", "", "", "")#>
+            
+            <Tasks>
+            
+                <#=CallBimlScript("cbs_AuditBegin.biml", edwConnName)#>
+                
+                <Container Name="CNT Extract">
+                    <Tasks>
+                        <# foreach(var pkg in RootNode.Packages.Where(p => p.GetTag("Type") == "Staging")) {  #>
+                            <ExecutePackage Name="EPT <#=pkg.Name#>">
+                                <ExternalProjectPackage Package="<#=pkg.Name#>.dtsx" />
+                                <ParameterBindings>
+                                    <ParameterBinding Name="ParentAuditId" VariableName="User.AuditId" />
+                                </ParameterBindings> 
+                            </ExecutePackage>
+                            
+                        <# } #>
+                    </Tasks>
+                </Container>
+                
+                <#=CallBimlScript("cbs_AuditEnd.biml", edwConnName)#> 
+            
+            </Tasks>    
+        </Package>
+    </Packages>
+</Biml>

@@ -76,6 +76,11 @@
                 <#=CallBimlScript("cbs_AuditEnd.biml", edwConnName)#> 
                 
             </Tasks>
+            
+            <Annotations>
+                <Annotation Tag="Type">Staging</Annotation>
+            </Annotations>
+                
         </Package>
         <# } #>
     </Packages>
