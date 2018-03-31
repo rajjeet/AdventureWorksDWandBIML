@@ -26,7 +26,7 @@
           <SSIS:Property SSIS:Name="CreatorComputerName">PHULL207</SSIS:Property>
           <SSIS:Property SSIS:Name="Description">
           </SSIS:Property>
-          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAiCOl8Y6qgUS3M1GWvtDmYwAAAAACAAAAAAAQZgAAAAEAACAAAAD68rHrQfpzp1Qn6jTOTME7hzAU8suBWpfOlCXBACcg7AAAAAAOgAAAAAIAACAAAAD5d43afM7UuxS47F4LeDUeh3p86Tos9rHTZryc3BSI95AAAAB8Py1tMtJ4xIUAimIdCnK2TwOEegEMu1rvE2PK89B636ozCzovkr8r8rCgJ9f0em/oqoy7g32Rh4dYV2rBmsmRDKiBVjKRMXWIZzpWM/D0yKIo3fD6rWPvOW3aEFlPkJfyIf1bREvBawGNpF0mV8Yp6y5Ptil8uWSiZIx1V8lcc9oUWa2pMxa95lp320BeXORAAAAAcwp4XwvNKB1ZiNihwPOLiw6P2zLJnlYgZsyzxPO/wbI1rgv35ODYjNByE39dklfGzL390x7kS/tiudF9iTcHig==</SSIS:Property>
+          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAiCOl8Y6qgUS3M1GWvtDmYwAAAAACAAAAAAAQZgAAAAEAACAAAAB2PtJOCSVOSWFmDbjZ+tSMqRX3LLda0DZJ0+QXid00RQAAAAAOgAAAAAIAACAAAAAy5Rw1U8XHcaHcV/7LLt2ay8V8Ribjb4dj7vDHKqLJZZAAAACfQaexpxR1GnV9am2mQwlICF0VRfqxWAxHrQZoq0/ORR9rTjhN/eEZZQqm8Zx2gakd+YVKN65szEskU+emqYZoLVMLHUR4yp0p0z34nbd2gF2zTFhsnij8KUABFgpYfFtMptyoY9AduGK1uSEyVJ6Rwh/SJhchEmxYJEASLWBvVBPLfZCsvL5P3GjPbcu4TiBAAAAAtQ0iOyT4iJuV+o5Wgq1fJgGA4bEieCZfAySVTC+EL8RiAiV9qgu0In2wOP957enyNXKg1j8IeMHUVhozS82vxQ==</SSIS:Property>
           <SSIS:Property SSIS:Name="FormatVersion">1</SSIS:Property>
         </SSIS:Properties>
         <SSIS:Packages>
@@ -1469,12 +1469,12 @@
       <FullPath>40_ExtractPackages.biml</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>90_GenerateCompiledBiml.biml</Name>
-      <FullPath>90_GenerateCompiledBiml.biml</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>40_LoadPackages.biml</Name>
       <FullPath>40_LoadPackages.biml</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>90_GenerateCompiledBiml.biml</Name>
+      <FullPath>90_GenerateCompiledBiml.biml</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>cbs_AuditBegin.biml</Name>

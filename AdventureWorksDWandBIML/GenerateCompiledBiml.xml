@@ -3,11 +3,11 @@
     <OleDbConnection Name="OLEDB_Staging" CreateInProject="true" ConnectionString="Data Source=localhost;Integrated Security=SSPI;Initial Catalog=AwBimlStaging;Provider=SQLNCLI11.1;" />
     <OleDbConnection Name="OLEDB_Source" CreateInProject="true" ConnectionString="Data Source=localhost;Integrated Security=SSPI;Initial Catalog=AdventureWorks2012;Provider=SQLNCLI11.1;" />
     <OleDbConnection Name="OLEDB_EDW" CreateInProject="true" ConnectionString="Data Source=localhost;Integrated Security=SSPI;Initial Catalog=AwBimlEdw;Provider=SQLNCLI11.1;" />
-    <FlatFileConnection Name="FFC stage_Product" FilePath="C:\Users\rajje\Documents\visual studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\errors\stage_Product.txt" FileFormat="FFF stage_Product" />
-    <FlatFileConnection Name="FFC stage_ProductCategory" FilePath="C:\Users\rajje\Documents\visual studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\errors\stage_ProductCategory.txt" FileFormat="FFF stage_ProductCategory" />
-    <FlatFileConnection Name="FFC stage_ProductSubcategory" FilePath="C:\Users\rajje\Documents\visual studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\errors\stage_ProductSubcategory.txt" FileFormat="FFF stage_ProductSubcategory" />
-    <FlatFileConnection Name="FFC stage_SalesOrderDetail" FilePath="C:\Users\rajje\Documents\visual studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\errors\stage_SalesOrderDetail.txt" FileFormat="FFF stage_SalesOrderDetail" />
-    <FlatFileConnection Name="FFC stage_SalesOrderHeader" FilePath="C:\Users\rajje\Documents\visual studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\errors\stage_SalesOrderHeader.txt" FileFormat="FFF stage_SalesOrderHeader" />
+    <FlatFileConnection Name="FFC Production_Product" FilePath="C:\Users\rajje\Documents\visual studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\errors\Production_Product.txt" FileFormat="FFF Production_Product" />
+    <FlatFileConnection Name="FFC Production_ProductCategory" FilePath="C:\Users\rajje\Documents\visual studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\errors\Production_ProductCategory.txt" FileFormat="FFF Production_ProductCategory" />
+    <FlatFileConnection Name="FFC Production_ProductSubcategory" FilePath="C:\Users\rajje\Documents\visual studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\errors\Production_ProductSubcategory.txt" FileFormat="FFF Production_ProductSubcategory" />
+    <FlatFileConnection Name="FFC Sales_SalesOrderDetail" FilePath="C:\Users\rajje\Documents\visual studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\errors\Sales_SalesOrderDetail.txt" FileFormat="FFF Sales_SalesOrderDetail" />
+    <FlatFileConnection Name="FFC Sales_SalesOrderHeader" FilePath="C:\Users\rajje\Documents\visual studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\errors\Sales_SalesOrderHeader.txt" FileFormat="FFF Sales_SalesOrderHeader" />
     <FlatFileConnection Name="FFC dw_DimProduct" FilePath="C:\Users\rajje\Documents\visual studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\errors\dw_DimProduct.txt" FileFormat="FFF dw_DimProduct" />
     <FlatFileConnection Name="FFC dw_DimProductCategory" FilePath="C:\Users\rajje\Documents\visual studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\errors\dw_DimProductCategory.txt" FileFormat="FFF dw_DimProductCategory" />
     <FlatFileConnection Name="FFC dw_DimProductSubcategory" FilePath="C:\Users\rajje\Documents\visual studio 2015\Projects\AdventureWorksDWandBIML\AdventureWorksDWandBIML\errors\dw_DimProductSubcategory.txt" FileFormat="FFF dw_DimProductSubcategory" />
@@ -665,7 +665,7 @@ GO
             <RowCount Name="RC Error" VariableName="User.ErrorRowCnt">
               <InputPath OutputPathName="OLEDBDEST stage_Product.Error" />
             </RowCount>
-            <FlatFileDestination Name="FF Errors stage_Product" ConnectionName="FFC stage_Product">
+            <FlatFileDestination Name="FF Errors Production_Product" ConnectionName="FFC Production_Product">
               <InputPath OutputPathName="RC Error.Output" />
             </FlatFileDestination>
           </Transformations>
@@ -693,7 +693,7 @@ GO
         </ExecuteSQL>
       </Tasks>
       <Connections>
-        <Connection ConnectionName="FFC stage_Product" />
+        <Connection ConnectionName="FFC Production_Product" />
       </Connections>
       <Parameters>
         <Parameter Name="ParentAuditId" DataType="Int32">-1</Parameter>
@@ -776,7 +776,7 @@ GO
             <RowCount Name="RC Error" VariableName="User.ErrorRowCnt">
               <InputPath OutputPathName="OLEDBDEST stage_ProductCategory.Error" />
             </RowCount>
-            <FlatFileDestination Name="FF Errors stage_ProductCategory" ConnectionName="FFC stage_ProductCategory">
+            <FlatFileDestination Name="FF Errors Production_ProductCategory" ConnectionName="FFC Production_ProductCategory">
               <InputPath OutputPathName="RC Error.Output" />
             </FlatFileDestination>
           </Transformations>
@@ -804,7 +804,7 @@ GO
         </ExecuteSQL>
       </Tasks>
       <Connections>
-        <Connection ConnectionName="FFC stage_ProductCategory" />
+        <Connection ConnectionName="FFC Production_ProductCategory" />
       </Connections>
       <Parameters>
         <Parameter Name="ParentAuditId" DataType="Int32">-1</Parameter>
@@ -887,7 +887,7 @@ GO
             <RowCount Name="RC Error" VariableName="User.ErrorRowCnt">
               <InputPath OutputPathName="OLEDBDEST stage_ProductSubcategory.Error" />
             </RowCount>
-            <FlatFileDestination Name="FF Errors stage_ProductSubcategory" ConnectionName="FFC stage_ProductSubcategory">
+            <FlatFileDestination Name="FF Errors Production_ProductSubcategory" ConnectionName="FFC Production_ProductSubcategory">
               <InputPath OutputPathName="RC Error.Output" />
             </FlatFileDestination>
           </Transformations>
@@ -915,7 +915,7 @@ GO
         </ExecuteSQL>
       </Tasks>
       <Connections>
-        <Connection ConnectionName="FFC stage_ProductSubcategory" />
+        <Connection ConnectionName="FFC Production_ProductSubcategory" />
       </Connections>
       <Parameters>
         <Parameter Name="ParentAuditId" DataType="Int32">-1</Parameter>
@@ -1009,7 +1009,7 @@ GO
             <RowCount Name="RC Error" VariableName="User.ErrorRowCnt">
               <InputPath OutputPathName="OLEDBDEST stage_SalesOrderDetail.Error" />
             </RowCount>
-            <FlatFileDestination Name="FF Errors stage_SalesOrderDetail" ConnectionName="FFC stage_SalesOrderDetail">
+            <FlatFileDestination Name="FF Errors Sales_SalesOrderDetail" ConnectionName="FFC Sales_SalesOrderDetail">
               <InputPath OutputPathName="RC Error.Output" />
             </FlatFileDestination>
           </Transformations>
@@ -1037,7 +1037,7 @@ GO
         </ExecuteSQL>
       </Tasks>
       <Connections>
-        <Connection ConnectionName="FFC stage_SalesOrderDetail" />
+        <Connection ConnectionName="FFC Sales_SalesOrderDetail" />
       </Connections>
       <Parameters>
         <Parameter Name="ParentAuditId" DataType="Int32">-1</Parameter>
@@ -1131,7 +1131,7 @@ GO
             <RowCount Name="RC Error" VariableName="User.ErrorRowCnt">
               <InputPath OutputPathName="OLEDBDEST stage_SalesOrderHeader.Error" />
             </RowCount>
-            <FlatFileDestination Name="FF Errors stage_SalesOrderHeader" ConnectionName="FFC stage_SalesOrderHeader">
+            <FlatFileDestination Name="FF Errors Sales_SalesOrderHeader" ConnectionName="FFC Sales_SalesOrderHeader">
               <InputPath OutputPathName="RC Error.Output" />
             </FlatFileDestination>
           </Transformations>
@@ -1159,7 +1159,7 @@ GO
         </ExecuteSQL>
       </Tasks>
       <Connections>
-        <Connection ConnectionName="FFC stage_SalesOrderHeader" />
+        <Connection ConnectionName="FFC Sales_SalesOrderHeader" />
       </Connections>
       <Parameters>
         <Parameter Name="ParentAuditId" DataType="Int32">-1</Parameter>
@@ -1636,7 +1636,7 @@ GO
     <Schema Name="stage" DatabaseName="stagingDb" />
   </Schemas>
   <FileFormats>
-    <FlatFileFormat Name="FFF stage_Product">
+    <FlatFileFormat Name="FFF Production_Product">
       <Columns>
         <Column Name="ProductID" Delimiter="," />
         <Column Name="Name" Length="50" DataType="String" Delimiter="," />
@@ -1667,7 +1667,7 @@ GO
         <Column Name="ErrorColumn" Delimiter="CRLF" />
       </Columns>
     </FlatFileFormat>
-    <FlatFileFormat Name="FFF stage_ProductCategory">
+    <FlatFileFormat Name="FFF Production_ProductCategory">
       <Columns>
         <Column Name="ProductCategoryID" Delimiter="," />
         <Column Name="Name" Length="50" DataType="String" Delimiter="," />
@@ -1677,7 +1677,7 @@ GO
         <Column Name="ErrorColumn" Delimiter="CRLF" />
       </Columns>
     </FlatFileFormat>
-    <FlatFileFormat Name="FFF stage_ProductSubcategory">
+    <FlatFileFormat Name="FFF Production_ProductSubcategory">
       <Columns>
         <Column Name="ProductSubcategoryID" Delimiter="," />
         <Column Name="ProductCategoryID" Delimiter="," />
@@ -1688,7 +1688,7 @@ GO
         <Column Name="ErrorColumn" Delimiter="CRLF" />
       </Columns>
     </FlatFileFormat>
-    <FlatFileFormat Name="FFF stage_SalesOrderDetail">
+    <FlatFileFormat Name="FFF Sales_SalesOrderDetail">
       <Columns>
         <Column Name="SalesOrderID" Delimiter="," />
         <Column Name="SalesOrderDetailID" Delimiter="," />
@@ -1705,7 +1705,7 @@ GO
         <Column Name="ErrorColumn" Delimiter="CRLF" />
       </Columns>
     </FlatFileFormat>
-    <FlatFileFormat Name="FFF stage_SalesOrderHeader">
+    <FlatFileFormat Name="FFF Sales_SalesOrderHeader">
       <Columns>
         <Column Name="SalesOrderID" Delimiter="," />
         <Column Name="RevisionNumber" DataType="Byte" Delimiter="," />

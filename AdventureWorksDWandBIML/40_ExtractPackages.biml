@@ -6,8 +6,9 @@
         <Package Name="Extract <#=table.Schema.Name#>_<#=table.Name#>" 
                     ProtectionLevel="EncryptSensitiveWithUserKey"
                     ConstraintMode="Linear">
+                        
             <Connections>
-                <Connection ConnectionName="FFC <#=stagingSchemaName#>_<#=table.Name#>" />
+                <Connection ConnectionName="FFC <#=table.Schema.Name#>_<#=table.Name#>" />
             </Connections>
 
             <#=CallBimlScript("cbs_AuditParameterVariables.biml", 
@@ -17,6 +18,7 @@
             <Tasks>
                 
                 <#=CallBimlScript("cbs_ExecuteSQLTruncate.biml", stagingSchemaName, table.Name, stagingConnName)#>
+                
                 <#=CallBimlScript("cbs_ExecuteSQLCountRows.biml", stagingSchemaName, table.Name, stagingConnName, 
                     "User.InitialTableRowCnt", "Initial")#>
                 
@@ -30,6 +32,7 @@
                         <Result Name="0" VariableName="User.TableMaxDateTime" />
                     </Results>
                 </ExecuteSQL>
+                
                 <Expression Name="EXP SourceQuery" 
                             Expression="@[User::SourceQuery] = @[$Project::InitialLoad] ? 
                                             @[User::SourceQuery] :
@@ -38,32 +41,40 @@
                 <# } #>
                 
                 <#=CallBimlScript("cbs_AuditBegin.biml", edwConnName)#>
-                
-
+            
                 <Dataflow Name="DFT Extract <#=table.Schema.Name#>_<#=table.Name#> to Staging">
                     <Transformations>
-                    <OleDbSource Name="OLEDBSRC <#=table.Schema.Name#>_<#=table.Name#>" 
-                                    ConnectionName="<#=sourceConnName#>">
-                       <VariableInput VariableName="User.SourceQuery" />
-                    </OleDbSource>
-                    <RowCount Name="RC Extract" VariableName="User.ExtractRowCnt" />
-                    <OleDbDestination Name="OLEDBDEST <#=stagingSchemaName#>_<#=table.Name#>" 
-                                      ConnectionName="<#=stagingConnName#>">
-                        <ExternalTableOutput Table="[<#=stagingSchemaName#>].[<#=table.Name#>]" />
-                        <ErrorHandling ErrorRowDisposition="RedirectRow" TruncationRowDisposition="RedirectRow" />
-                    </OleDbDestination>
-                    <RowCount Name="RC Error" VariableName="User.ErrorRowCnt"> 
-                        <InputPath OutputPathName="OLEDBDEST <#=stagingSchemaName#>_<#=table.Name#>.Error" />
-                    </RowCount>
-                    <FlatFileDestination Name="FF Errors <#=stagingSchemaName#>_<#=table.Name#>" 
-                                        ConnectionName="FFC <#=stagingSchemaName#>_<#=table.Name#>">
-                        <InputPath OutputPathName="RC Error.Output" />
-                    </FlatFileDestination>
+                        
+                        <OleDbSource Name="OLEDBSRC <#=table.Schema.Name#>_<#=table.Name#>" 
+                                        ConnectionName="<#=sourceConnName#>">
+                           <VariableInput VariableName="User.SourceQuery" />
+                        </OleDbSource>
+                        
+                        <RowCount Name="RC Extract" VariableName="User.ExtractRowCnt" />
+                        
+                        <OleDbDestination Name="OLEDBDEST <#=stagingSchemaName#>_<#=table.Name#>" 
+                                          ConnectionName="<#=stagingConnName#>">
+                            <ExternalTableOutput Table="[<#=stagingSchemaName#>].[<#=table.Name#>]" />
+                            <ErrorHandling ErrorRowDisposition="RedirectRow" TruncationRowDisposition="RedirectRow" />
+                        </OleDbDestination>
+                        
+                        <RowCount Name="RC Error" VariableName="User.ErrorRowCnt"> 
+                            <InputPath OutputPathName="OLEDBDEST <#=stagingSchemaName#>_<#=table.Name#>.Error" />
+                        </RowCount>
+                        
+                        <FlatFileDestination Name="FF Errors <#=table.Schema.Name#>_<#=table.Name#>" 
+                                            ConnectionName="FFC <#=table.Schema.Name#>_<#=table.Name#>">
+                            <InputPath OutputPathName="RC Error.Output" />
+                        </FlatFileDestination>
+                            
                     </Transformations>
                 </Dataflow>
+                
                 <#=CallBimlScript("cbs_ExecuteSQLCountRows.biml", stagingSchemaName, table.Name, stagingConnName, 
                     "User.FinalTableRowCnt", "Final")#>
+                    
                 <#=CallBimlScript("cbs_AuditEnd.biml", edwConnName)#> 
+                
             </Tasks>
         </Package>
         <# } #>

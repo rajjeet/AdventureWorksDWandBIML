@@ -2,22 +2,7 @@
 <#@ include file="i_CommonVariables.biml"#>
 <Biml xmlns="http://schemas.varigence.com/biml.xsd">
     <FileFormats>
-        <# foreach(var table in RootNode.Tables.Where(t => t.GetTag("Type") == "Staging")) { #>
-        <FlatFileFormat Name="FFF <#=stagingSchemaName#>_<#=table.Name#>">
-             <Columns>
-                 <# foreach(var column in table.Columns) { #>
-                <Column Name="<#=column.Name#>" 
-                        CodePage="<#=column.CodePage#>"
-                        DataType="<#=column.DataType.ToString()#>"
-                        Length="<#=column.Length.ToString()#>"
-                        Delimiter=","  />
-                 <# } #>
-                <Column Name="ErrorCode" DataType="Int32" Delimiter="," />
-                <Column Name="ErrorColumn" DataType="Int32" Delimiter="CRLF" />
-             </Columns>
-        </FlatFileFormat>
-        <# } #>
-        <# foreach(var table in RootNode.Tables.Where(t => t.GetTag("Type") == "Edw")) { #>
+        <# foreach(var table in RootNode.Tables) { #>
         <FlatFileFormat Name="FFF <#=table.Schema.Name#>_<#=table.Name#>">
              <Columns>
                  <# foreach(var column in table.Columns) { #>
@@ -32,16 +17,9 @@
              </Columns>
         </FlatFileFormat>
         <# } #>
-            
     </FileFormats>
     <Connections>
-        <# foreach(var table in RootNode.Tables.Where(t => t.GetTag("Type") == "Staging")) { #>
-        <FlatFileConnection 
-            Name="FFC <#=stagingSchemaName#>_<#=table.Name#>" 
-            FilePath="<#=errorFFPath#><#=stagingSchemaName#>_<#=table.Name#>.txt"
-            FileFormat="FFF <#=stagingSchemaName#>_<#=table.Name#>" />
-        <# } #>
-        <# foreach(var table in RootNode.Tables.Where(t => t.GetTag("Type") == "Edw")) { #>
+        <# foreach(var table in RootNode.Tables) { #>
         <FlatFileConnection 
             Name="FFC <#=table.Schema.Name#>_<#=table.Name#>" 
             FilePath="<#=errorFFPath#><#=table.Schema.Name#>_<#=table.Name#>.txt"
