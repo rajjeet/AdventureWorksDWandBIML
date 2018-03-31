@@ -146,18 +146,6 @@
     </Build>
     <Build Include="Security\stage.sql" />
     <Build Include="Security\Permissions.sql" />
-    <Build Include="stage\Tables\tmp_scd_DimProductSubcategory.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="stage\Tables\tmp_scd_DimProductCategory.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="stage\Tables\tmp_scd_DimProduct.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
     <Build Include="stage\Views\vDimProductSubcategory.sql">
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>

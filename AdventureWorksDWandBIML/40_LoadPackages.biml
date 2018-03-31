@@ -128,16 +128,16 @@
                         <# } #>
                     </RowCount>
                     
-                    <OleDbDestination Name="OLEDBDEST <#=stagingSchemaName#>_tmp_scd_<#=table.Name#>" 
-                                      ConnectionName="<#=stagingConnName#>">
+                    <OleDbDestination Name="OLEDBDEST <#=edwUpdateSchemaName#>_<#=edwUpdatePrefix#><#=table.Name#>" 
+                                      ConnectionName="<#=edwConnName#>">
                         <InputPath OutputPathName="RC Update.Output" />
-                        <ExternalTableOutput Table="[<#=stagingSchemaName#>].[tmp_scd_<#=table.Name#>]" />
+                        <ExternalTableOutput Table="[<#=edwUpdateSchemaName#>].[<#=edwUpdatePrefix#><#=table.Name#>]" />
                         <ErrorHandling ErrorRowDisposition="RedirectRow" TruncationRowDisposition="RedirectRow" />
                     </OleDbDestination>
                         
                     <UnionAll Name="UNI Error">
                         <InputPaths>
-                            <InputPath OutputPathName="OLEDBDEST <#=stagingSchemaName#>_tmp_scd_<#=table.Name#>.Error" />
+                            <InputPath OutputPathName="OLEDBDEST <#=edwUpdateSchemaName#>_<#=edwUpdatePrefix#><#=table.Name#>.Error" />
                             <InputPath OutputPathName="OLEDBDEST <#=table.Schema.Name#>_<#=table.Name#>.Error" />
                         </InputPaths>
                     </UnionAll>
@@ -152,6 +152,7 @@
                                         
                 </Transformations>
             </Dataflow>
+            
                 
             <#=CallBimlScript("cbs_AuditEnd.biml", edwConnName)#> 
             </Tasks>

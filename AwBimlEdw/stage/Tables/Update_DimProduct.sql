@@ -1,4 +1,4 @@
-﻿CREATE TABLE [stage].[tmp_scd_DimProduct] (
+﻿CREATE TABLE [stage].[Update_DimProduct] (
     [ProductKey]            INT            IDENTITY (1, 1) NOT NULL,
     [ProductSubcategoryKey] INT            NULL,
     [ProductID]             INT            NOT NULL,

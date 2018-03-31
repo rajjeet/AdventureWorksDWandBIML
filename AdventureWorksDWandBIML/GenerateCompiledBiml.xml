@@ -1317,14 +1317,14 @@ GO
             <RowCount Name="RC Update" VariableName="User.UpdateRowCnt">
               <InputPath OutputPathName="UNI Update.Output" />
             </RowCount>
-            <OleDbDestination Name="OLEDBDEST stage_tmp_scd_DimProduct" ConnectionName="OLEDB_Staging">
+            <OleDbDestination Name="OLEDBDEST stage_Update_DimProduct" ConnectionName="OLEDB_EDW">
               <ErrorHandling ErrorRowDisposition="RedirectRow" TruncationRowDisposition="RedirectRow" />
               <InputPath OutputPathName="RC Update.Output" />
-              <ExternalTableOutput Table="[stage].[tmp_scd_DimProduct]" />
+              <ExternalTableOutput Table="[stage].[Update_DimProduct]" />
             </OleDbDestination>
             <UnionAll Name="UNI Error">
               <InputPaths>
-                <InputPath OutputPathName="OLEDBDEST stage_tmp_scd_DimProduct.Error" />
+                <InputPath OutputPathName="OLEDBDEST stage_Update_DimProduct.Error" />
                 <InputPath OutputPathName="OLEDBDEST dw_DimProduct.Error" />
               </InputPaths>
             </UnionAll>
@@ -1452,14 +1452,14 @@ GO
             <RowCount Name="RC Update" VariableName="User.UpdateRowCnt">
               <InputPath OutputPathName="CS Changed Columns.SCD1" />
             </RowCount>
-            <OleDbDestination Name="OLEDBDEST stage_tmp_scd_DimProductCategory" ConnectionName="OLEDB_Staging">
+            <OleDbDestination Name="OLEDBDEST stage_Update_DimProductCategory" ConnectionName="OLEDB_EDW">
               <ErrorHandling ErrorRowDisposition="RedirectRow" TruncationRowDisposition="RedirectRow" />
               <InputPath OutputPathName="RC Update.Output" />
-              <ExternalTableOutput Table="[stage].[tmp_scd_DimProductCategory]" />
+              <ExternalTableOutput Table="[stage].[Update_DimProductCategory]" />
             </OleDbDestination>
             <UnionAll Name="UNI Error">
               <InputPaths>
-                <InputPath OutputPathName="OLEDBDEST stage_tmp_scd_DimProductCategory.Error" />
+                <InputPath OutputPathName="OLEDBDEST stage_Update_DimProductCategory.Error" />
                 <InputPath OutputPathName="OLEDBDEST dw_DimProductCategory.Error" />
               </InputPaths>
             </UnionAll>
@@ -1589,14 +1589,14 @@ GO
             <RowCount Name="RC Update" VariableName="User.UpdateRowCnt">
               <InputPath OutputPathName="CS Changed Columns.SCD1" />
             </RowCount>
-            <OleDbDestination Name="OLEDBDEST stage_tmp_scd_DimProductSubcategory" ConnectionName="OLEDB_Staging">
+            <OleDbDestination Name="OLEDBDEST stage_Update_DimProductSubcategory" ConnectionName="OLEDB_EDW">
               <ErrorHandling ErrorRowDisposition="RedirectRow" TruncationRowDisposition="RedirectRow" />
               <InputPath OutputPathName="RC Update.Output" />
-              <ExternalTableOutput Table="[stage].[tmp_scd_DimProductSubcategory]" />
+              <ExternalTableOutput Table="[stage].[Update_DimProductSubcategory]" />
             </OleDbDestination>
             <UnionAll Name="UNI Error">
               <InputPaths>
-                <InputPath OutputPathName="OLEDBDEST stage_tmp_scd_DimProductSubcategory.Error" />
+                <InputPath OutputPathName="OLEDBDEST stage_Update_DimProductSubcategory.Error" />
                 <InputPath OutputPathName="OLEDBDEST dw_DimProductSubcategory.Error" />
               </InputPaths>
             </UnionAll>

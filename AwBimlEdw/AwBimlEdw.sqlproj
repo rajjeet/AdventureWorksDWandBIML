@@ -122,6 +122,8 @@
     <Folder Include="dw\Tables\" />
     <Folder Include="Security\" />
     <Folder Include="dw\Stored Procedures\" />
+    <Folder Include="stage\" />
+    <Folder Include="stage\Tables\" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dw\Tables\DimProduct.sql">
@@ -150,5 +152,18 @@
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
+    <Build Include="stage\Tables\Update_DimProductCategory.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="stage\Tables\Update_DimProductSubcategory.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="stage\Tables\Update_DimProduct.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="Security\stage.sql" />
   </ItemGroup>
 </Project>
