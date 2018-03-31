@@ -1187,6 +1187,9 @@ GO
           </Results>
           <DirectInput>SELECT COUNT(*) FROM [dw].[DimProduct];</DirectInput>
         </ExecuteSQL>
+        <ExecuteSQL Name="SQL Truncate Update Table" ConnectionName="OLEDB_EDW">
+          <DirectInput>TRUNCATE TABLE stage_Update_DimProduct;</DirectInput>
+        </ExecuteSQL>
         <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_EDW" ResultSet="SingleRow">
           <Results>
             <Result Name="0" VariableName="User.AuditId" />
@@ -1336,6 +1339,39 @@ GO
             </FlatFileDestination>
           </Transformations>
         </Dataflow>
+        <ExecuteSQL Name="SQL Update SCD1" ConnectionName="OLEDB_EDW">
+          <DirectInput>UDPATE target 
+ set
+	target.[ProductNumber] = source.[ProductNumber]
+	,target.[SafetyStockLevel] = source.[SafetyStockLevel]
+	,target.[Size] = source.[Size]
+	,target.[SizeUnitMeasureCode] = source.[SizeUnitMeasureCode]
+	,target.[WeightUnitMeasureCode] = source.[WeightUnitMeasureCode]
+	,target.[Weight] = source.[Weight]
+	,target.[ProductLine] = source.[ProductLine]
+	,target.[Class] = source.[Class]
+	,target.[Style] = source.[Style]
+	,target.[ProductModelID] = source.[ProductModelID]
+FROM [dw].[DimProduct] as target
+JOIN [stage].[Update_DimProduct] source ON 
+	target.[ProductID] = source.[ProductID]
+	WHERE target.[EndDate] IS NULL</DirectInput>
+        </ExecuteSQL>
+        <ExecuteSQL Name="SQL Update SCD2" ConnectionName="OLEDB_EDW">
+          <DirectInput>UDPATE target 
+ set
+	target.[EndDate] = GETDATE()
+FROM [dw].[DimProduct] as target
+JOIN [stage].[Update_DimProduct] source ON 
+	target.[ProductID] = source.[ProductID]
+	WHERE target.[EndDate] IS NULL</DirectInput>
+        </ExecuteSQL>
+        <ExecuteSQL Name="SQL Count Final dw_DimProduct" ConnectionName="OLEDB_EDW" ResultSet="SingleRow">
+          <Results>
+            <Result Name="0" VariableName="User.FinalTableRowCnt" />
+          </Results>
+          <DirectInput>SELECT COUNT(*) FROM [dw].[DimProduct];</DirectInput>
+        </ExecuteSQL>
         <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_EDW">
           <Parameters>
             <Parameter Name="@AuditId" VariableName="User.AuditId" DataType="Int32" />
@@ -1377,6 +1413,9 @@ GO
             <Result Name="0" VariableName="User.InitialTableRowCnt" />
           </Results>
           <DirectInput>SELECT COUNT(*) FROM [dw].[DimProductCategory];</DirectInput>
+        </ExecuteSQL>
+        <ExecuteSQL Name="SQL Truncate Update Table" ConnectionName="OLEDB_EDW">
+          <DirectInput>TRUNCATE TABLE stage_Update_DimProductCategory;</DirectInput>
         </ExecuteSQL>
         <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_EDW" ResultSet="SingleRow">
           <Results>
@@ -1471,6 +1510,21 @@ GO
             </FlatFileDestination>
           </Transformations>
         </Dataflow>
+        <ExecuteSQL Name="SQL Update SCD1" ConnectionName="OLEDB_EDW">
+          <DirectInput>UDPATE target 
+ set
+	target.[Name] = source.[Name]
+FROM [dw].[DimProductCategory] as target
+JOIN [stage].[Update_DimProductCategory] source ON 
+	target.[ProductCategoryID] = source.[ProductCategoryID]
+</DirectInput>
+        </ExecuteSQL>
+        <ExecuteSQL Name="SQL Count Final dw_DimProductCategory" ConnectionName="OLEDB_EDW" ResultSet="SingleRow">
+          <Results>
+            <Result Name="0" VariableName="User.FinalTableRowCnt" />
+          </Results>
+          <DirectInput>SELECT COUNT(*) FROM [dw].[DimProductCategory];</DirectInput>
+        </ExecuteSQL>
         <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_EDW">
           <Parameters>
             <Parameter Name="@AuditId" VariableName="User.AuditId" DataType="Int32" />
@@ -1512,6 +1566,9 @@ GO
             <Result Name="0" VariableName="User.InitialTableRowCnt" />
           </Results>
           <DirectInput>SELECT COUNT(*) FROM [dw].[DimProductSubcategory];</DirectInput>
+        </ExecuteSQL>
+        <ExecuteSQL Name="SQL Truncate Update Table" ConnectionName="OLEDB_EDW">
+          <DirectInput>TRUNCATE TABLE stage_Update_DimProductSubcategory;</DirectInput>
         </ExecuteSQL>
         <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_EDW" ResultSet="SingleRow">
           <Results>
@@ -1608,6 +1665,23 @@ GO
             </FlatFileDestination>
           </Transformations>
         </Dataflow>
+        <ExecuteSQL Name="SQL Update SCD1" ConnectionName="OLEDB_EDW">
+          <DirectInput>UDPATE target 
+ set
+	target.[ProductCategoryKey] = source.[ProductCategoryKey]
+	,target.[ProductCategoryID] = source.[ProductCategoryID]
+	,target.[Name] = source.[Name]
+FROM [dw].[DimProductSubcategory] as target
+JOIN [stage].[Update_DimProductSubcategory] source ON 
+	target.[ProductSubcategoryID] = source.[ProductSubcategoryID]
+</DirectInput>
+        </ExecuteSQL>
+        <ExecuteSQL Name="SQL Count Final dw_DimProductSubcategory" ConnectionName="OLEDB_EDW" ResultSet="SingleRow">
+          <Results>
+            <Result Name="0" VariableName="User.FinalTableRowCnt" />
+          </Results>
+          <DirectInput>SELECT COUNT(*) FROM [dw].[DimProductSubcategory];</DirectInput>
+        </ExecuteSQL>
         <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_EDW">
           <Parameters>
             <Parameter Name="@AuditId" VariableName="User.AuditId" DataType="Int32" />

@@ -45,5 +45,43 @@
         
         return $"REPLACENULL({column.Name},0) != REPLACENULL(dim_{column.Name},0)";
     }
+    
+    public string GetUpdateQuery(AstTableNode tableNode, string SCDType, string updateTable){
+        var query = "";
+        bool firstLoop;
+        var endDateColumnName = tableNode.Columns.Where(c => c.GetTag("ColumnRole") == "EndDate").FirstOrDefault();
+        
+        query = "UDPATE target \r\n set\r\n";
+        
+        firstLoop = true;
+        if (SCDType == "SCD1"){
+            foreach(var column in tableNode.Columns.Where(c => c.GetTag("ColumnRole") == SCDType)) { 
+                query += $"\t{(firstLoop ? "":",")}target.[{column.Name}] = source.[{column.Name}]\r\n";
+                firstLoop = false;
+            }
+        } 
+        
+        if (SCDType == "SCD2"){
+            if (endDateColumnName != null)
+                query += $"\ttarget.[{endDateColumnName}] = GETDATE()\r\n";
+        }
+        
+        query += $"FROM {tableNode.SchemaQualifiedName} as target\r\n";
+        query += $"JOIN {updateTable} source ON \r\n";
+        
+        firstLoop = true;
+        foreach(var column in tableNode.Columns.Where(c => c.GetTag("ColumnRole") == "BK")){
+            query += $"\t{(firstLoop ? "":"AND")}target.[{column.Name}] = source.[{column.Name}]\r\n";
+            firstLoop = false;
+        }
+        
+        if (tableNode.GetTag("SCDType") == "2") {
+            if (endDateColumnName != null)
+                query += $"\tWHERE target.[{endDateColumnName}] IS NULL";
+        }
+
+        return query;
+        
+    }
 
 #>

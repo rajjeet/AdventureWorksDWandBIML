@@ -14,6 +14,10 @@
                 
             <#=CallBimlScript("cbs_ExecuteSQLCountRows.biml", table.Schema.Name, table.Name, edwConnName, 
                 "User.InitialTableRowCnt", "Initial")#>
+
+            <ExecuteSQL Name="SQL Truncate Update Table" ConnectionName="<#=edwConnName#>">
+                <DirectInput>TRUNCATE TABLE <#=edwUpdateSchemaName#>_<#=edwUpdatePrefix#><#=table.Name#>;</DirectInput>
+            </ExecuteSQL>                
                     
             <#=CallBimlScript("cbs_AuditBegin.biml", edwConnName)#>
             
@@ -128,16 +132,19 @@
                         <# } #>
                     </RowCount>
                     
-                    <OleDbDestination Name="OLEDBDEST <#=edwUpdateSchemaName#>_<#=edwUpdatePrefix#><#=table.Name#>" 
+                    <# var updateTableLabel = $"{edwUpdateSchemaName}_{edwUpdatePrefix}{table.Name}"; #>
+                    <# var updateTableSchemaQualifiedName = $"[{edwUpdateSchemaName}].[{edwUpdatePrefix}{table.Name}]"; #>
+
+                    <OleDbDestination Name="OLEDBDEST <#=updateTableLabel#>" 
                                       ConnectionName="<#=edwConnName#>">
                         <InputPath OutputPathName="RC Update.Output" />
-                        <ExternalTableOutput Table="[<#=edwUpdateSchemaName#>].[<#=edwUpdatePrefix#><#=table.Name#>]" />
+                        <ExternalTableOutput Table="<#=updateTableSchemaQualifiedName#>" />
                         <ErrorHandling ErrorRowDisposition="RedirectRow" TruncationRowDisposition="RedirectRow" />
                     </OleDbDestination>
                         
                     <UnionAll Name="UNI Error">
                         <InputPaths>
-                            <InputPath OutputPathName="OLEDBDEST <#=edwUpdateSchemaName#>_<#=edwUpdatePrefix#><#=table.Name#>.Error" />
+                            <InputPath OutputPathName="OLEDBDEST <#=updateTableLabel#>.Error" />
                             <InputPath OutputPathName="OLEDBDEST <#=table.Schema.Name#>_<#=table.Name#>.Error" />
                         </InputPaths>
                     </UnionAll>
@@ -153,6 +160,18 @@
                 </Transformations>
             </Dataflow>
             
+            <ExecuteSQL Name="SQL Update SCD1" ConnectionName="<#=edwConnName#>">
+                <DirectInput><#=GetUpdateQuery(table, "SCD1", updateTableSchemaQualifiedName)#></DirectInput>
+            </ExecuteSQL>
+            
+            <# if (table.GetTag("SCDType") == "2") { #>
+            <ExecuteSQL Name="SQL Update SCD2" ConnectionName="<#=edwConnName#>">
+                <DirectInput><#=GetUpdateQuery(table, "SCD2", updateTableSchemaQualifiedName)#></DirectInput>
+            </ExecuteSQL>
+            <# } #>
+            
+            <#=CallBimlScript("cbs_ExecuteSQLCountRows.biml", table.Schema.Name, table.Name, edwConnName, 
+                    "User.FinalTableRowCnt", "Final")#>
                 
             <#=CallBimlScript("cbs_AuditEnd.biml", edwConnName)#> 
             </Tasks>
