@@ -1,3 +1,40 @@
 <#@ template tier="50" language="C#" #>
+<#@ include file="i_CommonVariables.biml"#>
 <Biml xmlns="http://schemas.varigence.com/biml.xsd">
+    <Packages>
+        <Package Name="Load _Master" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey">
+            <#=CallBimlScript("cbs_AuditParameterVariables.biml", "", "Load _Master", "", "", "", "")#>
+            
+            <Tasks>
+            
+                <#=CallBimlScript("cbs_AuditBegin.biml", edwConnName)#>
+                
+                <Container Name="SEQ Load Dimensions" ConstraintMode="Linear">
+                    <Tasks>
+                        <# foreach(var pkg in RootNode.Packages
+                                .Where(p => p.GetTag("TableRole") == "Dimension")
+                                .OrderBy(p => p.GetTag("LoadOrder"))) {  #>
+                            <ExecutePackage Name="EPT <#=pkg.Name#>">
+                                <ExternalProjectPackage Package="<#=pkg.Name#>.dtsx" />
+                                <ParameterBindings>
+                                    <ParameterBinding Name="ParentAuditId" VariableName="User.AuditId" />
+                                </ParameterBindings> 
+                            </ExecutePackage>
+                            
+                        <# } #>
+                    </Tasks>
+                </Container>
+                
+                <Container Name="SEQ Load Facts" ConstraintMode="Linear">
+                    
+                </Container>
+                
+                <#=CallBimlScript("cbs_AuditEnd.biml", edwConnName)#> 
+            
+            </Tasks>    
+            <Annotations>
+                <Annotation Tag="Type">MasterLoad</Annotation>
+            </Annotations>
+        </Package>
+    </Packages>
 </Biml>

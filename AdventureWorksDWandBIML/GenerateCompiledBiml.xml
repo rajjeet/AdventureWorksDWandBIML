@@ -589,6 +589,9 @@ GO
       </Connections>
     </Package>
     <Package Name="Extract Production_Product" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey">
+      <Annotations>
+        <Annotation Tag="Type">Staging</Annotation>
+      </Annotations>
       <Variables>
         <Variable Name="ParentAuditId" DataType="Int32" EvaluateAsExpression="true">@[$Package::ParentAuditId]</Variable>
         <Variable Name="AuditId" DataType="Int32">-1</Variable>
@@ -700,6 +703,9 @@ GO
       </Parameters>
     </Package>
     <Package Name="Extract Production_ProductCategory" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey">
+      <Annotations>
+        <Annotation Tag="Type">Staging</Annotation>
+      </Annotations>
       <Variables>
         <Variable Name="ParentAuditId" DataType="Int32" EvaluateAsExpression="true">@[$Package::ParentAuditId]</Variable>
         <Variable Name="AuditId" DataType="Int32">-1</Variable>
@@ -811,6 +817,9 @@ GO
       </Parameters>
     </Package>
     <Package Name="Extract Production_ProductSubcategory" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey">
+      <Annotations>
+        <Annotation Tag="Type">Staging</Annotation>
+      </Annotations>
       <Variables>
         <Variable Name="ParentAuditId" DataType="Int32" EvaluateAsExpression="true">@[$Package::ParentAuditId]</Variable>
         <Variable Name="AuditId" DataType="Int32">-1</Variable>
@@ -922,6 +931,9 @@ GO
       </Parameters>
     </Package>
     <Package Name="Extract Sales_SalesOrderDetail" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey">
+      <Annotations>
+        <Annotation Tag="Type">Staging</Annotation>
+      </Annotations>
       <Variables>
         <Variable Name="ParentAuditId" DataType="Int32" EvaluateAsExpression="true">@[$Package::ParentAuditId]</Variable>
         <Variable Name="AuditId" DataType="Int32">-1</Variable>
@@ -1044,6 +1056,9 @@ GO
       </Parameters>
     </Package>
     <Package Name="Extract Sales_SalesOrderHeader" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey">
+      <Annotations>
+        <Annotation Tag="Type">Staging</Annotation>
+      </Annotations>
       <Variables>
         <Variable Name="ParentAuditId" DataType="Int32" EvaluateAsExpression="true">@[$Package::ParentAuditId]</Variable>
         <Variable Name="AuditId" DataType="Int32">-1</Variable>
@@ -1166,6 +1181,10 @@ GO
       </Parameters>
     </Package>
     <Package Name="Load dw_DimProduct" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey">
+      <Annotations>
+        <Annotation Tag="TableRole">Dimension</Annotation>
+        <Annotation Tag="LoadOrder">3</Annotation>
+      </Annotations>
       <Variables>
         <Variable Name="ParentAuditId" DataType="Int32" EvaluateAsExpression="true">@[$Package::ParentAuditId]</Variable>
         <Variable Name="AuditId" DataType="Int32">-1</Variable>
@@ -1188,7 +1207,7 @@ GO
           <DirectInput>SELECT COUNT(*) FROM [dw].[DimProduct];</DirectInput>
         </ExecuteSQL>
         <ExecuteSQL Name="SQL Truncate Update Table" ConnectionName="OLEDB_EDW">
-          <DirectInput>TRUNCATE TABLE stage_Update_DimProduct;</DirectInput>
+          <DirectInput>TRUNCATE TABLE [stage].[Update_DimProduct];</DirectInput>
         </ExecuteSQL>
         <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_EDW" ResultSet="SingleRow">
           <Results>
@@ -1340,7 +1359,7 @@ GO
           </Transformations>
         </Dataflow>
         <ExecuteSQL Name="SQL Update SCD1" ConnectionName="OLEDB_EDW">
-          <DirectInput>UDPATE target 
+          <DirectInput>UPDATE target 
  set
 	target.[ProductNumber] = source.[ProductNumber]
 	,target.[SafetyStockLevel] = source.[SafetyStockLevel]
@@ -1358,7 +1377,7 @@ JOIN [stage].[Update_DimProduct] source ON
 	WHERE target.[EndDate] IS NULL</DirectInput>
         </ExecuteSQL>
         <ExecuteSQL Name="SQL Update SCD2" ConnectionName="OLEDB_EDW">
-          <DirectInput>UDPATE target 
+          <DirectInput>UPDATE target 
  set
 	target.[EndDate] = GETDATE()
 FROM [dw].[DimProduct] as target
@@ -1393,6 +1412,10 @@ JOIN [stage].[Update_DimProduct] source ON
       </Parameters>
     </Package>
     <Package Name="Load dw_DimProductCategory" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey">
+      <Annotations>
+        <Annotation Tag="TableRole">Dimension</Annotation>
+        <Annotation Tag="LoadOrder">1</Annotation>
+      </Annotations>
       <Variables>
         <Variable Name="ParentAuditId" DataType="Int32" EvaluateAsExpression="true">@[$Package::ParentAuditId]</Variable>
         <Variable Name="AuditId" DataType="Int32">-1</Variable>
@@ -1415,7 +1438,7 @@ JOIN [stage].[Update_DimProduct] source ON
           <DirectInput>SELECT COUNT(*) FROM [dw].[DimProductCategory];</DirectInput>
         </ExecuteSQL>
         <ExecuteSQL Name="SQL Truncate Update Table" ConnectionName="OLEDB_EDW">
-          <DirectInput>TRUNCATE TABLE stage_Update_DimProductCategory;</DirectInput>
+          <DirectInput>TRUNCATE TABLE [stage].[Update_DimProductCategory];</DirectInput>
         </ExecuteSQL>
         <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_EDW" ResultSet="SingleRow">
           <Results>
@@ -1511,7 +1534,7 @@ JOIN [stage].[Update_DimProduct] source ON
           </Transformations>
         </Dataflow>
         <ExecuteSQL Name="SQL Update SCD1" ConnectionName="OLEDB_EDW">
-          <DirectInput>UDPATE target 
+          <DirectInput>UPDATE target 
  set
 	target.[Name] = source.[Name]
 FROM [dw].[DimProductCategory] as target
@@ -1546,6 +1569,10 @@ JOIN [stage].[Update_DimProductCategory] source ON
       </Parameters>
     </Package>
     <Package Name="Load dw_DimProductSubcategory" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey">
+      <Annotations>
+        <Annotation Tag="TableRole">Dimension</Annotation>
+        <Annotation Tag="LoadOrder">2</Annotation>
+      </Annotations>
       <Variables>
         <Variable Name="ParentAuditId" DataType="Int32" EvaluateAsExpression="true">@[$Package::ParentAuditId]</Variable>
         <Variable Name="AuditId" DataType="Int32">-1</Variable>
@@ -1568,7 +1595,7 @@ JOIN [stage].[Update_DimProductCategory] source ON
           <DirectInput>SELECT COUNT(*) FROM [dw].[DimProductSubcategory];</DirectInput>
         </ExecuteSQL>
         <ExecuteSQL Name="SQL Truncate Update Table" ConnectionName="OLEDB_EDW">
-          <DirectInput>TRUNCATE TABLE stage_Update_DimProductSubcategory;</DirectInput>
+          <DirectInput>TRUNCATE TABLE [stage].[Update_DimProductSubcategory];</DirectInput>
         </ExecuteSQL>
         <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_EDW" ResultSet="SingleRow">
           <Results>
@@ -1666,7 +1693,7 @@ JOIN [stage].[Update_DimProductCategory] source ON
           </Transformations>
         </Dataflow>
         <ExecuteSQL Name="SQL Update SCD1" ConnectionName="OLEDB_EDW">
-          <DirectInput>UDPATE target 
+          <DirectInput>UPDATE target 
  set
 	target.[ProductCategoryKey] = source.[ProductCategoryKey]
 	,target.[ProductCategoryID] = source.[ProductCategoryID]
@@ -1682,6 +1709,297 @@ JOIN [stage].[Update_DimProductSubcategory] source ON
           </Results>
           <DirectInput>SELECT COUNT(*) FROM [dw].[DimProductSubcategory];</DirectInput>
         </ExecuteSQL>
+        <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_EDW">
+          <Parameters>
+            <Parameter Name="@AuditId" VariableName="User.AuditId" DataType="Int32" />
+            <Parameter Name="@ExtractRowCnt" VariableName="User.ExtractRowCnt" DataType="Int32" />
+            <Parameter Name="@InsertRowCnt" VariableName="User.InsertRowCnt" DataType="Int32" />
+            <Parameter Name="@UpdateRowCnt" VariableName="User.UpdateRowCnt" DataType="Int32" />
+            <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
+            <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
+            <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
+            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
+          </Parameters>
+          <DirectInput>
+        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+    </DirectInput>
+        </ExecuteSQL>
+      </Tasks>
+      <Parameters>
+        <Parameter Name="ParentAuditId" DataType="Int32">-1</Parameter>
+      </Parameters>
+    </Package>
+    <Package Name="Extract _Master" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey">
+      <Annotations>
+        <Annotation Tag="Type">MasterExtract</Annotation>
+      </Annotations>
+      <Variables>
+        <Variable Name="ParentAuditId" DataType="Int32" EvaluateAsExpression="true">@[$Package::ParentAuditId]</Variable>
+        <Variable Name="AuditId" DataType="Int32">-1</Variable>
+        <Variable Name="TableSchemaName" DataType="String">
+        </Variable>
+        <Variable Name="TableName" DataType="String">Extract _Master</Variable>
+        <Variable Name="ExtractRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="InsertRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="UpdateRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="ErrorRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="InitialTableRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="FinalTableRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="TableMaxDateTime" DataType="DateTime">1900-01-01</Variable>
+        <Variable Name="IsSuccessful" DataType="String">N</Variable>
+      </Variables>
+      <Tasks>
+        <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_EDW" ResultSet="SingleRow">
+          <Results>
+            <Result Name="0" VariableName="User.AuditId" />
+          </Results>
+          <Parameters>
+            <Parameter Name="@ParentAuditId" VariableName="User.ParentAuditId" DataType="Int32" />
+            <Parameter Name="@ExecutionInstanceGUID" VariableName="System.ExecutionInstanceGUID" DataType="Guid" />
+            <Parameter Name="@MachineName" VariableName="System.MachineName" DataType="String" />
+            <Parameter Name="@PackageID" VariableName="System.PackageID" DataType="Guid" />
+            <Parameter Name="@ServerExecutionId" VariableName="System.ServerExecutionID" DataType="String" />
+            <Parameter Name="@StartTime" VariableName="System.StartTime" DataType="DateTime" />
+            <Parameter Name="@UserName" VariableName="System.UserName" DataType="String" />
+            <Parameter Name="@VersionBuild" VariableName="System.VersionBuild" DataType="Int16" />
+            <Parameter Name="@VersionGUID" VariableName="System.VersionGUID" DataType="Guid" />
+            <Parameter Name="@VersionMajor" VariableName="System.VersionMajor" DataType="Int32" />
+            <Parameter Name="@VersionMinor" VariableName="System.VersionMinor" DataType="Int32" />
+            <Parameter Name="@TableSchemaName" VariableName="User.TableSchemaName" DataType="String" />
+            <Parameter Name="@TableName" VariableName="User.TableName" DataType="String" />
+            <Parameter Name="@ExtractRowCnt" VariableName="User.ExtractRowCnt" DataType="Int32" />
+            <Parameter Name="@InsertRowCnt" VariableName="User.InsertRowCnt" DataType="Int32" />
+            <Parameter Name="@UpdateRowCnt" VariableName="User.UpdateRowCnt" DataType="Int32" />
+            <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
+            <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
+            <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
+            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
+            <Parameter Name="@IsSuccessful" VariableName="User.IsSuccessful" DataType="String" />
+          </Parameters>
+          <DirectInput>
+        exec dw.spIns_Audit ?, ?, ?, ?, ?,
+                             ?, ?, ?, ?, ?,
+                             ?, ?, ?, ?, ?,
+                             ?, ?, ?, ?, ?, ?
+                        
+    </DirectInput>
+        </ExecuteSQL>
+        <Container Name="CNT Extract">
+          <Tasks>
+            <ExecutePackage Name="EPT Extract Production_Product">
+              <ParameterBindings>
+                <ParameterBinding Name="ParentAuditId" VariableName="User.AuditId" />
+              </ParameterBindings>
+              <ExternalProjectPackage Package="Extract Production_Product.dtsx" />
+            </ExecutePackage>
+            <ExecutePackage Name="EPT Extract Production_ProductCategory">
+              <ParameterBindings>
+                <ParameterBinding Name="ParentAuditId" VariableName="User.AuditId" />
+              </ParameterBindings>
+              <ExternalProjectPackage Package="Extract Production_ProductCategory.dtsx" />
+            </ExecutePackage>
+            <ExecutePackage Name="EPT Extract Production_ProductSubcategory">
+              <ParameterBindings>
+                <ParameterBinding Name="ParentAuditId" VariableName="User.AuditId" />
+              </ParameterBindings>
+              <ExternalProjectPackage Package="Extract Production_ProductSubcategory.dtsx" />
+            </ExecutePackage>
+            <ExecutePackage Name="EPT Extract Sales_SalesOrderDetail">
+              <ParameterBindings>
+                <ParameterBinding Name="ParentAuditId" VariableName="User.AuditId" />
+              </ParameterBindings>
+              <ExternalProjectPackage Package="Extract Sales_SalesOrderDetail.dtsx" />
+            </ExecutePackage>
+            <ExecutePackage Name="EPT Extract Sales_SalesOrderHeader">
+              <ParameterBindings>
+                <ParameterBinding Name="ParentAuditId" VariableName="User.AuditId" />
+              </ParameterBindings>
+              <ExternalProjectPackage Package="Extract Sales_SalesOrderHeader.dtsx" />
+            </ExecutePackage>
+          </Tasks>
+        </Container>
+        <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_EDW">
+          <Parameters>
+            <Parameter Name="@AuditId" VariableName="User.AuditId" DataType="Int32" />
+            <Parameter Name="@ExtractRowCnt" VariableName="User.ExtractRowCnt" DataType="Int32" />
+            <Parameter Name="@InsertRowCnt" VariableName="User.InsertRowCnt" DataType="Int32" />
+            <Parameter Name="@UpdateRowCnt" VariableName="User.UpdateRowCnt" DataType="Int32" />
+            <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
+            <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
+            <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
+            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
+          </Parameters>
+          <DirectInput>
+        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+    </DirectInput>
+        </ExecuteSQL>
+      </Tasks>
+      <Parameters>
+        <Parameter Name="ParentAuditId" DataType="Int32">-1</Parameter>
+      </Parameters>
+    </Package>
+    <Package Name="Load _Master" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey">
+      <Annotations>
+        <Annotation Tag="Type">MasterLoad</Annotation>
+      </Annotations>
+      <Variables>
+        <Variable Name="ParentAuditId" DataType="Int32" EvaluateAsExpression="true">@[$Package::ParentAuditId]</Variable>
+        <Variable Name="AuditId" DataType="Int32">-1</Variable>
+        <Variable Name="TableSchemaName" DataType="String">
+        </Variable>
+        <Variable Name="TableName" DataType="String">Load _Master</Variable>
+        <Variable Name="ExtractRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="InsertRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="UpdateRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="ErrorRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="InitialTableRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="FinalTableRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="TableMaxDateTime" DataType="DateTime">1900-01-01</Variable>
+        <Variable Name="IsSuccessful" DataType="String">N</Variable>
+      </Variables>
+      <Tasks>
+        <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_EDW" ResultSet="SingleRow">
+          <Results>
+            <Result Name="0" VariableName="User.AuditId" />
+          </Results>
+          <Parameters>
+            <Parameter Name="@ParentAuditId" VariableName="User.ParentAuditId" DataType="Int32" />
+            <Parameter Name="@ExecutionInstanceGUID" VariableName="System.ExecutionInstanceGUID" DataType="Guid" />
+            <Parameter Name="@MachineName" VariableName="System.MachineName" DataType="String" />
+            <Parameter Name="@PackageID" VariableName="System.PackageID" DataType="Guid" />
+            <Parameter Name="@ServerExecutionId" VariableName="System.ServerExecutionID" DataType="String" />
+            <Parameter Name="@StartTime" VariableName="System.StartTime" DataType="DateTime" />
+            <Parameter Name="@UserName" VariableName="System.UserName" DataType="String" />
+            <Parameter Name="@VersionBuild" VariableName="System.VersionBuild" DataType="Int16" />
+            <Parameter Name="@VersionGUID" VariableName="System.VersionGUID" DataType="Guid" />
+            <Parameter Name="@VersionMajor" VariableName="System.VersionMajor" DataType="Int32" />
+            <Parameter Name="@VersionMinor" VariableName="System.VersionMinor" DataType="Int32" />
+            <Parameter Name="@TableSchemaName" VariableName="User.TableSchemaName" DataType="String" />
+            <Parameter Name="@TableName" VariableName="User.TableName" DataType="String" />
+            <Parameter Name="@ExtractRowCnt" VariableName="User.ExtractRowCnt" DataType="Int32" />
+            <Parameter Name="@InsertRowCnt" VariableName="User.InsertRowCnt" DataType="Int32" />
+            <Parameter Name="@UpdateRowCnt" VariableName="User.UpdateRowCnt" DataType="Int32" />
+            <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
+            <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
+            <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
+            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
+            <Parameter Name="@IsSuccessful" VariableName="User.IsSuccessful" DataType="String" />
+          </Parameters>
+          <DirectInput>
+        exec dw.spIns_Audit ?, ?, ?, ?, ?,
+                             ?, ?, ?, ?, ?,
+                             ?, ?, ?, ?, ?,
+                             ?, ?, ?, ?, ?, ?
+                        
+    </DirectInput>
+        </ExecuteSQL>
+        <Container Name="SEQ Load Dimensions" ConstraintMode="Linear">
+          <Tasks>
+            <ExecutePackage Name="EPT Load dw_DimProductCategory">
+              <ParameterBindings>
+                <ParameterBinding Name="ParentAuditId" VariableName="User.AuditId" />
+              </ParameterBindings>
+              <ExternalProjectPackage Package="Load dw_DimProductCategory.dtsx" />
+            </ExecutePackage>
+            <ExecutePackage Name="EPT Load dw_DimProductSubcategory">
+              <ParameterBindings>
+                <ParameterBinding Name="ParentAuditId" VariableName="User.AuditId" />
+              </ParameterBindings>
+              <ExternalProjectPackage Package="Load dw_DimProductSubcategory.dtsx" />
+            </ExecutePackage>
+            <ExecutePackage Name="EPT Load dw_DimProduct">
+              <ParameterBindings>
+                <ParameterBinding Name="ParentAuditId" VariableName="User.AuditId" />
+              </ParameterBindings>
+              <ExternalProjectPackage Package="Load dw_DimProduct.dtsx" />
+            </ExecutePackage>
+          </Tasks>
+        </Container>
+        <Container Name="SEQ Load Facts" ConstraintMode="Linear" />
+        <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_EDW">
+          <Parameters>
+            <Parameter Name="@AuditId" VariableName="User.AuditId" DataType="Int32" />
+            <Parameter Name="@ExtractRowCnt" VariableName="User.ExtractRowCnt" DataType="Int32" />
+            <Parameter Name="@InsertRowCnt" VariableName="User.InsertRowCnt" DataType="Int32" />
+            <Parameter Name="@UpdateRowCnt" VariableName="User.UpdateRowCnt" DataType="Int32" />
+            <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
+            <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
+            <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
+            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
+          </Parameters>
+          <DirectInput>
+        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+    </DirectInput>
+        </ExecuteSQL>
+      </Tasks>
+      <Parameters>
+        <Parameter Name="ParentAuditId" DataType="Int32">-1</Parameter>
+      </Parameters>
+    </Package>
+    <Package Name="_Master" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey">
+      <Variables>
+        <Variable Name="ParentAuditId" DataType="Int32" EvaluateAsExpression="true">@[$Package::ParentAuditId]</Variable>
+        <Variable Name="AuditId" DataType="Int32">-1</Variable>
+        <Variable Name="TableSchemaName" DataType="String">
+        </Variable>
+        <Variable Name="TableName" DataType="String">_Master</Variable>
+        <Variable Name="ExtractRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="InsertRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="UpdateRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="ErrorRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="InitialTableRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="FinalTableRowCnt" DataType="Int32">-1</Variable>
+        <Variable Name="TableMaxDateTime" DataType="DateTime">1900-01-01</Variable>
+        <Variable Name="IsSuccessful" DataType="String">N</Variable>
+      </Variables>
+      <Tasks>
+        <ExecuteSQL Name="SQL Audit Begin" ConnectionName="OLEDB_EDW" ResultSet="SingleRow">
+          <Results>
+            <Result Name="0" VariableName="User.AuditId" />
+          </Results>
+          <Parameters>
+            <Parameter Name="@ParentAuditId" VariableName="User.ParentAuditId" DataType="Int32" />
+            <Parameter Name="@ExecutionInstanceGUID" VariableName="System.ExecutionInstanceGUID" DataType="Guid" />
+            <Parameter Name="@MachineName" VariableName="System.MachineName" DataType="String" />
+            <Parameter Name="@PackageID" VariableName="System.PackageID" DataType="Guid" />
+            <Parameter Name="@ServerExecutionId" VariableName="System.ServerExecutionID" DataType="String" />
+            <Parameter Name="@StartTime" VariableName="System.StartTime" DataType="DateTime" />
+            <Parameter Name="@UserName" VariableName="System.UserName" DataType="String" />
+            <Parameter Name="@VersionBuild" VariableName="System.VersionBuild" DataType="Int16" />
+            <Parameter Name="@VersionGUID" VariableName="System.VersionGUID" DataType="Guid" />
+            <Parameter Name="@VersionMajor" VariableName="System.VersionMajor" DataType="Int32" />
+            <Parameter Name="@VersionMinor" VariableName="System.VersionMinor" DataType="Int32" />
+            <Parameter Name="@TableSchemaName" VariableName="User.TableSchemaName" DataType="String" />
+            <Parameter Name="@TableName" VariableName="User.TableName" DataType="String" />
+            <Parameter Name="@ExtractRowCnt" VariableName="User.ExtractRowCnt" DataType="Int32" />
+            <Parameter Name="@InsertRowCnt" VariableName="User.InsertRowCnt" DataType="Int32" />
+            <Parameter Name="@UpdateRowCnt" VariableName="User.UpdateRowCnt" DataType="Int32" />
+            <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
+            <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
+            <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
+            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
+            <Parameter Name="@IsSuccessful" VariableName="User.IsSuccessful" DataType="String" />
+          </Parameters>
+          <DirectInput>
+        exec dw.spIns_Audit ?, ?, ?, ?, ?,
+                             ?, ?, ?, ?, ?,
+                             ?, ?, ?, ?, ?,
+                             ?, ?, ?, ?, ?, ?
+                        
+    </DirectInput>
+        </ExecuteSQL>
+        <ExecutePackage Name="EPT Extract _Master">
+          <ParameterBindings>
+            <ParameterBinding Name="ParentAuditId" VariableName="User.AuditId" />
+          </ParameterBindings>
+          <ExternalProjectPackage Package="Extract _Master.dtsx" />
+        </ExecutePackage>
+        <ExecutePackage Name="EPT Load _Master">
+          <ParameterBindings>
+            <ParameterBinding Name="ParentAuditId" VariableName="User.AuditId" />
+          </ParameterBindings>
+          <ExternalProjectPackage Package="Load _Master.dtsx" />
+        </ExecutePackage>
         <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_EDW">
           <Parameters>
             <Parameter Name="@AuditId" VariableName="User.AuditId" DataType="Int32" />

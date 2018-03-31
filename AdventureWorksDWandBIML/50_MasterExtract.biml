@@ -3,7 +3,7 @@
 <Biml xmlns="http://schemas.varigence.com/biml.xsd">
     <Packages>
         <Package Name="Extract _Master" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey">
-            <#=CallBimlScript("cbs_AuditParameterVariables.biml", "", "Master _Extract", "", "", "", "")#>
+            <#=CallBimlScript("cbs_AuditParameterVariables.biml", "", "Extract _Master", "", "", "", "")#>
             
             <Tasks>
             
@@ -26,6 +26,9 @@
                 <#=CallBimlScript("cbs_AuditEnd.biml", edwConnName)#> 
             
             </Tasks>    
+            <Annotations>
+                <Annotation Tag="Type">MasterExtract</Annotation>
+            </Annotations>
         </Package>
     </Packages>
 </Biml>

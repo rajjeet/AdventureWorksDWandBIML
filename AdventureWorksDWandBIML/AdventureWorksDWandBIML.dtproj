@@ -26,7 +26,7 @@
           <SSIS:Property SSIS:Name="CreatorComputerName">PHULL207</SSIS:Property>
           <SSIS:Property SSIS:Name="Description">
           </SSIS:Property>
-          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAiCOl8Y6qgUS3M1GWvtDmYwAAAAACAAAAAAAQZgAAAAEAACAAAAA5nOowFa8PukVNxTBSGGP8vHvi/pD9tPlp7nc7oEJwgQAAAAAOgAAAAAIAACAAAABwD4OsWiQMjD6P92v5ZV7hUCOyjHwHHsaQ/eBi1W1XYZAAAACeo8y5/kqi52xQ80QZ1D2wcrz56ADwKGoh1GIOaOuYs+VNF7jryZBt6vrEnrkeKkAJy3RhrVs+1gchjkYiADFs/7iFc5KzgAD8EbT07W1wkGulWp+Jw/Cq7Xji+5EsvWRI3mlGkgdoLXk43bDW5vC1//FtmRrtfwvwFgxsmT/nKhyW5BkAEAYhs+fg04rc8dxAAAAAK576tDvB69WGBGwS7kzrRb+o49QCKY5/gogvJ2qKz5osKUZaLq/6z+Bv8/ylp1906l5xuigAIE4nw8c/xbP07g==</SSIS:Property>
+          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAiCOl8Y6qgUS3M1GWvtDmYwAAAAACAAAAAAAQZgAAAAEAACAAAABI7MTeW5D4+9F9+otrME06W8mQBymuJiceD66WAUKU4gAAAAAOgAAAAAIAACAAAAAiF1A4LBtpRfiNzxIWivUoF9rZVt7Y47Z4WJpLO+zzfJAAAAAyL48xdcpQndCYXrVF8vGDiqDNXoDIeg6XOe2DSPyTwnWjV4bj5QHdAl2BnqNW0z2VwfyVLPO82UV5JiDuzqXBzBNfB51f8mA85LSKTnMtHzvW5rP87wFg+hYiz/nbi/4+DMgigK3fQ/oUKN5fcAb4/Xp0aOnpYMwWwnbqjCS7RR/BdEZ0zImSlFHIV47npvFAAAAAeSc7c/0toEoJBzQ2k+tuR942dBx5aV5C3X0wlCpOIyrhbEfydIdobxzChna5oEE2/nlTNxrjkvvYv1puipEbRA==</SSIS:Property>
           <SSIS:Property SSIS:Name="FormatVersion">1</SSIS:Property>
         </SSIS:Properties>
         <SSIS:Packages>
@@ -40,6 +40,8 @@
           <SSIS:Package SSIS:Name="Load dw_DimProductCategory.dtsx" SSIS:EntryPoint="1" />
           <SSIS:Package SSIS:Name="Load dw_DimProductSubcategory.dtsx" SSIS:EntryPoint="1" />
           <SSIS:Package SSIS:Name="Extract _Master.dtsx" SSIS:EntryPoint="1" />
+          <SSIS:Package SSIS:Name="Load _Master.dtsx" SSIS:EntryPoint="1" />
+          <SSIS:Package SSIS:Name="_Master.dtsx" SSIS:EntryPoint="1" />
         </SSIS:Packages>
         <SSIS:ConnectionManagers>
           <SSIS:ConnectionManager SSIS:Name="OLEDB_Staging.conmgr" />
@@ -1568,8 +1570,6 @@
                     <SSIS:Property SSIS:Name="IncludeInDebugDump">0</SSIS:Property>
                     <SSIS:Property SSIS:Name="Required">0</SSIS:Property>
                     <SSIS:Property SSIS:Name="Sensitive">0</SSIS:Property>
-                    <SSIS:Property SSIS:Name="Value">
-                    </SSIS:Property>
                     <SSIS:Property SSIS:Name="DataType">18</SSIS:Property>
                   </SSIS:Properties>
                 </SSIS:Parameter>
@@ -1641,14 +1641,14 @@
             </SSIS:PackageMetaData>
             <SSIS:PackageMetaData SSIS:Name="Extract _Master.dtsx">
               <SSIS:Properties>
-                <SSIS:Property SSIS:Name="ID">{1AF7C794-F8DC-47C3-AE42-36F94437D0C2}</SSIS:Property>
+                <SSIS:Property SSIS:Name="ID">{348FB6AA-E476-4079-8B58-33B12DEC4514}</SSIS:Property>
                 <SSIS:Property SSIS:Name="Name">Extract _Master</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMajor">0</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionBuild">0</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionComments">
                 </SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionGUID">{DACE0D48-811F-4731-BFD1-3B4945ECDC5E}</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionGUID">{C2272EEC-C17C-4EA5-8A60-4C81B583CFB2}</SSIS:Property>
                 <SSIS:Property SSIS:Name="PackageFormatVersion">8</SSIS:Property>
                 <SSIS:Property SSIS:Name="Description">
                 </SSIS:Property>
@@ -1657,7 +1657,71 @@
               <SSIS:Parameters>
                 <SSIS:Parameter SSIS:Name="ParentAuditId">
                   <SSIS:Properties>
-                    <SSIS:Property SSIS:Name="ID">{75973B14-4B55-4B81-BB67-DE595E778C21}</SSIS:Property>
+                    <SSIS:Property SSIS:Name="ID">{156337DB-2DCE-48A8-9511-731D6580804D}</SSIS:Property>
+                    <SSIS:Property SSIS:Name="CreationName">
+                    </SSIS:Property>
+                    <SSIS:Property SSIS:Name="Description">
+                    </SSIS:Property>
+                    <SSIS:Property SSIS:Name="IncludeInDebugDump">0</SSIS:Property>
+                    <SSIS:Property SSIS:Name="Required">0</SSIS:Property>
+                    <SSIS:Property SSIS:Name="Sensitive">0</SSIS:Property>
+                    <SSIS:Property SSIS:Name="Value">-1</SSIS:Property>
+                    <SSIS:Property SSIS:Name="DataType">9</SSIS:Property>
+                  </SSIS:Properties>
+                </SSIS:Parameter>
+              </SSIS:Parameters>
+            </SSIS:PackageMetaData>
+            <SSIS:PackageMetaData SSIS:Name="Load _Master.dtsx">
+              <SSIS:Properties>
+                <SSIS:Property SSIS:Name="ID">{286C9589-CA56-4CE1-A626-C2418210E79D}</SSIS:Property>
+                <SSIS:Property SSIS:Name="Name">Load _Master</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionMajor">0</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionBuild">0</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionComments">
+                </SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionGUID">{4655F238-A627-45D9-9B1D-52BDDA5CDA49}</SSIS:Property>
+                <SSIS:Property SSIS:Name="PackageFormatVersion">8</SSIS:Property>
+                <SSIS:Property SSIS:Name="Description">
+                </SSIS:Property>
+                <SSIS:Property SSIS:Name="ProtectionLevel">1</SSIS:Property>
+              </SSIS:Properties>
+              <SSIS:Parameters>
+                <SSIS:Parameter SSIS:Name="ParentAuditId">
+                  <SSIS:Properties>
+                    <SSIS:Property SSIS:Name="ID">{207C239D-79D3-4FCC-BEB8-D6C124504A40}</SSIS:Property>
+                    <SSIS:Property SSIS:Name="CreationName">
+                    </SSIS:Property>
+                    <SSIS:Property SSIS:Name="Description">
+                    </SSIS:Property>
+                    <SSIS:Property SSIS:Name="IncludeInDebugDump">0</SSIS:Property>
+                    <SSIS:Property SSIS:Name="Required">0</SSIS:Property>
+                    <SSIS:Property SSIS:Name="Sensitive">0</SSIS:Property>
+                    <SSIS:Property SSIS:Name="Value">-1</SSIS:Property>
+                    <SSIS:Property SSIS:Name="DataType">9</SSIS:Property>
+                  </SSIS:Properties>
+                </SSIS:Parameter>
+              </SSIS:Parameters>
+            </SSIS:PackageMetaData>
+            <SSIS:PackageMetaData SSIS:Name="_Master.dtsx">
+              <SSIS:Properties>
+                <SSIS:Property SSIS:Name="ID">{658C4C5F-C86B-4A0B-AC46-C6A1AE2EBD56}</SSIS:Property>
+                <SSIS:Property SSIS:Name="Name">_Master</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionMajor">0</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionBuild">0</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionComments">
+                </SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionGUID">{5FD1627A-BBCC-44A0-8A53-5275C824F421}</SSIS:Property>
+                <SSIS:Property SSIS:Name="PackageFormatVersion">8</SSIS:Property>
+                <SSIS:Property SSIS:Name="Description">
+                </SSIS:Property>
+                <SSIS:Property SSIS:Name="ProtectionLevel">1</SSIS:Property>
+              </SSIS:Properties>
+              <SSIS:Parameters>
+                <SSIS:Parameter SSIS:Name="ParentAuditId">
+                  <SSIS:Properties>
+                    <SSIS:Property SSIS:Name="ID">{5094A989-449D-47EE-A0BE-B74238AE71DE}</SSIS:Property>
                     <SSIS:Property SSIS:Name="CreationName">
                     </SSIS:Property>
                     <SSIS:Property SSIS:Name="Description">

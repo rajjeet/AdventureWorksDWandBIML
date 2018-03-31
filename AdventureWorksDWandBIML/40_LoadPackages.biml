@@ -10,13 +10,16 @@
                 table.Schema.Name, table.Name, table.GetTag("Type"), table.GetTag("IsIncremental"), 
                 table.GetTag("SourceQuery"), table.GetTag("IncrementColumn"))#>
 
+            <# var updateTableLabel = $"{edwUpdateSchemaName}_{edwUpdatePrefix}{table.Name}"; #>
+            <# var updateTableSchemaQualifiedName = $"[{edwUpdateSchemaName}].[{edwUpdatePrefix}{table.Name}]"; #>
+
             <Tasks>
                 
             <#=CallBimlScript("cbs_ExecuteSQLCountRows.biml", table.Schema.Name, table.Name, edwConnName, 
                 "User.InitialTableRowCnt", "Initial")#>
 
             <ExecuteSQL Name="SQL Truncate Update Table" ConnectionName="<#=edwConnName#>">
-                <DirectInput>TRUNCATE TABLE <#=edwUpdateSchemaName#>_<#=edwUpdatePrefix#><#=table.Name#>;</DirectInput>
+                <DirectInput>TRUNCATE TABLE <#=updateTableSchemaQualifiedName#>;</DirectInput>
             </ExecuteSQL>                
                     
             <#=CallBimlScript("cbs_AuditBegin.biml", edwConnName)#>
@@ -77,20 +80,20 @@
                             <OutputPath Name="SCD2 Update" />
                         </OutputPaths>
                     </Multicast>
+                
+                    <UnionAll Name="UNI Insert">
+                        <InputPaths>
+                            <InputPath OutputPathName="MC SCD2.SCD2 Insert" />
+                            <InputPath OutputPathName="LU <#=edwSchemaName#>_<#=table.Name#>.NoMatch" />
+                        </InputPaths>
+                    </UnionAll>
                     
                     <DerivedColumns Name="DC Start Date">
-                        <InputPath OutputPathName="MC SCD2.SCD2 Insert" />
+                        <InputPath OutputPathName="UNI Insert.Output" />
                         <Columns>
                             <Column Name="StartDate" DataType="DateTime">GETDATE()</Column>
                         </Columns>
                     </DerivedColumns>
-                    
-                    <UnionAll Name="UNI Insert">
-                        <InputPaths>
-                            <InputPath OutputPathName="DC Start Date.Output" />
-                            <InputPath OutputPathName="LU <#=edwSchemaName#>_<#=table.Name#>.NoMatch" />
-                        </InputPaths>
-                    </UnionAll>
                     
                     <DerivedColumns Name="DC End Date">
                         <InputPath OutputPathName="MC SCD2.SCD2 Update" />
@@ -110,7 +113,7 @@
                     <!-- INSERT -->
                     <RowCount Name="RC Insert" VariableName="User.InsertRowCnt">
                         <# if (table.GetTag("SCDType") == "2") { #>
-                        <InputPath OutputPathName="UNI Insert.Output" />
+                        <InputPath OutputPathName="DC Start Date.Output" />
                         <# } else { #>
                         <InputPath OutputPathName="LU <#=edwSchemaName#>_<#=table.Name#>.NoMatch" />
                         <# } #>
@@ -131,9 +134,6 @@
                         <InputPath OutputPathName="CS Changed Columns.SCD1" />
                         <# } #>
                     </RowCount>
-                    
-                    <# var updateTableLabel = $"{edwUpdateSchemaName}_{edwUpdatePrefix}{table.Name}"; #>
-                    <# var updateTableSchemaQualifiedName = $"[{edwUpdateSchemaName}].[{edwUpdatePrefix}{table.Name}]"; #>
 
                     <OleDbDestination Name="OLEDBDEST <#=updateTableLabel#>" 
                                       ConnectionName="<#=edwConnName#>">
@@ -175,6 +175,10 @@
                 
             <#=CallBimlScript("cbs_AuditEnd.biml", edwConnName)#> 
             </Tasks>
+            <Annotations>
+                <Annotation Tag="TableRole"><#=table.GetTag("TableRole")#></Annotation>
+                <Annotation Tag="LoadOrder"><#=table.GetTag("LoadOrder")#></Annotation>
+            </Annotations>
         </Package>
         <# } #>
     </Packages>

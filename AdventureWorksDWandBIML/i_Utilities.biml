@@ -51,7 +51,7 @@
         bool firstLoop;
         var endDateColumnName = tableNode.Columns.Where(c => c.GetTag("ColumnRole") == "EndDate").FirstOrDefault();
         
-        query = "UDPATE target \r\n set\r\n";
+        query = "UPDATE target \r\n set\r\n";
         
         firstLoop = true;
         if (SCDType == "SCD1"){

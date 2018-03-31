@@ -1,3 +1,35 @@
 <#@ template tier="60" language="C#" #>
+<#@ include file="i_CommonVariables.biml"#>
 <Biml xmlns="http://schemas.varigence.com/biml.xsd">
+    <Packages>
+        <Package Name="_Master" ConstraintMode="Linear" ProtectionLevel="EncryptSensitiveWithUserKey">
+            <#=CallBimlScript("cbs_AuditParameterVariables.biml", "", "_Master", "", "", "", "")#>
+            
+            <Tasks>
+            
+                <#=CallBimlScript("cbs_AuditBegin.biml", edwConnName)#>
+                
+                <#  var masterExtractPkg = RootNode.Packages.Where(p => p.GetTag("Type") == "MasterExtract").First(); #>
+                        
+                <ExecutePackage Name="EPT <#=masterExtractPkg.Name#>">
+                    <ExternalProjectPackage Package="<#=masterExtractPkg.Name#>.dtsx" />
+                    <ParameterBindings>
+                        <ParameterBinding Name="ParentAuditId" VariableName="User.AuditId" />
+                    </ParameterBindings> 
+                </ExecutePackage>
+                
+                <#  var masterLoadPkg = RootNode.Packages.Where(p => p.GetTag("Type") == "MasterLoad").First(); #>
+
+                <ExecutePackage Name="EPT <#=masterLoadPkg.Name#>">
+                    <ExternalProjectPackage Package="<#=masterLoadPkg.Name#>.dtsx" />
+                    <ParameterBindings>
+                        <ParameterBinding Name="ParentAuditId" VariableName="User.AuditId" />
+                    </ParameterBindings> 
+                </ExecutePackage>                    
+                
+                <#=CallBimlScript("cbs_AuditEnd.biml", edwConnName)#> 
+            
+            </Tasks>    
+        </Package>
+    </Packages>
 </Biml>
