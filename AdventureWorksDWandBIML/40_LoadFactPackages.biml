@@ -62,9 +62,29 @@
                     </FlatFileDestination>
                         
                     <!-- Max Aggregate -->
-                    <RowCount Name="RC Aggregate" VariableName="User.InsertRowCnt">
+                    <Aggregate Name="AGG Max DateTime">
                         <InputPath OutputPathName="MC Aggegrate And Insert.Max Aggregate" />
-                    </RowCount>
+                        <OutputPaths>
+                            <OutputPath Name="AGG Max Date Output">
+                                <Columns>
+                                    <Column SourceColumn="AuditId" Operation="GroupBy" />
+                                    <Column SourceColumn="ModifiedDate" Operation="Maximum" />
+                                </Columns>
+                            </OutputPath>
+                        </OutputPaths>
+                    </Aggregate>
+
+                    <OleDbCommand Name="OLECMD Update DimAudit" ConnectionName="<#=edwConnName#>">
+                        <InputPath OutputPathName="AGG Max DateTime.AGG Max Date Output" />
+                        <DirectInput>
+                            UPDATE [<#=edwSchemaName#>].[DimAudit] set TableMaxDateTime = ? WHERE AuditId = ?
+                        </DirectInput>
+                        <Parameters>
+                            <Parameter SourceColumn="ModifiedDate" TargetColumn="Param_0" DataType="DateTime" />
+                            <Parameter SourceColumn="AuditId" TargetColumn="Param_1" DataType="Int32" />
+                        </Parameters>
+                    </OleDbCommand>
+
                         
                 </Transformations>
             </Dataflow>

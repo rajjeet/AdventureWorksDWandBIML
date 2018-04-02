@@ -679,14 +679,13 @@ GO
             <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
             <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
             <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
-            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
             <Parameter Name="@IsSuccessful" VariableName="User.IsSuccessful" DataType="String" />
           </Parameters>
           <DirectInput>
         exec dw.spIns_Audit ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
-                             ?, ?, ?, ?, ?, ?
+                             ?, ?, ?, ?, ?
                         
     </DirectInput>
         </ExecuteSQL>
@@ -723,10 +722,9 @@ GO
             <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
             <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
             <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
-            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
           </Parameters>
           <DirectInput>
-        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?
     </DirectInput>
         </ExecuteSQL>
       </Tasks>
@@ -793,14 +791,13 @@ GO
             <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
             <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
             <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
-            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
             <Parameter Name="@IsSuccessful" VariableName="User.IsSuccessful" DataType="String" />
           </Parameters>
           <DirectInput>
         exec dw.spIns_Audit ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
-                             ?, ?, ?, ?, ?, ?
+                             ?, ?, ?, ?, ?
                         
     </DirectInput>
         </ExecuteSQL>
@@ -837,10 +834,9 @@ GO
             <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
             <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
             <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
-            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
           </Parameters>
           <DirectInput>
-        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?
     </DirectInput>
         </ExecuteSQL>
       </Tasks>
@@ -907,14 +903,13 @@ GO
             <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
             <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
             <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
-            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
             <Parameter Name="@IsSuccessful" VariableName="User.IsSuccessful" DataType="String" />
           </Parameters>
           <DirectInput>
         exec dw.spIns_Audit ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
-                             ?, ?, ?, ?, ?, ?
+                             ?, ?, ?, ?, ?
                         
     </DirectInput>
         </ExecuteSQL>
@@ -951,10 +946,9 @@ GO
             <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
             <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
             <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
-            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
           </Parameters>
           <DirectInput>
-        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?
     </DirectInput>
         </ExecuteSQL>
       </Tasks>
@@ -1003,8 +997,10 @@ GO
             <Result Name="0" VariableName="User.TableMaxDateTime" />
           </Results>
           <DirectInput>
-                        SELECT MAX([TableMaxDateTime]) FROM [dw].[DimAudit] 
-                            WHERE [TableSchemaName] = 'Sales' AND [TableName] = 'SalesOrderDetail';
+                        SELECT Max(a.TableMaxDateTime)  FROM [dw].[DimAudit] a
+						join stage.SourceTargetFactMapping fm 
+								on fm.SourceSchemaName = 'Sales'
+									and fm.SourceTableName = 'SalesOrderDetail';
                     </DirectInput>
         </ExecuteSQL>
         <Expression Name="EXP SourceQuery" Expression="@[User::SourceQuery] = @[$Project::InitialLoad] ?                                              @[User::SourceQuery] :                                             @[User::SourceQuery] + @[User::SourceQueryWhere] +                                                 &quot;'&quot; + (DT_WSTR, 30) @[User::TableMaxDateTime] +  &quot;'&quot;" />
@@ -1032,14 +1028,13 @@ GO
             <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
             <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
             <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
-            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
             <Parameter Name="@IsSuccessful" VariableName="User.IsSuccessful" DataType="String" />
           </Parameters>
           <DirectInput>
         exec dw.spIns_Audit ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
-                             ?, ?, ?, ?, ?, ?
+                             ?, ?, ?, ?, ?
                         
     </DirectInput>
         </ExecuteSQL>
@@ -1076,10 +1071,9 @@ GO
             <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
             <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
             <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
-            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
           </Parameters>
           <DirectInput>
-        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?
     </DirectInput>
         </ExecuteSQL>
       </Tasks>
@@ -1128,8 +1122,10 @@ GO
             <Result Name="0" VariableName="User.TableMaxDateTime" />
           </Results>
           <DirectInput>
-                        SELECT MAX([TableMaxDateTime]) FROM [dw].[DimAudit] 
-                            WHERE [TableSchemaName] = 'Sales' AND [TableName] = 'SalesOrderHeader';
+                        SELECT Max(a.TableMaxDateTime)  FROM [dw].[DimAudit] a
+						join stage.SourceTargetFactMapping fm 
+								on fm.SourceSchemaName = 'Sales'
+									and fm.SourceTableName = 'SalesOrderHeader';
                     </DirectInput>
         </ExecuteSQL>
         <Expression Name="EXP SourceQuery" Expression="@[User::SourceQuery] = @[$Project::InitialLoad] ?                                              @[User::SourceQuery] :                                             @[User::SourceQuery] + @[User::SourceQueryWhere] +                                                 &quot;'&quot; + (DT_WSTR, 30) @[User::TableMaxDateTime] +  &quot;'&quot;" />
@@ -1157,14 +1153,13 @@ GO
             <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
             <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
             <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
-            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
             <Parameter Name="@IsSuccessful" VariableName="User.IsSuccessful" DataType="String" />
           </Parameters>
           <DirectInput>
         exec dw.spIns_Audit ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
-                             ?, ?, ?, ?, ?, ?
+                             ?, ?, ?, ?, ?
                         
     </DirectInput>
         </ExecuteSQL>
@@ -1201,10 +1196,9 @@ GO
             <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
             <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
             <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
-            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
           </Parameters>
           <DirectInput>
-        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?
     </DirectInput>
         </ExecuteSQL>
       </Tasks>
@@ -1268,14 +1262,13 @@ GO
             <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
             <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
             <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
-            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
             <Parameter Name="@IsSuccessful" VariableName="User.IsSuccessful" DataType="String" />
           </Parameters>
           <DirectInput>
         exec dw.spIns_Audit ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
-                             ?, ?, ?, ?, ?, ?
+                             ?, ?, ?, ?, ?
                         
     </DirectInput>
         </ExecuteSQL>
@@ -1432,10 +1425,9 @@ JOIN [stage].[Update_DimProduct] source ON
             <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
             <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
             <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
-            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
           </Parameters>
           <DirectInput>
-        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?
     </DirectInput>
         </ExecuteSQL>
       </Tasks>
@@ -1496,14 +1488,13 @@ JOIN [stage].[Update_DimProduct] source ON
             <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
             <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
             <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
-            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
             <Parameter Name="@IsSuccessful" VariableName="User.IsSuccessful" DataType="String" />
           </Parameters>
           <DirectInput>
         exec dw.spIns_Audit ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
-                             ?, ?, ?, ?, ?, ?
+                             ?, ?, ?, ?, ?
                         
     </DirectInput>
         </ExecuteSQL>
@@ -1591,10 +1582,9 @@ JOIN [stage].[Update_DimProductCategory] source ON
             <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
             <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
             <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
-            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
           </Parameters>
           <DirectInput>
-        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?
     </DirectInput>
         </ExecuteSQL>
       </Tasks>
@@ -1655,14 +1645,13 @@ JOIN [stage].[Update_DimProductCategory] source ON
             <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
             <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
             <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
-            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
             <Parameter Name="@IsSuccessful" VariableName="User.IsSuccessful" DataType="String" />
           </Parameters>
           <DirectInput>
         exec dw.spIns_Audit ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
-                             ?, ?, ?, ?, ?, ?
+                             ?, ?, ?, ?, ?
                         
     </DirectInput>
         </ExecuteSQL>
@@ -1754,10 +1743,9 @@ JOIN [stage].[Update_DimProductSubcategory] source ON
             <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
             <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
             <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
-            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
           </Parameters>
           <DirectInput>
-        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?
     </DirectInput>
         </ExecuteSQL>
       </Tasks>
@@ -1815,14 +1803,13 @@ JOIN [stage].[Update_DimProductSubcategory] source ON
             <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
             <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
             <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
-            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
             <Parameter Name="@IsSuccessful" VariableName="User.IsSuccessful" DataType="String" />
           </Parameters>
           <DirectInput>
         exec dw.spIns_Audit ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
-                             ?, ?, ?, ?, ?, ?
+                             ?, ?, ?, ?, ?
                         
     </DirectInput>
         </ExecuteSQL>
@@ -1858,9 +1845,27 @@ JOIN [stage].[Update_DimProductSubcategory] source ON
             <FlatFileDestination Name="FFD dw_FactResellerSales" ConnectionName="FFC dw_FactResellerSales">
               <InputPath OutputPathName="RC Error.Output" />
             </FlatFileDestination>
-            <RowCount Name="RC Aggregate" VariableName="User.InsertRowCnt">
+            <Aggregate Name="AGG Max DateTime">
               <InputPath OutputPathName="MC Aggegrate And Insert.Max Aggregate" />
-            </RowCount>
+              <OutputPaths>
+                <OutputPath Name="AGG Max Date Output">
+                  <Columns>
+                    <Column SourceColumn="AuditId" Operation="GroupBy" />
+                    <Column SourceColumn="ModifiedDate" Operation="Maximum" />
+                  </Columns>
+                </OutputPath>
+              </OutputPaths>
+            </Aggregate>
+            <OleDbCommand Name="OLECMD Update DimAudit" ConnectionName="OLEDB_EDW">
+              <InputPath OutputPathName="AGG Max DateTime.AGG Max Date Output" />
+              <Parameters>
+                <Parameter SourceColumn="ModifiedDate" TargetColumn="Param_0" DataType="DateTime" />
+                <Parameter SourceColumn="AuditId" TargetColumn="Param_1" DataType="Int32" />
+              </Parameters>
+              <DirectInput>
+                            UPDATE [dw].[DimAudit] set TableMaxDateTime = ? WHERE AuditId = ?
+                        </DirectInput>
+            </OleDbCommand>
           </Transformations>
         </Dataflow>
         <ExecuteSQL Name="SQL Count Final dw_FactResellerSales" ConnectionName="OLEDB_EDW" ResultSet="SingleRow">
@@ -1878,10 +1883,9 @@ JOIN [stage].[Update_DimProductSubcategory] source ON
             <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
             <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
             <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
-            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
           </Parameters>
           <DirectInput>
-        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?
     </DirectInput>
         </ExecuteSQL>
       </Tasks>
@@ -1933,14 +1937,13 @@ JOIN [stage].[Update_DimProductSubcategory] source ON
             <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
             <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
             <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
-            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
             <Parameter Name="@IsSuccessful" VariableName="User.IsSuccessful" DataType="String" />
           </Parameters>
           <DirectInput>
         exec dw.spIns_Audit ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
-                             ?, ?, ?, ?, ?, ?
+                             ?, ?, ?, ?, ?
                         
     </DirectInput>
         </ExecuteSQL>
@@ -1987,10 +1990,9 @@ JOIN [stage].[Update_DimProductSubcategory] source ON
             <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
             <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
             <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
-            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
           </Parameters>
           <DirectInput>
-        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?
     </DirectInput>
         </ExecuteSQL>
       </Tasks>
@@ -2042,14 +2044,13 @@ JOIN [stage].[Update_DimProductSubcategory] source ON
             <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
             <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
             <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
-            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
             <Parameter Name="@IsSuccessful" VariableName="User.IsSuccessful" DataType="String" />
           </Parameters>
           <DirectInput>
         exec dw.spIns_Audit ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
-                             ?, ?, ?, ?, ?, ?
+                             ?, ?, ?, ?, ?
                         
     </DirectInput>
         </ExecuteSQL>
@@ -2094,10 +2095,9 @@ JOIN [stage].[Update_DimProductSubcategory] source ON
             <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
             <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
             <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
-            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
           </Parameters>
           <DirectInput>
-        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?
     </DirectInput>
         </ExecuteSQL>
       </Tasks>
@@ -2146,14 +2146,13 @@ JOIN [stage].[Update_DimProductSubcategory] source ON
             <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
             <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
             <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
-            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
             <Parameter Name="@IsSuccessful" VariableName="User.IsSuccessful" DataType="String" />
           </Parameters>
           <DirectInput>
         exec dw.spIns_Audit ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
-                             ?, ?, ?, ?, ?, ?
+                             ?, ?, ?, ?, ?
                         
     </DirectInput>
         </ExecuteSQL>
@@ -2178,10 +2177,9 @@ JOIN [stage].[Update_DimProductSubcategory] source ON
             <Parameter Name="@ErrorRowCnt" VariableName="User.ErrorRowCnt" DataType="Int32" />
             <Parameter Name="@InitialTableRowCnt" VariableName="User.InitialTableRowCnt" DataType="Int32" />
             <Parameter Name="@FinalTableRowCnt" VariableName="User.FinalTableRowCnt" DataType="Int32" />
-            <Parameter Name="@TableMaxDateTime" VariableName="User.TableMaxDateTime" DataType="DateTime" />
           </Parameters>
           <DirectInput>
-        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?
     </DirectInput>
         </ExecuteSQL>
       </Tasks>

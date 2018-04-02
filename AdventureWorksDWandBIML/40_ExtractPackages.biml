@@ -25,8 +25,10 @@
                 <# if (table.GetTag("IsIncremental").ToString() == "1") { #>
                 <ExecuteSQL Name="SQL Max Table DateTime" ConnectionName="<#=edwConnName#>" ResultSet="SingleRow">
                     <DirectInput>
-                        SELECT MAX([TableMaxDateTime]) FROM [dw].[DimAudit] 
-                            WHERE [TableSchemaName] = '<#=table.Schema.Name#>' AND [TableName] = '<#=table.Name#>';
+                        SELECT Max(a.TableMaxDateTime)  FROM [dw].[DimAudit] a
+						join stage.SourceTargetFactMapping fm 
+								on fm.SourceSchemaName = '<#=table.Schema.Name#>'
+									and fm.SourceTableName = '<#=table.Name#>';
                     </DirectInput>
                     <Results>
                         <Result Name="0" VariableName="User.TableMaxDateTime" />

@@ -1,7 +1,7 @@
 <#@ property name="ConnName" type="String"#>
 <ExecuteSQL Name="SQL Audit End" ConnectionName="<#=ConnName#>">
     <DirectInput>
-        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?, ?
+        exec dw.spUpd_Audit ?, ?, ?, ?, ?, ?, ?
     </DirectInput>
     <Parameters>
         <Parameter Name="@AuditId" DataType="Int32" VariableName="User.AuditId" />
@@ -11,6 +11,5 @@
         <Parameter Name="@ErrorRowCnt" DataType="Int32" VariableName="User.ErrorRowCnt" />
         <Parameter Name="@InitialTableRowCnt" DataType="Int32" VariableName="User.InitialTableRowCnt" />
         <Parameter Name="@FinalTableRowCnt" DataType="Int32" VariableName="User.FinalTableRowCnt" />
-        <Parameter Name="@TableMaxDateTime" DataType="DateTime" VariableName="User.TableMaxDateTime" />
     </Parameters>
 </ExecuteSQL>

@@ -4,7 +4,7 @@
         exec dw.spIns_Audit ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
                              ?, ?, ?, ?, ?,
-                             ?, ?, ?, ?, ?, ?
+                             ?, ?, ?, ?, ?
                         
     </DirectInput>
     <Results>
@@ -30,7 +30,6 @@
         <Parameter Name="@ErrorRowCnt" DataType="Int32" VariableName="User.ErrorRowCnt" />
         <Parameter Name="@InitialTableRowCnt" DataType="Int32" VariableName="User.InitialTableRowCnt" />
         <Parameter Name="@FinalTableRowCnt" DataType="Int32" VariableName="User.FinalTableRowCnt" />
-        <Parameter Name="@TableMaxDateTime" DataType="DateTime" VariableName="User.TableMaxDateTime" />
         <Parameter Name="@IsSuccessful" DataType="String" VariableName="User.IsSuccessful" />
     </Parameters>
 </ExecuteSQL>
