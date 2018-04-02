@@ -1368,7 +1368,7 @@ GO
 FROM [dw].[DimProduct] as target
 JOIN [stage].[Update_DimProduct] source ON 
 	target.[ProductID] = source.[ProductID]
-	WHERE target.[EndDate] IS NULL</DirectInput>
+</DirectInput>
         </ExecuteSQL>
         <ExecuteSQL Name="SQL Update SCD2" ConnectionName="OLEDB_EDW">
           <DirectInput>UPDATE target 
@@ -1377,7 +1377,7 @@ JOIN [stage].[Update_DimProduct] source ON
 FROM [dw].[DimProduct] as target
 JOIN [stage].[Update_DimProduct] source ON 
 	target.[ProductID] = source.[ProductID]
-	WHERE target.[EndDate] IS NULL</DirectInput>
+	WHERE target.[EndDate] IS NULL AND source.[AuditId] != target.[AuditId]</DirectInput>
         </ExecuteSQL>
         <ExecuteSQL Name="SQL Count Final dw_DimProduct" ConnectionName="OLEDB_EDW" ResultSet="SingleRow">
           <Results>

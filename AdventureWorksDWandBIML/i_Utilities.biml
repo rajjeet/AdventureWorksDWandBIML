@@ -50,6 +50,7 @@
         var query = "";
         bool firstLoop;
         var endDateColumnName = tableNode.Columns.Where(c => c.GetTag("ColumnRole") == "EndDate").FirstOrDefault();
+        var auditIdColumnName = tableNode.Columns.Where(c => c.GetTag("ColumnRole") == "Audit").FirstOrDefault();
         
         query = "UPDATE target \r\n set\r\n";
         
@@ -75,9 +76,9 @@
             firstLoop = false;
         }
         
-        if (tableNode.GetTag("SCDType") == "2") {
-            if (endDateColumnName != null)
-                query += $"\tWHERE target.[{endDateColumnName}] IS NULL";
+        if (SCDType == "SCD2"){
+            if (endDateColumnName != null && auditIdColumnName != null)
+                query += $"\tWHERE target.[{endDateColumnName}] IS NULL AND source.[{auditIdColumnName}] != target.[{auditIdColumnName}]";
         }
 
         return query;
