@@ -1,6 +1,7 @@
 <#
     var stagingSchemaName = @"stage";
     var stagingConnName = @"OLEDB_Staging";
+    var stagingViewStgPrefix = @"v";
     var stagingConnString = @"Data Source=localhost;Integrated Security=SSPI;Initial Catalog=AwBimlStaging;Provider=SQLNCLI11.1;";
     
     var sourceConnName = @"OLEDB_Source";

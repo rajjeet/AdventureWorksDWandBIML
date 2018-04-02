@@ -23,11 +23,9 @@
             ImportOptions.ExcludeViews); 
             
         var includedEdwSchemas = new List<String>{"dw"};        
-        var includedEdwTables = new List<String>{"DimProduct", "DimProductSubcategory", 
-            "DimProductCategory"};
             
         var edwConn = RootNode.OleDbConnections[edwConnName];
-        var edwDbSchema = edwConn.GetDatabaseSchema(includedEdwSchemas, includedEdwTables,
+        var edwDbSchema = edwConn.GetDatabaseSchema(includedEdwSchemas, null,
             ImportOptions.ExcludeCheckConstraint |
             ImportOptions.ExcludeColumnDefault | 
             ImportOptions.ExcludeForeignKey | 
@@ -74,7 +72,7 @@
                 </Annotations>
             </Table>
         <# } #>
-        <# foreach(var tableNode in edwDbSchema.TableNodes) { #>
+        <# foreach(var tableNode in edwDbSchema.TableNodes.Where(t => t.Name != "DimAudit")) { #>
             <Table Name="<#=tableNode.Name#>" SchemaName="edwDb.<#=tableNode.Schema.Name#>">
                 <Columns>
                     <# foreach(var columnNode in tableNode.Columns) { #>

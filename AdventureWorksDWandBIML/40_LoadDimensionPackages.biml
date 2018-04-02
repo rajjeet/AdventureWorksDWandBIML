@@ -3,7 +3,7 @@
 <#@ include file="i_Utilities.biml"#>
 <Biml xmlns="http://schemas.varigence.com/biml.xsd">
     <Packages>
-        <# foreach(var table in RootNode.Tables.Where(t => t.GetTag("Type") == "Edw")) { #>
+        <# foreach(var table in RootNode.Tables.Where(t => t.GetTag("TableRole") == "Dimension")) { #>
         <Package Name="Load <#=table.Schema.Name#>_<#=table.Name#>" ProtectionLevel="EncryptSensitiveWithUserKey" 
                     ConstraintMode="Linear">
             <#=CallBimlScript("cbs_AuditParameterVariables.biml", 
