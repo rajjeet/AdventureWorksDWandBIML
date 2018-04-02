@@ -1284,7 +1284,10 @@ GO
               <Inputs>
                 <Column SourceColumn="ProductID" />
               </Inputs>
-              <ExternalTableInput Table="[dw].[DimProduct]" />
+              <DirectInput>
+                            SELECT * FROM [dw].[DimProduct]
+                                                                                            WHERE [EndDate] IS NULL
+                                                    </DirectInput>
             </Lookup>
             <ConditionalSplit Name="CS Changed Columns">
               <InputPath OutputPathName="LU dw_DimProduct.Match" />
@@ -1373,7 +1376,7 @@ JOIN [stage].[Update_DimProduct] source ON
         <ExecuteSQL Name="SQL Update SCD2" ConnectionName="OLEDB_EDW">
           <DirectInput>UPDATE target 
  set
-	target.[EndDate] = GETDATE()
+	target.[EndDate] = source.[EndDate]
 FROM [dw].[DimProduct] as target
 JOIN [stage].[Update_DimProduct] source ON 
 	target.[ProductID] = source.[ProductID]
@@ -1487,7 +1490,9 @@ JOIN [stage].[Update_DimProduct] source ON
               <Inputs>
                 <Column SourceColumn="ProductCategoryID" />
               </Inputs>
-              <ExternalTableInput Table="[dw].[DimProductCategory]" />
+              <DirectInput>
+                            SELECT * FROM [dw].[DimProductCategory]
+                                                    </DirectInput>
             </Lookup>
             <ConditionalSplit Name="CS Changed Columns">
               <InputPath OutputPathName="LU dw_DimProductCategory.Match" />
@@ -1646,7 +1651,9 @@ JOIN [stage].[Update_DimProductCategory] source ON
               <Inputs>
                 <Column SourceColumn="ProductSubcategoryID" />
               </Inputs>
-              <ExternalTableInput Table="[dw].[DimProductSubcategory]" />
+              <DirectInput>
+                            SELECT * FROM [dw].[DimProductSubcategory]
+                                                    </DirectInput>
             </Lookup>
             <ConditionalSplit Name="CS Changed Columns">
               <InputPath OutputPathName="LU dw_DimProductSubcategory.Match" />

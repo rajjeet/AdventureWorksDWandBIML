@@ -45,7 +45,13 @@
                     <Lookup Name="LU <#=edwSchemaName#>_<#=table.Name#>" 
                             NoMatchBehavior="RedirectRowsToNoMatchOutput"
                             OleDbConnectionName="<#=edwConnName#>">
-                        <ExternalTableInput Table="<#=table.SchemaQualifiedName#>" />
+                        <DirectInput>
+                            SELECT * FROM <#=table.SchemaQualifiedName#>
+                            <# if (table.GetTag("SCDType") == "2") { #>
+                                <# var columnED = table.Columns.Where(c => c.GetTag("ColumnRole") == "EndDate").ElementAt(0); #>
+                                WHERE [<#=columnED#>] IS NULL
+                            <# } #>
+                        </DirectInput>
                         <Inputs>
                             <Column SourceColumn="<#=columnBK#>"/>
                         </Inputs>

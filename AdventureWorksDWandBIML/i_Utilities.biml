@@ -64,7 +64,7 @@
         
         if (SCDType == "SCD2"){
             if (endDateColumnName != null)
-                query += $"\ttarget.[{endDateColumnName}] = GETDATE()\r\n";
+                query += $"\ttarget.[{endDateColumnName}] = source.[{endDateColumnName}]\r\n";
         }
         
         query += $"FROM {tableNode.SchemaQualifiedName} as target\r\n";
