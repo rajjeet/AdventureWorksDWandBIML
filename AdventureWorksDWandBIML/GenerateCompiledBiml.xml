@@ -1304,22 +1304,16 @@ GO
                 <OutputPath Name="SCD2 Update" />
               </OutputPaths>
             </Multicast>
-            <DerivedColumns Name="DC Start Date">
-              <InputPath OutputPathName="MC SCD2.SCD2 Insert" />
-              <Columns>
-                <Column Name="StartDate" DataType="DateTime">GETDATE()</Column>
-              </Columns>
-            </DerivedColumns>
             <UnionAll Name="UNI Insert">
               <InputPaths>
-                <InputPath OutputPathName="DC Start Date.Output" />
+                <InputPath OutputPathName="MC SCD2.SCD2 Insert" />
                 <InputPath OutputPathName="LU dw_DimProduct.NoMatch" />
               </InputPaths>
             </UnionAll>
             <DerivedColumns Name="DC End Date">
               <InputPath OutputPathName="MC SCD2.SCD2 Update" />
               <Columns>
-                <Column Name="EndDate" DataType="DateTime">GETDATE()</Column>
+                <Column Name="EndDate" DataType="DateTime" ReplaceExisting="true">StartDate</Column>
               </Columns>
             </DerivedColumns>
             <UnionAll Name="UNI Update">

@@ -88,17 +88,10 @@
                         </InputPaths>
                     </UnionAll>
                     
-                    <DerivedColumns Name="DC Start Date">
-                        <InputPath OutputPathName="UNI Insert.Output" />
-                        <Columns>
-                            <Column Name="StartDate" DataType="DateTime">GETDATE()</Column>
-                        </Columns>
-                    </DerivedColumns>
-                    
                     <DerivedColumns Name="DC End Date">
                         <InputPath OutputPathName="MC SCD2.SCD2 Update" />
                         <Columns>
-                            <Column Name="EndDate" DataType="DateTime">GETDATE()</Column>
+                            <Column Name="EndDate" DataType="DateTime" ReplaceExisting="true">StartDate</Column>
                         </Columns>
                     </DerivedColumns>   
                     
@@ -113,7 +106,7 @@
                     <!-- INSERT -->
                     <RowCount Name="RC Insert" VariableName="User.InsertRowCnt">
                         <# if (table.GetTag("SCDType") == "2") { #>
-                        <InputPath OutputPathName="DC Start Date.Output" />
+                        <InputPath OutputPathName="UNI Insert.Output" />
                         <# } else { #>
                         <InputPath OutputPathName="LU <#=edwSchemaName#>_<#=table.Name#>.NoMatch" />
                         <# } #>

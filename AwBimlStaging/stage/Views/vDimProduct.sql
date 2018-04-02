@@ -24,6 +24,8 @@ SELECT p.[ProductID]
       ,p.[SellStartDate]
       ,p.[SellEndDate]
       ,p.[DiscontinuedDate]
+	  ,getdate() as StartDate
+	  ,cast(null as datetime) as EndDate
   FROM [stage].[Product] p
   JOIN [AwBimlEdw].dw.DimProductSubcategory sc on p.ProductSubcategoryID = sc.ProductSubcategoryKey
 

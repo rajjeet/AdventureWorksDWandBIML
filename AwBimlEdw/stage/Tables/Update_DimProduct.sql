@@ -24,8 +24,10 @@
     [SellStartDate]         DATETIME       NOT NULL,
     [SellEndDate]           DATETIME       NULL,
     [DiscontinuedDate]      DATETIME       NULL,
-    [StartDate]             DATETIME       NOT NULL,
+    [StartDate]             DATETIME       NULL,
     [EndDate]               DATETIME       NULL,
-    [AuditId]               INT            NOT NULL
+    [AuditId]               INT            NULL
 );
+
+
 

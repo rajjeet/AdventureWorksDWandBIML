@@ -4,6 +4,8 @@
     [ProductCategoryKey]    INT           NOT NULL,
     [ProductCategoryID]     INT           NOT NULL,
     [Name]                  NVARCHAR (50) NOT NULL,
-    [AuditId]               INT           NOT NULL
+    [AuditId]               INT           NULL
 );
+
+
 
