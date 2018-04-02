@@ -395,6 +395,7 @@
         <Column Name="TotalDue" DataType="Currency" />
         <Column Name="Comment" DataType="String" Length="128" />
         <Column Name="ModifiedDate" DataType="DateTime" />
+        <Column Name="AuditId" />
       </Columns>
     </Table>
   </Tables>
@@ -1825,7 +1826,43 @@ JOIN [stage].[Update_DimProductSubcategory] source ON
                         
     </DirectInput>
         </ExecuteSQL>
-        <Dataflow Name="DFT Load dw_FactResellerSales" />
+        <Dataflow Name="DFT Load dw_FactResellerSales">
+          <Transformations>
+            <OleDbSource Name="OLEDBSRC stage_vFactResellerSales" ConnectionName="OLEDB_Staging">
+              <ExternalTableInput Table="[stage].[vFactResellerSales]" />
+            </OleDbSource>
+            <RowCount Name="RC Extract" VariableName="User.ExtractRowCnt" />
+            <DerivedColumns Name="DC Audit Id">
+              <Columns>
+                <Column Name="AuditId" DataType="Int32">@[User::AuditId]</Column>
+              </Columns>
+            </DerivedColumns>
+            <Multicast Name="MC Aggegrate And Insert">
+              <InputPath OutputPathName="DC Audit Id.Output" />
+              <OutputPaths>
+                <OutputPath Name="Max Aggregate" />
+                <OutputPath Name="Insert" />
+              </OutputPaths>
+            </Multicast>
+            <RowCount Name="RC Insert" VariableName="User.InsertRowCnt">
+              <InputPath OutputPathName="MC Aggegrate And Insert.Insert" />
+            </RowCount>
+            <OleDbDestination Name="OLEDBDEST dw_FactResellerSales" ConnectionName="OLEDB_EDW">
+              <ErrorHandling ErrorRowDisposition="RedirectRow" TruncationRowDisposition="RedirectRow" />
+              <InputPath OutputPathName="RC Insert.Output" />
+              <ExternalTableOutput Table="[dw].[FactResellerSales]" />
+            </OleDbDestination>
+            <RowCount Name="RC Error" VariableName="User.ErrorRowCnt">
+              <InputPath OutputPathName="OLEDBDEST dw_FactResellerSales.Error" />
+            </RowCount>
+            <FlatFileDestination Name="FFD dw_FactResellerSales" ConnectionName="FFC dw_FactResellerSales">
+              <InputPath OutputPathName="RC Error.Output" />
+            </FlatFileDestination>
+            <RowCount Name="RC Aggregate" VariableName="User.InsertRowCnt">
+              <InputPath OutputPathName="MC Aggegrate And Insert.Max Aggregate" />
+            </RowCount>
+          </Transformations>
+        </Dataflow>
         <ExecuteSQL Name="SQL Count Final dw_FactResellerSales" ConnectionName="OLEDB_EDW" ResultSet="SingleRow">
           <Results>
             <Result Name="0" VariableName="User.FinalTableRowCnt" />
@@ -2038,7 +2075,16 @@ JOIN [stage].[Update_DimProductSubcategory] source ON
             </ExecutePackage>
           </Tasks>
         </Container>
-        <Container Name="SEQ Load Facts" ConstraintMode="Linear" />
+        <Container Name="SEQ Load Facts" ConstraintMode="Linear">
+          <Tasks>
+            <ExecutePackage Name="EPT Load dw_FactResellerSales">
+              <ParameterBindings>
+                <ParameterBinding Name="ParentAuditId" VariableName="User.AuditId" />
+              </ParameterBindings>
+              <ExternalProjectPackage Package="Load dw_FactResellerSales.dtsx" />
+            </ExecutePackage>
+          </Tasks>
+        </Container>
         <ExecuteSQL Name="SQL Audit End" ConnectionName="OLEDB_EDW">
           <Parameters>
             <Parameter Name="@AuditId" VariableName="User.AuditId" DataType="Int32" />
@@ -2334,6 +2380,7 @@ JOIN [stage].[Update_DimProductSubcategory] source ON
         <Column Name="TotalDue" DataType="Currency" Delimiter="," />
         <Column Name="Comment" Length="128" DataType="String" Delimiter="," />
         <Column Name="ModifiedDate" DataType="DateTime" Delimiter="," />
+        <Column Name="AuditId" Delimiter="," />
         <Column Name="ErrorCode" Delimiter="," />
         <Column Name="ErrorColumn" Delimiter="CRLF" />
       </Columns>

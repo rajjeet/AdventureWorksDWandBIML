@@ -19,11 +19,54 @@
             
             <Dataflow Name="DFT Load <#=table.Schema.Name#>_<#=table.Name#>">
                  <Transformations>
-                    
+                     
+                    <OleDbSource Name="OLEDBSRC <#=stagingSchemaName#>_<#=stagingViewStgPrefix#><#=table.Name#>" 
+                                    ConnectionName="<#=stagingConnName#>">
+                       <ExternalTableInput Table="[<#=stagingSchemaName#>].[<#=stagingViewStgPrefix#><#=table.Name#>]" />
+                    </OleDbSource>
 
-                
+                    <RowCount Name="RC Extract" VariableName="User.ExtractRowCnt" />
+                    
+                    <DerivedColumns Name="DC Audit Id">
+                        <Columns>
+                            <Column Name="AuditId" DataType="Int32">@[User::AuditId]</Column>
+                        </Columns>
+                    </DerivedColumns>
+                        
+                    <Multicast Name="MC Aggegrate And Insert">
+                        <InputPath OutputPathName="DC Audit Id.Output" />
+                        <OutputPaths>
+                            <OutputPath Name="Max Aggregate" />
+                            <OutputPath Name="Insert" />
+                        </OutputPaths>
+                    </Multicast>
+                    
+                    <!-- Insert -->
+                    <RowCount Name="RC Insert" VariableName="User.InsertRowCnt">
+                        <InputPath OutputPathName="MC Aggegrate And Insert.Insert" />
+                    </RowCount>
+                    
+                    <OleDbDestination Name="OLEDBDEST <#=table.Schema.Name#>_<#=table.Name#>" 
+                                      ConnectionName="<#=edwConnName#>">
+                        <InputPath OutputPathName="RC Insert.Output" />                                          
+                        <ExternalTableOutput Table="<#=table.SchemaQualifiedName#>" />
+                        <ErrorHandling ErrorRowDisposition="RedirectRow" TruncationRowDisposition="RedirectRow" />
+                    </OleDbDestination>
+                    
+                    <RowCount Name="RC Error" VariableName="User.ErrorRowCnt"> 
+                            <InputPath OutputPathName="OLEDBDEST <#=table.Schema.Name#>_<#=table.Name#>.Error" />
+                    </RowCount>
+                    
+                    <FlatFileDestination Name="FFD <#=table.Schema.Name#>_<#=table.Name#>" ConnectionName="FFC <#=table.Schema.Name#>_<#=table.Name#>">
+                        <InputPath OutputPathName="RC Error.Output" />
+                    </FlatFileDestination>
+                        
+                    <!-- Max Aggregate -->
+                    <RowCount Name="RC Aggregate" VariableName="User.InsertRowCnt">
+                        <InputPath OutputPathName="MC Aggegrate And Insert.Max Aggregate" />
+                    </RowCount>
+                        
                 </Transformations>
-           
             </Dataflow>
         
             

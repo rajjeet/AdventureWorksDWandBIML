@@ -23,9 +23,12 @@
     [TotalDue]               MONEY           NOT NULL,
     [Comment]                NVARCHAR (128)  NULL,
     [ModifiedDate]           DATETIME        NOT NULL,
+    [AuditId]                INT             NULL,
     CONSTRAINT [PK_FactResellerSales] PRIMARY KEY CLUSTERED ([FactResellerSalesKey] ASC),
     CONSTRAINT [FK_DimProduct_ProductKey] FOREIGN KEY ([ProductKey]) REFERENCES [dw].[DimProduct] ([ProductKey])
 );
+
+
 
 
 GO

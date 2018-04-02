@@ -26,7 +26,18 @@
                 </Container>
                 
                 <Container Name="SEQ Load Facts" ConstraintMode="Linear">
-                    
+                    <Tasks>
+                        <# foreach(var pkg in RootNode.Packages
+                                .Where(p => p.GetTag("TableRole") == "Fact")
+                                .OrderBy(p => p.GetTag("LoadOrder"))) {  #>
+                            <ExecutePackage Name="EPT <#=pkg.Name#>">
+                                <ExternalProjectPackage Package="<#=pkg.Name#>.dtsx" />
+                                <ParameterBindings>
+                                    <ParameterBinding Name="ParentAuditId" VariableName="User.AuditId" />
+                                </ParameterBindings> 
+                            </ExecutePackage>
+                        <# } #>
+                    </Tasks>
                 </Container>
                 
                 <#=CallBimlScript("cbs_AuditEnd.biml", edwConnName)#> 
