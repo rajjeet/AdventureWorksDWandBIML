@@ -40,6 +40,19 @@
                         </Columns>
                     </DerivedColumns>
                     
+                    <!-- Check for Null Or Empty Columns - Replace with Defaults -->
+                    <# if (table.Columns.Where(c => c.GetTag("CheckNullsOrEmpty").Length > 0).Count() > 0) {  #>
+                    <DerivedColumns Name="DC Defaults">
+                        <Columns>
+                        <# foreach(var column in table.Columns.Where(c => c.GetTag("CheckNullsOrEmpty").Length > 0)) { #>
+                            <Column Name="<#=column.Name#>" DataType="<#=column.DataType#>" Length="<#=column.Length#>" ReplaceExisting="true">
+                                REPLACENULL(<#=column.Name#>, "<#=column.GetTag("CheckNullsOrEmpty")#>")
+                            </Column>
+                        <# } #>
+                        </Columns>
+                     </DerivedColumns> 
+                    <# } #>
+                    
                     <# var columnBK = table.Columns.Where(c => c.GetTag("ColumnRole") == "BK").ElementAt(0); #>
                     
                     <Lookup Name="LU <#=edwSchemaName#>_<#=table.Name#>" 

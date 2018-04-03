@@ -189,6 +189,7 @@
         </Column>
         <Column Name="Color" DataType="String" Length="15">
           <Annotations>
+            <Annotation Tag="CheckNullsOrEmpty">Not Applicable</Annotation>
             <Annotation Tag="ColumnRole">SCD2</Annotation>
           </Annotations>
         </Column>
@@ -214,21 +215,25 @@
         </Column>
         <Column Name="Size" DataType="String" Length="5">
           <Annotations>
+            <Annotation Tag="CheckNullsOrEmpty">NA</Annotation>
             <Annotation Tag="ColumnRole">SCD1</Annotation>
           </Annotations>
         </Column>
         <Column Name="SizeUnitMeasureCode" DataType="StringFixedLength" Length="3">
           <Annotations>
+            <Annotation Tag="CheckNullsOrEmpty">NA</Annotation>
             <Annotation Tag="ColumnRole">SCD1</Annotation>
           </Annotations>
         </Column>
         <Column Name="WeightUnitMeasureCode" DataType="StringFixedLength" Length="3">
           <Annotations>
+            <Annotation Tag="CheckNullsOrEmpty">NA</Annotation>
             <Annotation Tag="ColumnRole">SCD1</Annotation>
           </Annotations>
         </Column>
         <Column Name="Weight" DataType="Decimal">
           <Annotations>
+            <Annotation Tag="CheckNullsOrEmpty">0.00</Annotation>
             <Annotation Tag="ColumnRole">SCD1</Annotation>
           </Annotations>
         </Column>
@@ -244,11 +249,13 @@
         </Column>
         <Column Name="Class" DataType="StringFixedLength" Length="2">
           <Annotations>
+            <Annotation Tag="CheckNullsOrEmpty">NA</Annotation>
             <Annotation Tag="ColumnRole">SCD1</Annotation>
           </Annotations>
         </Column>
         <Column Name="Style" DataType="StringFixedLength" Length="2">
           <Annotations>
+            <Annotation Tag="CheckNullsOrEmpty">NA</Annotation>
             <Annotation Tag="ColumnRole">SCD1</Annotation>
           </Annotations>
         </Column>
@@ -269,11 +276,13 @@
         </Column>
         <Column Name="SellEndDate" DataType="DateTime">
           <Annotations>
+            <Annotation Tag="CheckNullsOrEmpty">3000-01-01</Annotation>
             <Annotation Tag="ColumnRole">SCD2</Annotation>
           </Annotations>
         </Column>
         <Column Name="DiscontinuedDate" DataType="DateTime">
           <Annotations>
+            <Annotation Tag="CheckNullsOrEmpty">3000-01-01</Annotation>
             <Annotation Tag="ColumnRole">SCD2</Annotation>
           </Annotations>
         </Column>
@@ -1281,6 +1290,37 @@ GO
             <DerivedColumns Name="DC Audit Id">
               <Columns>
                 <Column Name="AuditId" DataType="Int32">@[User::AuditId]</Column>
+              </Columns>
+            </DerivedColumns>
+            <DerivedColumns Name="DC Defaults">
+              <Columns>
+                <Column Name="Color" DataType="String" Length="15" ReplaceExisting="true">
+                                REPLACENULL(Color, "Not Applicable")
+                            </Column>
+                <Column Name="Size" DataType="String" Length="5" ReplaceExisting="true">
+                                REPLACENULL(Size, "NA")
+                            </Column>
+                <Column Name="SizeUnitMeasureCode" DataType="StringFixedLength" Length="3" ReplaceExisting="true">
+                                REPLACENULL(SizeUnitMeasureCode, "NA")
+                            </Column>
+                <Column Name="WeightUnitMeasureCode" DataType="StringFixedLength" Length="3" ReplaceExisting="true">
+                                REPLACENULL(WeightUnitMeasureCode, "NA")
+                            </Column>
+                <Column Name="Weight" DataType="Decimal" ReplaceExisting="true">
+                                REPLACENULL(Weight, "0.00")
+                            </Column>
+                <Column Name="Class" DataType="StringFixedLength" Length="2" ReplaceExisting="true">
+                                REPLACENULL(Class, "NA")
+                            </Column>
+                <Column Name="Style" DataType="StringFixedLength" Length="2" ReplaceExisting="true">
+                                REPLACENULL(Style, "NA")
+                            </Column>
+                <Column Name="SellEndDate" DataType="DateTime" ReplaceExisting="true">
+                                REPLACENULL(SellEndDate, "3000-01-01")
+                            </Column>
+                <Column Name="DiscontinuedDate" DataType="DateTime" ReplaceExisting="true">
+                                REPLACENULL(DiscontinuedDate, "3000-01-01")
+                            </Column>
               </Columns>
             </DerivedColumns>
             <Lookup Name="LU dw_DimProduct" OleDbConnectionName="OLEDB_EDW" NoMatchBehavior="RedirectRowsToNoMatchOutput">

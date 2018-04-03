@@ -89,6 +89,17 @@ exec sp_addextendedproperty @name='ColumnRole', @value='EndDate', @level0type='S
 exec sp_addextendedproperty @name='ColumnRole', @value='Audit', @level0type='SCHEMA', @level0name='dw', @level1type='TABLE', @level1name='DimProduct', @level2type='COLUMN', @level2name='AuditId'
 
 
+exec sp_addextendedproperty @name='CheckNullsOrEmpty', @value='Not Applicable', @level0type='SCHEMA', @level0name='dw', @level1type='TABLE', @level1name='DimProduct', @level2type='COLUMN', @level2name='Color'
+exec sp_addextendedproperty @name='CheckNullsOrEmpty', @value='NA', @level0type='SCHEMA', @level0name='dw', @level1type='TABLE', @level1name='DimProduct', @level2type='COLUMN', @level2name='Size'
+exec sp_addextendedproperty @name='CheckNullsOrEmpty', @value='NA', @level0type='SCHEMA', @level0name='dw', @level1type='TABLE', @level1name='DimProduct', @level2type='COLUMN', @level2name='SizeUnitMeasureCode'
+exec sp_addextendedproperty @name='CheckNullsOrEmpty', @value='NA', @level0type='SCHEMA', @level0name='dw', @level1type='TABLE', @level1name='DimProduct', @level2type='COLUMN', @level2name='WeightUnitMeasureCode'
+exec sp_addextendedproperty @name='CheckNullsOrEmpty', @value='NA', @level0type='SCHEMA', @level0name='dw', @level1type='TABLE', @level1name='DimProduct', @level2type='COLUMN', @level2name='Class'
+exec sp_addextendedproperty @name='CheckNullsOrEmpty', @value='NA', @level0type='SCHEMA', @level0name='dw', @level1type='TABLE', @level1name='DimProduct', @level2type='COLUMN', @level2name='Style'
+exec sp_addextendedproperty @name='CheckNullsOrEmpty', @value='0.00', @level0type='SCHEMA', @level0name='dw', @level1type='TABLE', @level1name='DimProduct', @level2type='COLUMN', @level2name='Weight'
+exec sp_addextendedproperty @name='CheckNullsOrEmpty', @value='3000-01-01', @level0type='SCHEMA', @level0name='dw', @level1type='TABLE', @level1name='DimProduct', @level2type='COLUMN', @level2name='SellEndDate'
+exec sp_addextendedproperty @name='CheckNullsOrEmpty', @value='3000-01-01', @level0type='SCHEMA', @level0name='dw', @level1type='TABLE', @level1name='DimProduct', @level2type='COLUMN', @level2name='DiscontinuedDate'
+go
+
 CREATE TABLE [dw].[DimProductSubcategory](
 	[ProductSubcategoryKey] int identity(1,1) not null,
 	[ProductSubcategoryID] [int] NOT NULL,
